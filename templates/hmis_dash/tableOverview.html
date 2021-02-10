@@ -1,0 +1,795 @@
+{% extends 'dashboard/dash_base.html' %}
+
+{% load static %}
+
+{% block feature_css %}
+
+<link rel="stylesheet" href="{% static 'hmis_dash/css/index.css' %}">
+
+<style>
+    table {
+        width: 90%;
+        height: 75%;
+        font-size: calc(40% + 0.5vw + 0.5vh);
+    }
+
+    th,
+    tr {
+        background: #a2d3fa;
+        font-weight: bold;
+    }
+
+    td,
+    th {
+        padding: 6px;
+        border: 1px solid #ccc;
+        text-align: center;
+    }
+
+    th.des:after {
+        content: "\21E9";
+    }
+
+    th.aes:after {
+        content: "\21E7";
+    }
+
+    .scroll-down {
+        float: right;
+        font-weight: bold;
+        font-size: calc(50% + 0.5vw + 0.5vh);
+    }
+
+    .custom-control-label {
+        font-size: calc(50% + 0.5vw + 0.5vh);
+    }
+
+    .custom-control-input {
+        width: 0.75em;
+        height: 0.75em;
+    }
+</style>
+{% endblock %}
+{% block feature %}
+<div class="row">
+    <div class="col-12 h-75">
+        <div class="heading text-center"> State Overview ({{ fy }})</div>
+    </div>
+</div>
+<div class="row h-100 bg-info">
+    <div class="dropdown m-1">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <span class="selectedCategory"></span>
+        </button>
+        <div class="dropdown-menu category" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#" onclick="block()">State</a>
+        </div>
+    </div>
+    <!-- <div class="dropdown m-1">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          Select State
+          <span class="selectedState"></span>
+        </button>
+        <div class="dropdown-menu state" aria-labelledby="dropdownMenuButton">
+          {% for state_select in state %}
+          <a class="dropdown-item" href="#">{{ state_select.state }}</a>
+          {% endfor %}
+        </div>
+      </div> -->
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="scroll-down">
+            Click column headers to sort the table
+        </div>
+    </div>
+</div>
+
+<div class="row text-center">
+    <div class="col-12 mb-3">
+        <input type="text" id="monthSlider" name="somename" data-provide="slider" data-slider-ticks="[0, 1, 2, 3, 4, 5,6,7,8,9,10,11,12]"
+        data-slider-ticks-labels='["All", "April", "May", "June", "July", "August", "September", "October", "November", "December",  "January", "February", "March"]' data-slider-min="0"
+        data-slider-max="5" data-slider-step="1" data-slider-value="0" data-slider-tooltip="hide">
+    </div>
+</div>
+
+<div class="row m-1">
+    <!-- <div class="col-12"> -->
+    <form class="col-12" name="indicatorRadio" action="#">
+        <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" id="customRadioInline1" name="states" value="set1" class="custom-control-input">
+            <label class="custom-control-label" for="customRadioInline1">Pregnant Women related Indicators</label>
+        </div>
+        <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" id="customRadioInline2" name="states" value="set2" class="custom-control-input">
+            <label class="custom-control-label" for="customRadioInline2">Child Immunization related Indicators</label>
+        </div>
+        <div class="custom-control custom-radio custom-control-inline">
+            <input type="radio" id="customRadioInline3" name="states" value="set3" class="custom-control-input">
+            <label class="custom-control-label" for="customRadioInline3">Child Diseases related Indicators</label>
+        </div>
+      
+
+    </form>
+</div>
+<div class="row h-100 justify-content-center mt-4">
+    <div class="col-12" id="table"></div>
+</div>
+
+{% endblock %}
+
+
+{% block feature_js %}
+<script>
+    let stateName = "All States";
+
+    function filterCSV(csv, key, value) {
+        var result = [];
+        csv.forEach(function (val, idx, arr) {
+
+            if (val[key] == value) {
+
+                result.push(val)
+            }
+        })
+        return result;
+    }
+
+    function block() {
+        const render = data => {
+        }
+
+        /////
+        data_from_django = {{ context.pw_data | safe }}
+        data_from_django_Im = {{ context.chilIm_data | safe }}
+        data_from_django_Di = {{ context.childDi_data | safe }}
+
+
+    var data_pw = []
+    data_from_django.forEach(element => {
+        data_pw.push(element.fields);
+    });
+
+    data_pw.forEach(d => {
+        d.state = d.state;
+        d.early_anc_register = +d.early_anc_register;
+        d.anc_4_or_more = +d.anc_4_or_more;
+        d.pw_tt1_given = +d.pw_tt1_given;
+        d.pw_tt2_given = +d.pw_tt2_given;
+        d.pw_tt_booster_given = +d.pw_tt_booster_given;
+        d.pw_calcium = +d.pw_calcium;
+        d.pw_ifa = +d.pw_ifa;
+        d.pw_albendazole = +d.pw_albendazole;
+        d.c_section_deliveries = +d.c_section_deliveries;
+        d.tot_no_pw_reg_anc = +d.tot_no_pw_reg_anc;
+        d.no_early_anc_register = +d.no_early_anc_register;
+        d.no_anc_4_or_more = +d.no_anc_4_or_more;
+        d.no_pw_given_tt1 = +d.no_pw_given_tt1;
+        d.no_pw_given_tt2 = +d.no_pw_given_tt2;
+        d.no_pw_given_tt_booster = +d.no_pw_given_tt_booster;
+        d.no_pw_given_calcium = +d.no_pw_given_calcium;
+        d.no_pw_given_albendazole = +d.no_pw_given_albendazole;
+        d.no_pw_given_ifa = +d.no_pw_given_ifa;
+        d.tot_c_section_deliveries = +d.tot_c_section_deliveries;
+        d.month = d.month;
+    });
+
+    var data_childIm = []
+    data_from_django_Im.forEach(element => {
+        data_childIm.push(element.fields);
+    });
+
+    data_childIm.forEach(d => {
+        d.state = d.state;
+        d.chld_immunzt_vit_k1 = +d.chld_immunzt_vit_k1;
+        d.per_chld_immunzt_vit_k1 = +d.per_chld_immunzt_vit_k1;
+        d.chld_immunzt_bcg = +d.chld_immunzt_bcg;
+        d.per_chld_immunzt_bcg = +d.per_chld_immunzt_bcg;
+        d.chld_immunzt_9to11m_mr = +d.chld_immunzt_9to11m_mr;
+        d.per_chld_immunzt_9to11m_mr = +d.per_chld_immunzt_9to11m_mr;
+        d.chld_immunzt_9to11m_measl_1st_dose = +d.chld_immunzt_9to11m_measl_1st_dose;
+        d.per_chld_immunzt_9to11m_measl_1st_dose = +d.per_chld_immunzt_9to11m_measl_1st_dose;
+        d.chld_immunzt_vit_a_dose_1 = +d.chld_immunzt_vit_a_dose_1;
+        d.per_chld_immunzt_vit_a_dose_1 = +d.per_chld_immunzt_vit_a_dose_1;
+        d.no_chld_12to59m_albendazole = +d.no_chld_12to59m_albendazole;
+        d.per_no_chld_12to59m_albendazole = +d.per_no_chld_12to59m_albendazole;
+        d.month = d.month;
+    });
+    console.log("data_childIm", data_childIm);
+
+    var data_childDi = []
+    data_from_django_Di.forEach(element => {
+        data_childDi.push(element.fields);
+    });
+
+   
+    data_childDi.forEach(d => {
+        d.state = d.state;
+        d.chld_disease_pneumonia = +d.chld_disease_pneumonia;
+        d.per_chld_disease_pneumonia = +d.per_chld_disease_pneumonia;
+        d.chld_disease_sepsis = +d.chld_disease_sepsis;
+        d.per_chld_disease_sepsis = +d.per_chld_disease_sepsis;
+        d.chld_disease_tb = +d.chld_disease_tb;
+        d.per_chld_disease_tb = +d.per_chld_disease_tb;
+        d.chld_disease_malaria = +d.chld_disease_malaria;
+        d.per_chld_disease_malaria = +d.per_chld_disease_malaria;
+        d.chld_disease_diarrhoea = +d.chld_disease_diarrhoea;
+        d.per_chld_disease_diarrhoea = +d.per_chld_disease_diarrhoea;
+        d.chld_disease_sam = +d.chld_disease_sam;
+        d.per_chld_disease_sam = +d.per_chld_disease_sam;
+        d.month = d.month;
+    });
+    
+
+    var tickLabels = ["All", "April", "May", "June", "July", "August", "September", "October", "November", "December",  "January", "February", "March"]
+    $('#monthSlider').slider().on('slideStop', function (ev) {
+        var val = tickLabels[ev.value];
+        dataPw = filterCSV(data_pw, 'month', val);
+        dataChildIm = filterCSV(data_childIm, 'month', val);
+        dataChildDi = filterCSV(data_childDi, 'month', val);
+        let tbleData = tables(d3.select('input[name="states"]:checked').node().value, dataPw, dataChildIm, dataChildDi);
+        render(tbleData);
+    });
+
+ 
+
+    monthSelect = tickLabels[$('#monthSlider').slider('getValue')];
+    dataPw = filterCSV(data_pw, 'month', monthSelect);
+    dataChildIm = filterCSV(data_childIm, 'month', monthSelect);
+    dataChildDi = filterCSV(data_childDi, 'month', monthSelect);
+    let tbleData = tables(d3.select('input[name="states"]:checked').node().value, dataPw, dataChildIm, dataChildDi);
+    render(tbleData);
+
+
+    const tbData = (val, monthwiseData) => {
+
+        return selectMonth;
+
+    }
+
+    const buttons = d3.selectAll('input');
+    buttons.on('change', function (d) {
+        const selection = this.value;
+        dataPw = filterCSV(data_pw, 'month', monthSelect);
+        dataChildIm = filterCSV(data_childIm, 'month', monthSelect);
+        dataChildDi = filterCSV(data_childDi, 'month', monthSelect);
+        let tblData = tables(selection, dataPw, dataChildIm, dataChildDi);
+        render(tblData);
+    });
+
+    function tables(selection, dataPw, dataChildIm, dataChildDi) {
+
+        if (selection == "set1") {
+
+            $("div#table").find(".hello").remove();
+
+            var tbdata = [];
+            console.log("dataPw", dataPw);
+            dataPw.forEach(d => {
+                var tbd = {}
+                tbd['State'] = d.state;
+                tbd['Early Anc Registeration(%)'] = d.early_anc_register;
+                tbd['PW received 4 or more ANC check ups(%)'] = d.anc_4_or_more;
+                tbd['PW given TT1(%)'] = d.pw_tt1_given;
+                tbd['PW given TT2(%)'] = d.pw_tt2_given;
+                tbd['PW given TT Booster(%)'] = d.pw_tt_booster_given;
+                tbd['PW given 360 Calcium tablets(%)'] = d.pw_calcium;
+                tbd['PW given 180 IFA tablets(%)'] = d.pw_ifa;
+                tbd['PW given one Albendazole tablet(%)'] = d.pw_albendazole;
+                tbd['C section deliveries(%)'] = d.c_section_deliveries;
+        //         d.tot_no_pw_reg_anc = +d.tot_no_pw_reg_anc;
+        // d.no_early_anc_register = +d.no_early_anc_register;
+        // d.no_anc_4_or_more = +d.no_anc_4_or_more;
+        // d.no_pw_given_tt1 = +d.no_pw_given_tt1;
+        // d.no_pw_given_tt2 = +d.no_pw_given_tt2;
+        // d.no_pw_given_tt_booster = +d.no_pw_given_tt_booster;
+        // d.no_pw_given_calcium = +d.no_pw_given_calcium;
+        // d.no_pw_given_albendazole = +d.no_pw_given_albendazole;
+        // d.no_pw_given_ifa = +d.no_pw_given_ifa;
+        // d.tot_c_section_deliveries = +d.tot_c_section_deliveries;
+
+
+                tbdata.push(tbd);
+            });
+            console.log("tbdata", tbdata);
+            column_data = { "state": [], "early_anc_register": [], "anc_4_or_more": [], "pw_tt1_given": [], "pw_tt2_given": [], "pw_tt_booster_given": [], "pw_calcium": [], "pw_ifa": [], "pw_albendazole": [] , "c_section_deliveries": [] } //"HeightP":[],"WeightP":[], "HeightWeightP":[] }
+
+
+            dataPw.forEach(d => {
+                column_data.state.push(d.state);
+                column_data.early_anc_register.push(+d.early_anc_register);
+                column_data.anc_4_or_more.push(+d.anc_4_or_more);
+                column_data.pw_tt1_given.push(+d.pw_tt1_given);
+                column_data.pw_tt2_given.push(+d.pw_tt2_given);
+                column_data.pw_tt_booster_given.push(+d.pw_tt_booster_given);
+                column_data.pw_calcium.push(+d.pw_calcium);
+                column_data.pw_ifa.push(+d.pw_ifa);
+                column_data.pw_albendazole.push(+d.pw_albendazole);
+                column_data.c_section_deliveries.push(+d.c_section_deliveries);
+
+            })
+            var early_anc_color = d3.scaleSequential().domain([d3.min(column_data.early_anc_register), d3.max(column_data.early_anc_register)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var anc_4_color = d3.scaleSequential().domain([d3.min(column_data.anc_4_or_more), d3.max(column_data.anc_4_or_more)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var pw_tt1_color = d3.scaleSequential().domain([d3.min(column_data.pw_tt1_given), d3.max(column_data.pw_tt1_given)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var pw_tt2_color = d3.scaleSequential().domain([d3.min(column_data.pw_tt2_given), d3.max(column_data.pw_tt2_given)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var pw_tt_booster_color = d3.scaleSequential().domain([d3.min(column_data.pw_tt_booster_given), d3.max(column_data.pw_tt_booster_given)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var pw_calcium_color = d3.scaleSequential().domain([d3.min(column_data.pw_calcium), d3.max(column_data.pw_calcium)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var pw_ifa_color = d3.scaleSequential().domain([d3.min(column_data.pw_ifa), d3.max(column_data.pw_ifa)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var pw_albendazole_color = d3.scaleSequential().domain([d3.min(column_data.pw_albendazole), d3.max(column_data.pw_albendazole)])
+                .interpolator(d3.interpolateRdYlGn); 
+
+            var c_section_color = d3.scaleSequential().domain([d3.max(column_data.c_section_deliveries), d3.min(column_data.c_section_deliveries)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var sortAscending = true;
+            var table = d3.select('div#table').append('table')
+                .attr('class', 'hello');
+
+            var titles = d3.keys(tbdata[0]);
+            console.log("titles", titles);
+
+            var headers = table.append('thead').append('tr')
+                .selectAll('th')
+                .data(titles).enter()
+                .append('th')
+                .text(function (d) {
+                    return d;
+                })
+                .on('click', function (d) {
+                    headers.attr('class', 'header');
+
+                    if (sortAscending) {
+                        rows.sort(function (a, b) { return d3.ascending(b[d], a[d]); });
+                        sortAscending = false;
+                        this.className = 'aes';
+                    } else {
+                        rows.sort(function (a, b) { return d3.descending(b[d], a[d]); });
+                        sortAscending = true;
+                        this.className = 'des';
+                    }
+
+                });
+
+            var rows = table.append('tbody').selectAll('tr')
+                .data(tbdata).enter()
+                .append('tr');
+            rows.selectAll('td')
+
+                .data(function (d) {
+                    return titles.map(function (k) {
+                        return { 'value': d[k], 'name': k };
+                    });
+                }).enter()
+                .append('td')
+
+                .style("background-color", function (d) {
+                    if (d.name == 'Early Anc Registeration(%)') {
+                        return early_anc_color(d.value);
+                    }
+                    else if (d.name == 'PW received 4 or more ANC check ups(%)') {
+                        return anc_4_color(d.value);
+                    }
+                    else if (d.name == 'PW given TT1(%)') {
+                        return pw_tt1_color(d.value);
+                    }
+                    else if (d.name == 'PW given TT2(%)') {
+                        return pw_tt2_color(d.value);
+                    }
+                    else if (d.name == 'PW given TT Booster(%)') {
+                        return pw_tt_booster_color(d.value);
+                    }
+                    else if (d.name == 'PW given 360 Calcium tablets(%)') {
+                        return pw_calcium_color(d.value);
+                    }
+                    else if (d.name == 'PW given 180 IFA tablets(%)') {
+                        return pw_ifa_color(d.value);
+                    }
+                    else if (d.name == 'PW given one Albendazole tablet(%)') {
+                        return pw_albendazole_color(d.value);
+                    }
+                    else if (d.name == 'C section deliveries(%)') {
+                        return c_section_color(d.value);
+                    }
+                })
+                .text(function (d) {
+                    // if (d.name == 'Stunted Children') {
+                    //     return numberWithCommas(d.value)
+                    // }
+                    // else if (d.name == 'Wasted Children') {
+                    //     return numberWithCommas(d.value)
+                    // }
+                    // else if (d.name == 'Underweight Children') {
+                    //     return numberWithCommas(d.value)
+                    // }
+                    // else if (d.name == 'No. of Newborn with Low Birth Weight') {
+                
+                 
+                 //     return numberWithCommas(d.value)
+                    // }
+                    // else{
+                        return d.value;
+                    // }
+                });
+        }
+        else if (selection == 'set2') {
+            $("div#table").find(".hello").remove();
+
+            var tbdata2 = [];
+
+            dataChildIm.forEach(d => {
+                var tabdt = {}
+                tabdt['State'] = d.state;
+                tabdt['Child immunisation - Vitamin K1'] = d.chld_immunzt_vit_k1;
+                tabdt['Child immunisation - Vitamin K1(%)'] = d.per_chld_immunzt_vit_k1;
+                tabdt['Child immunisation - BCG'] = d.chld_immunzt_bcg;
+                tabdt['Child immunisation - BCG(%)'] = d.per_chld_immunzt_bcg;
+                tabdt['Child immunisation (9-11months) - Measles & Rubella (MR)- 1st Dose'] = d.chld_immunzt_9to11m_mr;
+                tabdt['Child immunisation (9-11months) - Measles & Rubella (MR)- 1st Dose(%)'] = d.per_chld_immunzt_9to11m_mr;
+                tabdt['Child immunisation (9-11months) - Measles 1st dose'] = d.chld_immunzt_9to11m_measl_1st_dose;
+                tabdt['Child immunisation (9-11months) - Measles 1st dose(%)'] = d.per_chld_immunzt_9to11m_measl_1st_dose;
+                tabdt['Child immunisation - Vitamin A Dose'] = d.chld_immunzt_vit_a_dose_1;
+                tabdt['Child immunisation - Vitamin A Dose(%)'] = d.per_chld_immunzt_vit_a_dose_1;
+                tabdt['Number of children (12-59 months) provided Albendazole'] = d.no_chld_12to59m_albendazole;
+                tabdt['Number of children (12-59 months) provided Albendazole(%)'] = d.per_no_chld_12to59m_albendazole;
+
+                tbdata2.push(tabdt);
+            });
+
+           console.log("tbdata2", tbdata2)
+           console.log("dataChildIm", dataChildIm)
+            column_data = { "state": [], "chld_immunzt_vit_k1": [], "per_chld_immunzt_vit_k1": [], "chld_immunzt_bcg": [], "per_chld_immunzt_bcg": [], "chld_immunzt_9to11m_mr": [], "per_chld_immunzt_9to11m_mr": [], "chld_immunzt_9to11m_measl_1st_dose": [], "per_chld_immunzt_9to11m_measl_1st_dose": [], "chld_immunzt_vit_a_dose_1": [],"per_chld_immunzt_vit_a_dose_1": [],"no_chld_12to59m_albendazole": [], "per_no_chld_12to59m_albendazole": []} //"HeightP":[],"WeightP":[], "HeightWeightP":[] }
+
+
+            dataChildIm.forEach(d => {
+                column_data.state.push(d.state);
+                column_data.chld_immunzt_vit_k1.push(+d.chld_immunzt_vit_k1);
+                column_data.per_chld_immunzt_vit_k1.push(+d.per_chld_immunzt_vit_k1);
+                column_data.chld_immunzt_bcg.push(+d.chld_immunzt_bcg);
+                column_data.per_chld_immunzt_bcg.push(+d.per_chld_immunzt_bcg);
+                column_data.chld_immunzt_9to11m_mr.push(+d.chld_immunzt_9to11m_mr);
+                column_data.per_chld_immunzt_9to11m_mr.push(+d.per_chld_immunzt_9to11m_mr);
+                column_data.chld_immunzt_9to11m_measl_1st_dose.push(+d.chld_immunzt_9to11m_measl_1st_dose);
+                column_data.per_chld_immunzt_9to11m_measl_1st_dose.push(+d.per_chld_immunzt_9to11m_measl_1st_dose);
+                column_data.chld_immunzt_vit_a_dose_1.push(+d.chld_immunzt_vit_a_dose_1);
+                column_data.per_chld_immunzt_vit_a_dose_1.push(+d.per_chld_immunzt_vit_a_dose_1);
+                column_data.no_chld_12to59m_albendazole.push(+d.no_chld_12to59m_albendazole);
+                column_data.per_no_chld_12to59m_albendazole.push(+d.per_no_chld_12to59m_albendazole);
+
+            })
+
+            console.log("column_data im", column_data);
+
+            var chld_vit_k1 = d3.scaleSequential().domain([d3.min(column_data.chld_immunzt_vit_k1), d3.max(column_data.chld_immunzt_vit_k1)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_vit_k1_percent = d3.scaleSequential().domain([d3.min(column_data.per_chld_immunzt_vit_k1), d3.max(column_data.per_chld_immunzt_vit_k1)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_bcg_color = d3.scaleSequential().domain([d3.min(column_data.chld_immunzt_bcg), d3.max(column_data.chld_immunzt_bcg)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_bcg_percent_color = d3.scaleSequential().domain([d3.min(column_data.per_chld_immunzt_bcg), d3.max(column_data.per_chld_immunzt_bcg)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_mr_color = d3.scaleSequential().domain([d3.min(column_data.chld_immunzt_9to11m_mr), d3.max(column_data.chld_immunzt_9to11m_mr)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_mr_percent_color = d3.scaleSequential().domain([d3.min(column_data.per_chld_immunzt_9to11m_mr), d3.max(column_data.per_chld_immunzt_9to11m_mr)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_meas_color = d3.scaleSequential().domain([d3.min(column_data.chld_immunzt_9to11m_measl_1st_dose), d3.max(column_data.chld_immunzt_9to11m_measl_1st_dose)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_meas_percent_color = d3.scaleSequential().domain([d3.min(column_data.per_chld_immunzt_9to11m_measl_1st_dose), d3.max(column_data.per_chld_immunzt_9to11m_measl_1st_dose)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_vit_a_color = d3.scaleSequential().domain([d3.min(column_data.chld_immunzt_vit_a_dose_1), d3.max(column_data.chld_immunzt_vit_a_dose_1)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_vit_a_percent_color = d3.scaleSequential().domain([d3.min(column_data.per_chld_immunzt_vit_a_dose_1), d3.max(column_data.per_chld_immunzt_vit_a_dose_1)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_alben_color = d3.scaleSequential().domain([d3.min(column_data.no_chld_12to59m_albendazole), d3.max(column_data.no_chld_12to59m_albendazole)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_alben_percent_color = d3.scaleSequential().domain([d3.min(column_data.per_no_chld_12to59m_albendazole), d3.max(column_data.per_no_chld_12to59m_albendazole)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var sortAscending = true;
+            var table = d3.select('div#table').append('table').attr('class', 'hello');
+
+            var titles = d3.keys(tbdata2[0]);
+
+            var headers = table.append('thead').append('tr')
+                .selectAll('th')
+                .data(titles).enter()
+                .append('th')
+                .text(function (d) {
+                    return d;
+                })
+                .on('click', function (d) {
+                    headers.attr('class', 'header');
+
+                    if (sortAscending) {
+                        rows.sort(function (a, b) { return d3.ascending(b[d], a[d]); });
+                        sortAscending = false;
+                        this.className = 'aes';
+                    } else {
+                        rows.sort(function (a, b) { return d3.descending(b[d], a[d]); });
+                        sortAscending = true;
+                        this.className = 'des';
+                    }
+
+                });
+
+
+
+            var rows = table.append('tbody').selectAll('tr')
+                .data(tbdata2).enter()
+                .append('tr');
+
+            rows.selectAll('td')
+
+                .data(function (d) {
+                    return titles.map(function (k) {
+                        return { 'value': d[k], 'name': k };
+                    });
+                }).enter()
+                .append('td')
+                .style("background-color", function (d) {
+                    if (d.name == 'Child immunisation - Vitamin K1') {
+                        return 'white';
+                    }
+                    else 
+                    if (d.name == 'Child immunisation - Vitamin K1(%)') {
+                        return chld_vit_k1_percent (d.value);
+                    }
+                    else if (d.name == 'Child immunisation - BCG') {
+                        return 'white';
+                    }
+                    else if (d.name == 'Child immunisation - BCG(%)') {
+                        return chld_bcg_percent_color(d.value);
+                    }
+                    else if (d.name == 'Child immunisation (9-11months) - Measles & Rubella (MR)- 1st Dose') {
+                        return 'white';
+                    }
+                    else if (d.name == 'Child immunisation (9-11months) - Measles & Rubella (MR)- 1st Dose(%)') {
+                        return chld_mr_percent_color(d.value);
+                    }
+                    else if (d.name == 'Child immunisation (9-11months) - Measles 1st dose') {
+                        return 'white';
+                    }
+                    else if (d.name == 'Child immunisation (9-11months) - Measles 1st dose(%)') {
+                        return chld_meas_percent_color(d.value);
+                    }
+                    else if (d.name == 'Child immunisation - Vitamin A Dose') {
+                         return 'white';
+                    }
+                    else if (d.name == 'Child immunisation - Vitamin A Dose(%)') {
+                        return chld_vit_a_percent_color(d.value);
+                    }
+                    else if (d.name == 'Number of children (12-59 months) provided Albendazole') {
+                        return 'white';
+                    }
+                    else if (d.name == 'Number of children (12-59 months) provided Albendazole(%)') {
+                        return chld_alben_percent_color(d.value);
+                    }
+                })
+                .attr('data-th', function (d) {
+                    return d.name;
+                })
+                .text(function (d) {
+                    return d.value;
+                });
+
+        }
+        else if (selection == 'set3') {
+
+            $("div#table").find(".hello").remove();
+
+            var tbdata2 = [];
+
+            dataChildDi.forEach(d => {
+                var tbdt = {}
+                tbdt['State'] = d.state;
+                tbdt['Childhood Diseases - Pneumonia'] = d.chld_disease_pneumonia;
+                tbdt['Childhood Diseases - Pneumonia(%)'] = d.per_chld_disease_pneumonia;
+                tbdt['Childhood Diseases - Sepsis'] = d.chld_disease_sepsis;
+                tbdt['Childhood Diseases - Sepsis(%)'] = d.per_chld_disease_sepsis;
+                tbdt['Childhood Diseases - Tuberculosis (TB)'] = d.chld_disease_tb;
+                tbdt['Childhood Diseases - Tuberculosis (TB)(%)'] = d.per_chld_disease_tb;
+                tbdt['Childhood Diseases - Malaria'] = d.chld_disease_malaria;
+                tbdt['Childhood Diseases - Malaria(%)'] = d.per_chld_disease_malaria;
+                tbdt['Childhood Diseases - Diarrhoea'] = d.chld_disease_diarrhoea;
+                tbdt['Childhood Diseases - Diarrhoea(%)'] = d.per_chld_disease_diarrhoea;
+                tbdt['Childhood Diseases - Severe Acute Malnutrition (SAM)'] = d.chld_disease_sam;
+                tbdt['Childhood Diseases - Severe Acute Malnutrition (SAM)(%)'] = d.per_chld_disease_sam;
+
+
+                tbdata2.push(tbdt);
+            });
+            column_data = { "state": [], "chld_disease_pneumonia": [], "per_chld_disease_pneumonia": [], "chld_disease_sepsis": [], "per_chld_disease_sepsis": [], "chld_disease_tb": [], "per_chld_disease_tb": [], "chld_disease_malaria": [], "per_chld_disease_malaria": [], "chld_disease_diarrhoea": [], "per_chld_disease_diarrhoea": [], "chld_disease_sam": [] , "per_chld_disease_sam": []  } //"HeightP":[],"WeightP":[], "HeightWeightP":[] }
+            console.log("dataChildDi", dataChildDi);
+
+            dataChildDi.forEach(d => {
+                column_data.state.push(d.state);
+                column_data.chld_disease_pneumonia.push(+d.chld_disease_pneumonia);
+                column_data.per_chld_disease_pneumonia.push(+d.per_chld_disease_pneumonia);
+                column_data.chld_disease_sepsis.push(+d.chld_disease_sepsis);
+                column_data.per_chld_disease_sepsis.push(+d.per_chld_disease_sepsis);
+                column_data.chld_disease_tb.push(+d.chld_disease_tb);
+                column_data.per_chld_disease_tb.push(+d.per_chld_disease_tb);
+                column_data.chld_disease_malaria.push(+d.chld_disease_malaria);
+                column_data.per_chld_disease_malaria.push(+d.per_chld_disease_malaria);
+                column_data.chld_disease_diarrhoea.push(+d.chld_disease_diarrhoea);
+                column_data.per_chld_disease_diarrhoea.push(+d.per_chld_disease_diarrhoea);
+                column_data.chld_disease_sam.push(+d.chld_disease_sam);
+                column_data.per_chld_disease_sam.push(+d.per_chld_disease_sam);
+            })
+            console.log("column_data di", column_data);
+            var chld_pneumonia = d3.scaleSequential().domain([d3.max(column_data.chld_disease_pneumonia), d3.min(column_data.chld_disease_pneumonia)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_pneumonia_percent = d3.scaleSequential().domain([d3.max(column_data.per_chld_disease_pneumonia), d3.min(column_data.per_chld_disease_pneumonia)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_sepsis_color = d3.scaleSequential().domain([d3.max(column_data.chld_disease_sepsis), d3.min(column_data.chld_disease_sepsis)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_sepsis_percent_color = d3.scaleSequential().domain([d3.max(column_data.per_chld_disease_sepsis), d3.min(column_data.per_chld_disease_sepsis)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_tb_color = d3.scaleSequential().domain([d3.max(column_data.chld_disease_tb), d3.min(column_data.chld_disease_tb)])
+                .interpolator(d3.interpolateRdYlGn);
+            
+            var chld_tb_percent_chld = d3.scaleSequential().domain([d3.max(column_data.per_chld_disease_tb), d3.min(column_data.per_chld_disease_tb)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_mal = d3.scaleSequential().domain([d3.max(column_data.chld_disease_malaria), d3.min(column_data.chld_disease_malaria)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_mal_percent_color = d3.scaleSequential().domain([d3.max(column_data.per_chld_disease_malaria), d3.min(column_data.per_chld_disease_malaria)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_diarr_color = d3.scaleSequential().domain([d3.max(column_data.chld_disease_diarrhoea), d3.min(column_data.chld_disease_diarrhoea)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_diarr_percent_color = d3.scaleSequential().domain([d3.max(column_data.per_chld_disease_diarrhoea), d3.min(column_data.per_chld_disease_diarrhoea)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_sam_color = d3.scaleSequential().domain([d3.max(column_data.chld_disease_sam), d3.min(column_data.chld_disease_sam)])
+                .interpolator(d3.interpolateRdYlGn);
+
+            var chld_sam_percent_color = d3.scaleSequential().domain([d3.max(column_data.per_chld_disease_sam), d3.min(column_data.per_chld_disease_sam)])
+                .interpolator(d3.interpolateRdYlGn);
+
+
+            var sortAscending = true;
+            var table = d3.select('div#table').append('table').attr('class', 'hello');
+
+            var titles = d3.keys(tbdata2[0]);
+
+            var headers = table.append('thead').append('tr')
+                .selectAll('th')
+                .data(titles).enter()
+                .append('th')
+                .text(function (d) {
+                    return d;
+                })
+                .on('click', function (d) {
+                    headers.attr('class', 'header');
+
+                    if (sortAscending) {
+                        rows.sort(function (a, b) { return d3.ascending(b[d], a[d]); });
+                        sortAscending = false;
+                        this.className = 'aes';
+                    } else {
+                        rows.sort(function (a, b) { return d3.descending(b[d], a[d]); });
+                        sortAscending = true;
+                        this.className = 'des';
+                    }
+
+                });
+
+
+
+            var rows = table.append('tbody').selectAll('tr')
+                .data(tbdata2).enter()
+                .append('tr');
+
+            rows.selectAll('td')
+
+                .data(function (d) {
+                    return titles.map(function (k) {
+                        return { 'value': d[k], 'name': k };
+                    });
+                }).enter()
+                .append('td')
+                .style("background-color", function (d) {
+                    if (d.name == 'Childhood Diseases - Pneumonia') {
+                         return 'white';
+                    }
+                    else 
+                    if (d.name == 'Childhood Diseases - Pneumonia(%)') {
+                        return chld_pneumonia_percent(d.value);
+                    }
+                    else if (d.name == 'Childhood Diseases - Sepsis') {
+                         return 'white';
+                    }
+                    else if (d.name == 'Childhood Diseases - Sepsis(%)') {
+                        return chld_sepsis_percent_color(d.value);
+                    }
+                    else if (d.name == 'Childhood Diseases - Tuberculosis (TB)') {
+                         return 'white';
+                    }
+
+                    else if (d.name == 'Childhood Diseases - Tuberculosis (TB)(%)') {
+                        return chld_tb_percent_chld(d.value);
+                    }
+                    else if (d.name == 'Childhood Diseases - Malaria') {
+                         return 'white';
+                    }
+                    else if (d.name == 'Childhood Diseases - Malaria(%)') {
+                        return chld_mal_percent_color(d.value);
+                    }
+                    else if (d.name == 'Childhood Diseases - Diarrhoea') {
+                         return 'white';
+                    }
+                    else if (d.name == 'Childhood Diseases - Diarrhoea(%)') {
+                        return chld_diarr_percent_color(d.value);
+                    }
+                    else if (d.name == 'Childhood Diseases - Severe Acute Malnutrition (SAM)') {
+                         return 'white';
+                    }
+                    else if (d.name == 'Childhood Diseases - Severe Acute Malnutrition (SAM)(%)') {
+                        return chld_sam_percent_color(d.value);
+                    }
+                })
+                .text(function (d) {
+                    return d.value;
+                });
+        }
+        }
+    }
+
+    $(function () {
+        //bind event
+        $("#customRadioInline1").prop("checked", true);
+        // $('.state a').parents('.dropdown').find('.dropdown-toggle').html('All States' + ' <span class="selectedState"></span>');
+
+        $(".category a").click(function () {
+            var valCategory = $(this).text();
+            console.log("valCategory", valCategory);
+            $(this).parents('.dropdown').find('.dropdown-toggle').html(valCategory + ' <span class="selectedCategory"></span>');
+        });
+
+        
+        //trigger event
+        $(".category a").first().trigger('click');
+
+    });
+
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+
+</script>
+{% endblock %}

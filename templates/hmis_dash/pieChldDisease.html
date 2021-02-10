@@ -1,0 +1,520 @@
+{% extends 'dashboard/dash_base.html' %}
+{% load static %}
+{% block feature_css %}
+<link rel="stylesheet" href="{% static 'hmis_dash/css/index.css' %}">
+<style>
+  .arc text {
+    font-family: sans-serif;
+    font-size: 1.8rem;
+    color: #fff;
+    text-anchor: middle;
+  }
+
+  .arc path {
+    stroke: #DDDDDD;
+    stroke-width: 2;
+  }
+
+  #tooltip {
+    position: absolute;
+    width: auto;
+    height: auto;
+    padding: 10px;
+    background-color: white;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    -mox-box-shadow: 4px 4px 4px 10px rgba(0, 0, 0, 0.4);
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+  }
+
+  .tooltip.hidden {
+    opacity: 0;
+  }
+
+  #zero_percent {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: calc(50% + 0.5vw + 0.5vh);
+    font-weight: bold;
+    font-style: italic;
+    float: right;
+    background-color: rgb(220, 240, 240);
+  }
+
+  #tooltip p {
+    margin: 0;
+    font-family: sans-serif;
+    font-size: calc(50% + 0.5vw + 0.5vh);
+    line-height: 20px;
+  }
+</style>
+{% endblock %}
+{% block feature %}
+<div class='heading text-dark mt-2 text-center'><span id="bartitleCategory">Pie Chart</span> <span
+    id="bartitleMonth"></span></div>
+
+<div class="row h-100 mb-3 bg-info">
+
+  <div class="dropdown m-1">
+    <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false">
+      <span class="selectedCategory"></span>
+    </button>
+    <div class="dropdown-menu category" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="#">Childhood Diseases-Pneumonia</a>
+        <a class="dropdown-item" href="#">Childhood Diseases-Sepsis</a>
+        <a class="dropdown-item" href="#">Childhood Diseases-Tuberculosis(TB)</a>
+        <a class="dropdown-item" href="#">Childhood Diseases-Malaria</a>
+        <a class="dropdown-item" href="#">Childhood Diseases-Diarrhoea</a>
+        <!-- <a class="dropdown-item" href="#">Childhood Diseases-Diarrhoea treated in Inpatients</a>
+        <a class="dropdown-item" href="#">Children admitted with upper respiratory infections</a> -->
+        <a class="dropdown-item" href="#">Childhood Diseases-Severe Acute Malnutrition(SAM)</a>
+    </div>
+  </div>
+
+  <!-- <div class="dropdown m-1">
+    <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false">
+      <span class="selectedPtype"></span>
+    </button>
+    <div class="dropdown-menu ptype" aria-labelledby="dropdownMenuButton">
+      <a class="dropdown-item" href="#">Urban</a>
+      <a class="dropdown-item" href="#">Rural</a>
+      <a class="dropdown-item" href="#">Tribal</a>
+    </div>
+  </div> -->
+
+</div>
+
+<div class="row text-center">
+  <div class="col-12 mb-5">
+      {% if fy == '2020-2021' %}
+      <input type="text" id="monthS" name="somename" data-provide="slider" data-slider-ticks="[0, 1, 2, 3]"
+          data-slider-ticks-labels='["All", "April", "May", "June"]' data-slider-min="0" data-slider-max="4"
+          data-slider-step="1" data-slider-value="0" data-slider-tooltip="hide">
+
+      {% else %}
+      <input type="text" id="monthSlider" name="somename" data-provide="slider"
+            data-slider-ticks="[0, 1, 2, 3, 4, 5,6,7,8,9,10,11,12]"
+            data-slider-ticks-labels='["All", "April", "May", "June", "July", "August", "September", "October", "November", "December",  "January", "February", "March"]'
+            data-slider-min="0" data-slider-max="12" data-slider-step="1" data-slider-value="0"
+            data-slider-tooltip="hide">
+      {% endif %}
+  </div>
+</div>
+
+<div id="zero_percent">State Labels with less than 1.5% are are not visible please hover to see details</div>
+
+<div class="col-12" id="chart">
+</div>
+
+<div id="tooltip" class="hidden">
+  <p><span id="stateN" style="font-weight: bold"></span></p>
+  <p><strong><span id="paraText"></span></strong><span id="value" style="font-weight: bold"> 100</span>%(<span id="num" style="font-weight: bold"> 100</span>)</p>
+  <p><strong>Total Child Born contribution: </strong><span id="enrlval" style="font-weight: bold">10</span>%(<span id="numEnrl" style="font-weight: bold"> 100</span>)</p>
+</div>
+
+
+{% endblock %}
+
+{% block feature_js %}
+
+<script>
+
+  const svg = d3.select('#chart').
+    append('svg').
+    attr('width', 1100).
+    attr('height', 900).
+    call(responsivefy) // Call responsivefy to make the chart responsive 
+
+  var radius;
+
+  function filterCSV(csv, key, value) {
+    var result = [];
+    csv.forEach(function (val, idx, arr) {
+
+      if (val[key] == value) {
+
+        result.push(val)
+      }
+    })
+    return result;
+  }
+
+
+  function responsivefy(svg) {
+
+    // Container is the DOM element, svg is appended. 
+    // Then we measure the container and find its 
+    // aspect ratio. 
+
+    const container = d3.select(svg.node().parentNode),
+      width = parseInt(svg.style('width'), 10),
+      height = parseInt(svg.style('height'), 10),
+      aspect = width / height;
+
+    // Add viewBox attribute to set the value to initial size 
+    // add preserveAspectRatio attribute to specify how to scale  
+    // and call resize so that svg resizes on page load 
+    svg.attr('viewBox', `0 0 ${width} ${height}`).
+      attr('preserveAspectRatio', 'xMinYMid').
+      call(resize);
+
+    d3.select(window).on('resize.', resize);
+
+    function resize() {
+      const targetWidth = $(window).width();
+      const targetHeight = targetWidth / 2.1;
+      svg.attr('width', targetWidth);
+      svg.attr('height', targetHeight);
+    }
+  }
+  let fy = '{{ fy }}';
+
+  var radius = Math.min(1100, 750) / 3;
+  let choices = parseURLParameters(window.location.href);
+
+  // let prjType = 'Urban';
+
+  const render = data => {
+
+    let arcInitial = d => d.per_chld_disease_pneumonia;
+    let arcInitialNum = d => d.chld_disease_pneumonia;
+
+    const setArcInitial = opt =>
+    {
+      if (opt == 'Childhood Diseases-Pneumonia') {
+        arcInitial = d => d.per_chld_disease_pneumonia;
+        arcInitialNum = d => d.chld_disease_pneumonia;
+      } else if (opt == 'Childhood Diseases-Sepsis') {
+        arcInitial = d => d.per_chld_disease_sepsis;
+        arcInitialNum = d => d.chld_disease_sepsis;
+      } else if (opt == 'Childhood Diseases-Tuberculosis(TB)') {
+        arcInitial = d => d.per_chld_disease_tb;
+        arcInitialNum = d => d.chld_disease_tb;
+      } else if (opt == 'Childhood Diseases-Malaria') {
+        arcInitial = d => d.per_chld_disease_malaria;
+        arcInitialNum = d => d.chld_disease_malaria;
+      } else if (opt == 'Childhood Diseases-Diarrhoea') {
+        arcInitial = d => d.per_chld_disease_diarrhoea;
+        arcInitialNum = d => d.chld_disease_diarrhoea;
+      } else if (opt == 'Childhood Diseases-Diarrhoea treated in Inpatients') {
+        arcInitial = d => d.per_chld_disease_diarrhoea_trtd_inpatnt;
+        arcInitialNum = d => d.chld_disease_diarrhoea_trtd_inpatnt;
+      } else if (opt == 'Children admitted with upper respiratory infections') {
+        arcInitial = d => d.per_chld_admtd_upper_resp_infec;
+        arcInitialNum = d => d.chld_admtd_upper_resp_infec;
+      } else {
+        arcInitial = d => d.per_chld_disease_sam;
+        arcInitialNum = d => d.chld_disease_sam;
+      }
+      
+    }
+
+    const margin = { left: 750, top: 320, right: 170, bottom: 20 };
+    const innerWidth = 1100 - margin.left - margin.right;
+    const innerHeight = 750 - margin.top - margin.bottom;
+
+    if (choices.length > 0) 
+    {
+      let selectedCat = choices[0].replace(/_/g, ' ');
+      var displayVal = selectedCat.substring(0, selectedCat.length - 3);
+      document.getElementById('paraText').innerHTML = displayVal + " Contribution: ";
+      document.getElementById('bartitleCategory').innerHTML = displayVal + " : State wise Contribution " + "(" + fy + ")";
+      $('.category a').parents('.dropdown').find('.dropdown-toggle').html(selectedCat + ' <span class="selectedCategory"></span>');
+      setArcInitial(selectedCat); 
+    }
+
+    const g = svg.append('g')
+      .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+    var pie = d3.pie()
+
+      .value(function (d) {
+        return arcInitial(d);
+      });
+
+    var path = d3.arc()
+      .outerRadius(radius - 10)
+      .innerRadius(0);
+    var arcs = d3.arc()
+      .innerRadius(radius * 0.4)         // This is the size of the donut hole
+      .outerRadius(radius * 0.5);
+    var label = d3.arc()
+      .outerRadius(radius * 1.1)
+      .innerRadius(radius * 1.3);
+
+    var div = d3.select("body").append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
+
+    const onMouseOver = d => {
+      div.transition().duration(100).style("opacity", 1);
+      div.html("<b>" + "<span id='paraText'>" + 10 + "</span>" + "</b><br>" + arcInitial(d.data) + "%");
+    }
+
+    oi = { "state": [], "per_chld_disease_pneumonia": [], "per_chld_disease_sepsis": [], "per_chld_disease_tb": [], "per_chld_disease_malaria": [], "per_chld_disease_diarrhoea": [], "per_chld_disease_diarrhoea_trtd_inpatnt": [],"per_chld_disease_sam": [],"per_chld_admtd_upper_resp_infec": [],"per_chld_born": [] }
+
+    data.forEach(d => {
+      oi.state.push(d.state);
+      oi.per_chld_disease_pneumonia.push(d.per_chld_disease_pneumonia);
+      oi.per_chld_disease_sepsis.push(d.per_chld_disease_sepsis);
+      oi.per_chld_disease_tb.push(d.per_chld_disease_tb);
+      oi.per_chld_disease_malaria.push(d.per_chld_disease_malaria);
+      oi.per_chld_disease_diarrhoea.push(d.per_chld_disease_diarrhoea);
+      oi.per_chld_disease_diarrhoea_trtd_inpatnt.push(d.per_chld_disease_diarrhoea_trtd_inpatnt);
+      oi.per_chld_disease_sam.push(d.per_chld_disease_sam);
+      oi.per_chld_admtd_upper_resp_infec.push(d.per_chld_admtd_upper_resp_infec);
+      oi.per_chld_born.push(d.per_chld_born);
+    });
+
+    var color = d3.scaleSequential().domain([d3.min(arcInitial(oi)), d3.max(arcInitial(oi))])
+      .interpolator(d3.interpolateReds);
+
+    var arc = g.selectAll(".arc");
+
+    var arcData = arc.data(pie(data));
+
+    var arcEnter = arcData.enter().append("g")
+      .attr("class", "arc");
+
+    arcEnter.append("path")
+      .attr("fill", function (d) {
+        return color(arcInitial(d.data));
+      })
+      .attr("d", path);
+
+
+    arcEnter.on("mouseover", function (d) {
+      d3.select("#tooltip #stateN").text("State Name:" + d.data.state)
+      d3.select("#tooltip")
+        .transition().duration(200)
+        .style("left", d3.event.pageX + "px")
+        .style("top", d3.event.pageY - 30 + "px")
+        .select("#value").text(arcInitial(d.data))
+
+      d3.select("#tooltip #enrlval").text(d.data["per_chld_born"])
+      d3.select("#tooltip #num").text(arcInitialNum(d.data))
+      d3.select("#tooltip #numEnrl").text(d.data["tot_chld_born"])
+      d3.select("#tooltip").style("opacity", 1);
+
+    })
+      .on("mouseout", function () {
+        // Hide the tooltip
+        d3.select("#tooltip")
+          .style("opacity", 0);;
+      });
+
+
+    makeviz = (arcInitial) => {
+      g.selectAll(".arc").remove();
+      $(".hello").remove();
+      let tansitionDuration = 1000;
+
+      var pie = d3.pie()
+        .value(function (d) {
+          return arcInitial(d);
+        });
+
+
+      var mycolor = d3.scaleSequential().domain([d3.min(arcInitial(oi)), d3.max(arcInitial(oi))])
+        .interpolator(d3.interpolateReds);
+
+
+      var arcData = arc.data(pie(data));
+
+      var arcEnter = arcData.enter().append("g")
+        .attr("class", "arc");
+
+      arcEnter.on("mouseover", function (d) {
+        d3.select("#tooltip #stateN").text("State Name:" + d.data.state)
+        d3.select("#tooltip")
+          .transition().duration(200)
+          .style("left", d3.event.pageX + "px")
+          .style("top", d3.event.pageY - 30 + "px")
+          .select("#value").text(arcInitial(d.data))
+
+        d3.select("#tooltip #enrlval").text(d.data["per_chld_born"])
+        d3.select("#tooltip #num").text(arcInitialNum(d.data))
+        d3.select("#tooltip #numEnrl").text(d.data["tot_chld_born"])
+        d3.select("#tooltip").style("opacity", 1);
+
+      })
+        .on("mouseout", function () {
+          // Hide the tooltip
+          d3.select("#tooltip")
+            .style("opacity", 0);;
+        });
+
+
+      arcEnter.append("path").attr("fill", function (d) {
+        return mycolor(arcInitial(d.data));
+      })
+        .attr("d", path);
+
+      var getAngle = function (d) {
+        return (180 / Math.PI * (d.startAngle + d.endAngle) / 2 - 90);
+      };
+
+      arcEnter
+        .append('polyline')
+        .attr("stroke", "black")
+        .style("fill", "none")
+        .data(pie(data))
+        .attr("stroke-width", 1)
+        .attr('points', function (d) {
+          var posA = arcs.centroid(d); // line insertion in the slice
+          var posB = label.centroid(d);// line break: we use the other arc generator that has been built only for that
+          var posC = label.centroid(d); // Label position = almost the same as posB
+          var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2 // we need the angle to see if the X position will be at the extreme right or extreme left
+          posC[0] = radius * 1.1 * (midangle < Math.PI ? 1 : -1); // multiply by 1 or -1 to put it on the right or on the left
+          if (arcInitial(d.data) > 1.5) {
+            return [posA, posB, posC]
+
+          }
+        })
+
+      // Add the polylines between chart and labels:
+      arcEnter
+        .append('text')
+        .text(function (d) { if (arcInitial(d.data) > 1.5) { return d.data.state } })
+        .attr('transform', function (d) {
+          var pos = label.centroid(d);
+          var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
+          pos[0] = radius * 1.14 * (midangle < Math.PI ? 1 : -1);
+          return 'translate(' + pos + ')';
+        })
+        .style('text-anchor', function (d) {
+          var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
+          return (midangle < Math.PI ? 'start' : 'end')
+        })
+    }
+
+    const dropdownChange = () => {
+      var sel = document.getElementById('opt');
+      val = document.getElementById("opt").value
+    }
+
+    makeviz(arcInitial);
+    $(".category a").click(function () {
+      $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="selectedCategory"></span>');
+      $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+      var valCategory = $(this).text();
+      displayPie(valCategory);
+    });
+
+    function displayPie(valCategory)
+    {
+        var displayVal = valCategory.substring(0, valCategory.length);
+          document.getElementById('paraText').innerHTML = displayVal + " Contribution: ";
+          document.getElementById('bartitleCategory').innerHTML = displayVal + " : State wise Contribution " + "(" + fy + ")";
+          setArcInitial(valCategory);
+          makeviz(arcInitial);
+    }
+  }
+
+  // $(".ptype a").click(function () {
+  //   $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="selectedPtype"></span>');
+  //   $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+  //   prjType = $(this).text();
+  //   var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
+  //   filterdata = filterCSV(data, 'month_n', valMonth);
+  //   pt_data = filterCSV(filterdata, 'project_type', prjType);
+  //   svg.selectAll("*").remove();
+  //   render(pt_data);
+  // });
+
+  function parseURLParameters() {
+    var query = (window.location.search || '?').substr(1);
+    var map = [];
+    query.replace(/([^&=]+)=?([^&]*)(?:&+|$)/g, function (match, key, value) {
+      map.push(value);
+    });
+    return map;
+  }
+
+  $(function () {
+    //bind event
+    // $('.ptype a').parents('.dropdown').find('.dropdown-toggle').html('Urban' + ' <span class="selectedPtype"></span>');
+
+    $(".category a").click(function () {
+      var valCategory = $(this).text();
+      var displayVal = valCategory.substring(0, valCategory.length);
+
+      document.getElementById('paraText').innerHTML = displayVal + " Contribution: ";
+      document.getElementById('bartitleCategory').innerHTML = displayVal + " : State wise Contribution " + "(" + fy + ")";
+
+      $(this).parents('.dropdown').find('.dropdown-toggle').html(valCategory + ' <span class="selectedCategory"></span>');
+    });
+
+    //trigger event
+    if(choices.length <= 0)
+    $(".category a").first().trigger('click');
+
+  });
+
+
+  /////
+  data_from_django = {{ data | safe }};
+  var data = []
+  data_from_django.forEach(element => {
+    data.push(element.fields);
+  });
+
+  data.forEach(d => {
+    d.per_chld_disease_pneumonia = +d.per_chld_disease_pneumonia;
+    d.per_chld_disease_sepsis = +d.per_chld_disease_sepsis;
+    d.per_chld_disease_tb = +d.per_chld_disease_tb;
+    d.per_chld_disease_malaria = +d.per_chld_disease_malaria;
+    d.per_chld_disease_diarrhoea = +d.per_chld_disease_diarrhoea;
+    d.per_chld_disease_diarrhoea_trtd_inpatnt = +d.per_chld_disease_diarrhoea_trtd_inpatnt;
+    d.per_chld_disease_sam = +d.per_chld_disease_sam;
+    d.per_chld_admtd_upper_resp_infec = +d.per_chld_admtd_upper_resp_infec;
+    d.chld_disease_sepsis = +d.chld_disease_sepsis;
+    d.chld_disease_pneumonia = +d.chld_disease_pneumonia;
+    d.chld_disease_tb = +d.chld_disease_tb;
+    d.chld_disease_malaria = +d.chld_disease_malaria;
+    d.chld_disease_diarrhoea = +d.chld_disease_diarrhoea;
+    d.chld_disease_diarrhoea_trtd_inpatnt = +d.chld_disease_diarrhoea_trtd_inpatnt;
+    d.chld_admtd_upper_resp_infec = +d.chld_admtd_upper_resp_infec;
+    d.chld_disease_sam = +d.chld_disease_sam;
+    d.per_chld_born = +d.per_chld_born;
+    d.tot_chld_born = +d.tot_chld_born;
+    d.state = d.state;
+    d.month = d.month;
+    d.year = d.year;
+  });
+
+let tickLabel21 = ["All", "April", "May", "June"]
+
+$('#monthS').slider().on('slideStop', function (ev) {
+    console.log("in monthS")
+
+    var val = tickLabel21[ev.value];
+    console.log(val, 'val in monthS')
+    document.getElementById('bartitleMonth').innerHTML = val;
+    mydata = filterCSV(data, 'month', val);
+    svg.selectAll("*").remove();
+    render(mydata);
+});
+
+let tickLabels = ["All", "April", "May", "June", "July", "August", "September", "October", "November", "December", "January", "February", "March"]
+
+$('#monthSlider').slider().on('slideStop', function (ev) {
+    var val = tickLabels[ev.value];
+    document.getElementById('bartitleMonth').innerHTML = val;
+    mydata = filterCSV(data, 'month', val);
+    console.log("MonthSlider Data", mydata)
+    svg.selectAll("*").remove();
+    render(mydata);
+});
+
+
+  monthSelect = tickLabels[$('#monthSlider').slider('getValue')]
+  augData = filterCSV(data, 'month', monthSelect);
+  render(augData);
+</script>
+
+{% endblock %}

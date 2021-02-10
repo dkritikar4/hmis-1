@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content%}
+
+<style>
+    .pdf {
+        font-size: calc(5% + 1vw + 1vh);
+        font-weight: bold;
+        font-style: italic;
+        float: right;
+    }
+
+    img {
+        width: 100px;
+        height: 80px;
+    }
+
+    p {
+        text-align: center;
+        font-size: calc(30% + 1vw + 1vh);
+        font-weight: bolder;
+    }
+
+    .main-content {
+        font-size: calc(50% + 0.5vw + 0.5vh);
+        text-align: center;
+    }
+
+    u {
+        font-weight: bold;
+        font-style: italic;
+        color: rgb(73, 77, 82);
+    }
+
+    .custom-select,
+    .btn {
+        font-size: calc(50% + 0.5vw + 0.5vh);
+    }
+</style>
+
+
+<!-- <div class="row align-items-end">
+    <div class="col">
+        <u><a class="pdf" href="{% static 'Know_your_district_dashboard_manual.pdf' %}" target="_blank"
+                style="color: rgb(38, 112, 112);">Dashboard Manual</a></u>
+    </div>
+</div> -->
+<!-- <div class="container-fluid">
+    <div class="row" style="margin-top:10px">
+        <div class="col-3">
+            <img src="{% static 'dashboard/img/iitb_logo.jpg'%}" class="mx-auto d-block" />
+        </div>
+
+        <div class="col-3">
+            <img src="{% static 'dashboard/img/WCD.jpg'%}" class="mx-auto d-block" />
+        </div>
+
+        <div class="col-3">
+            <img src="{% static 'dashboard/img/unicef_india.jpg'%}" class="mx-auto d-block" />
+        </div>
+
+        <div class="col-3">
+            <img src="{% static 'dashboard/img/ctara.jpg'%}" class="mx-auto d-block" />
+        </div>
+    </div> -->
+
+    <div class="row" style="margin-top:30px">
+        <div class="col-sm-12">
+            <p>Health Management Information System (HMIS)</p>
+        </div>
+    </div>
+
+    <!-- 
+
+    <div class="row" style="margin-top:10px">
+        <div class="col text-center main-content">
+            <u>Outcome indicators:</u>
+            It includes the nutrition status (Stunting/Wasting/Underweight/Low Birth Weight) of the children.
+            <br /><br />
+
+            <u>Child Related(IYCF) Indicators:</u>
+            It includes the Brestfeeding and Complementary feeding practices followed for 0-6 months and 6-24 months
+            children.
+            <br /><br />
+
+            <u>Pregnant Women Related Indicators:</u>
+            It includes ANC visits, number of Anaemic women.
+
+        </div>
+    </div> -->
+
+    {% if messages %}
+
+    {% for message in messages %}
+
+    <script>
+        M.toast({ html: "{{message}}", classes: 'blue rounded', displayLength: 2000 });
+    </script>
+
+    {% endfor %}
+
+    {% endif %}
+
+
+    {% if user.is_authenticated %}
+    <div class="row" style="margin-top:30px">
+        <div class="col-4 offset-4">
+            <form id="myform" name="myForm" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <!-- <select class="custom-select" name="dist_select" id="distList">
+                    <option selected disabled>Select Region</option>
+                    {% for dist_select in dd_dt_data %}
+                    <option value="{{ dist_select.district_n }}">{{ dist_select.district_n }}
+                    </option>
+                    {% endfor %}
+                </select><br></br> -->
+
+                <!-- {% if user.username == 'Amravati' %} 
+                        <select class="custom-select" name = "quarter_select" id="quarterList"> 
+                            <option value="q21">Dec-Feb</option>
+                        </select><br>-->
+                <!-- {% else %} -->
+
+                <select class="custom-select" name="fy_select" id="fyList">
+                    <option selected disabled>Select FY</option>
+                    <option value="2017-2018">2017-2018</option>
+                    <option value="2018-2019">2018-2019</option>
+                    <option value="2019-2020">2019-2020</option>
+                    <option value="2020-2021">2020-2021</option>
+                </select>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- <br><br> -->
+    <div class="d-flex justify-content-center mt-1">
+        <button class="btn btn-dark" type="submit">Submit</button>
+    </div>
+    </form>
+</div>
+</div>
+
+<br>
+<p>"This is Beta Version"</p>
+
+{% endif %}
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.15.0/d3.min.js"></script>
+<script>
+    $("#myform").submit(function () {
+        var fySelect = document.forms["myForm"]["fy_select"].value;
+        $("#myform").attr("action", "{% url 'overview' %}");
+        
+    })
+
+</script>
+
+{% endblock %}
