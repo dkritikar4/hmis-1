@@ -92,6 +92,7 @@
             <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
             <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
             <a class="dropdown-item" href="#">C-section deliveries</a>
+            <a class="dropdown-item" href="#">Still Birth</a>
         </div>
     </div>
   <div id="slider-range" class="mx-auto">
@@ -386,13 +387,26 @@
             TActualValue = d => d.tot_c_section_deliveries;
 
             break;
+
+            case 10:
+            updatedCat = "Still Birth";
+            Tooltipheader1 = d => "Still Birth:";
+            // Tooltipheader2 = d => "Moderately Underweight Children:";
+            TooltipVal1 = d => d.properties.tot_still_birth;
+            // TooltipVal2 = d => d.properties.mdrtly_uw;
+            ColorValue = d => d.properties.per_still_birth;
+            TPercentValue = d => d.per_still_birth;
+            TActualValue = d => d.tot_still_birth;
+
+            break;
         }
       };
 
     if (choices.length > 0) {
      updateviz(parseInt(choices[0])); 
      selectedCategory = updatedCat;
-     if (selectedCategory != 'C-section deliveries') {
+     console.log(selectedCategory, 'selectedCategory')
+     if (selectedCategory != 'C-section deliveries' && selectedCategory != 'Still Birth') {
           d3.select("line.leftcolor").attr("stroke", "red");
           d3.select("line.track-inset").attr("stroke", "green");
         }
@@ -572,7 +586,7 @@
       });
       let percentageColor;
         let actualColor;
-        if (PercentageValue == 'd => d.c_section_deliveries') {
+        if (PercentageValue == 'd => d.c_section_deliveries' || PercentageValue == 'd => d.per_still_birth') {
           percentageColor = d3
             .scaleSequential()
             .domain([d3.max(tdata, PercentageValue), d3.min(tdata, PercentageValue)])
@@ -620,7 +634,8 @@
 
         let selCat = $(this).text();
         let val;
-        if (selCat != 'C-section deliveries') {
+        console.log(selCat, 'selCat')
+        if (selCat != 'C-section deliveries' && selCat != 'Still Birth' ) {
           d3.select("line.leftcolor").attr("stroke", "red");
           d3.select("line.track-inset").attr("stroke", "green");
         }
@@ -639,7 +654,7 @@
           case "PW given 180 Iron Folic Acid (IFA) tablets": val = 7; break;
           case "PW given one Albendazole tablet after 1st trimester": val = 8; break;
           case "C-section deliveries": val = 9; break;
-
+          case "Still Birth": val = 10; break;
         }
         updateviz(val);
         updateMap(geojson);
@@ -735,6 +750,11 @@
             PercentageValue = d => d.c_section_deliveries;
             ActualValue = d => d.tot_c_section_deliveries;
             break;
+
+        case 10:
+        PercentageValue = d => d.per_still_birth;
+        ActualValue = d => d.tot_still_birth;
+        break;
           
         }
         let newtbdata = [];
@@ -756,7 +776,7 @@
         
         let percentageColor;
         let actualColor;
-        if (PercentageValue == 'd => d.c_section_deliveries') {
+        if (PercentageValue == 'd => d.c_section_deliveries' || PercentageValue == 'd => d.per_still_birth') {
           percentageColor = d3
             .scaleSequential()
             .domain([d3.max(tdata, PercentageValue), d3.min(tdata, PercentageValue)])
@@ -801,7 +821,7 @@
 
 
       let myColor = (v, low, high) => {
-  if (ColorValue == 'd => d.properties.c_section_deliveries') {
+  if (ColorValue == 'd => d.properties.c_section_deliveries' || ColorValue == 'd => d.properties.per_still_birth') {
     if (v < low) return "#24562B"
     //matte red
     else if (v >= low && v <= high) return "#F4BC1C";
@@ -1152,7 +1172,7 @@ let tickLabels = ["All", "April", "May", "June", "July", "August", "September", 
 //   scaleCenter = calculateScaleCenter(projectJSON);
 
   let stJSON = {{ context.st_geodata| safe }};
-//   console.log("ST GeoJSON", stJSON )
+  // console.log("ST GeoJSON", stJSON )
   scaleCenter = calculateScaleCenter(stJSON);
 
   mercator.scale(scaleCenter.scale)
@@ -1198,6 +1218,7 @@ let tickLabels = ["All", "April", "May", "June", "July", "August", "September", 
         d.pw_albendazole = +d.pw_albendazole;
         d.pw_ifa = +d.pw_ifa;
         d.c_section_deliveries = +d.c_section_deliveries;
+        d.per_still_birth = +d.per_still_birth;
 
         d.tot_no_pw_reg_anc = +d.tot_no_pw_reg_anc;
         d.no_early_anc_register = +d.no_early_anc_register;
@@ -1209,6 +1230,7 @@ let tickLabels = ["All", "April", "May", "June", "July", "August", "September", 
         d.no_pw_given_albendazole = +d.no_pw_given_albendazole;
         d.no_pw_given_ifa = +d.no_pw_given_ifa;
         d.tot_c_section_deliveries = +d.tot_c_section_deliveries;
+        d.tot_still_birth = +d.tot_still_birth;
         d.state = d.state;
         d.month = d.month;
         d.year = d.year;
@@ -1218,7 +1240,7 @@ let tickLabels = ["All", "April", "May", "June", "July", "August", "September", 
 
   const addProperty = (data, geojson) => {
       console.log("DATA In addProperty", data)
-      console.log("DATA In addProperty", geojson)
+      console.log("GeoJSon In addProperty", geojson)
 
     var x, y;
     for (let i = 0; i < data.length; i++) {
@@ -1252,6 +1274,7 @@ let tickLabels = ["All", "April", "May", "June", "July", "August", "September", 
           geojson[j].properties.no_pw_given_ifa = data[i].no_pw_given_ifa;
           geojson[j].properties.tot_c_section_deliveries = data[i].tot_c_section_deliveries;
           geojson[j].properties.tot_no_pw_reg_anc = data[i].tot_no_pw_reg_anc;
+          geojson[j].properties.tot_still_birth = data[i].tot_still_birth;
 
           geojson[j].properties.pw_tt1_given = data[i].pw_tt1_given;
           geojson[j].properties.pw_tt2_given = data[i].pw_tt2_given;
@@ -1262,6 +1285,7 @@ let tickLabels = ["All", "April", "May", "June", "July", "August", "September", 
           geojson[j].properties.pw_albendazole = data[i].pw_albendazole;
           geojson[j].properties.pw_ifa = data[i].pw_ifa;
           geojson[j].properties.c_section_deliveries = data[i].c_section_deliveries;
+          geojson[j].properties.per_still_birth = data[i].per_still_birth;
 
         }
       }

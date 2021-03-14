@@ -72,6 +72,7 @@
       <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
       <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
       <a class="dropdown-item" href="#">C-section deliveries</a>
+      <a class="dropdown-item" href="#">Total no of Still Birth</a>
     </div>
   </div>
 
@@ -212,9 +213,12 @@
         arcInitial = d => d.pw_albendazole;
         arcInitialNum = d => d.no_pw_given_albendazole;
       }
-      else {
+      else if(opt == 'C-section deliveries'){
         arcInitial = d => d.c_section_deliveries;
         arcInitialNum = d => d.tot_c_section_deliveries;
+      }else{
+        arcInitial = d => d.per_still_birth;
+        arcInitialNum = d => d.tot_still_birth
       }
 
     }
@@ -261,7 +265,7 @@
       div.html("<b>" + "<span id='paraText'>" + 10 + "</span>" + "</b><br>" + arcInitial(d.data) + "%");
     }
 
-    oi = { "state": [], "early_anc_register": [], "anc_4_or_more": [], "pw_tt1_given": [], "pw_tt2_given": [], "pw_tt_booster_given": [], "pw_calcium": [],"pw_albendazole": [],"pw_ifa": [],"c_section_deliveries": [],"per_pw_reg_anc": [] }
+    oi = { "state": [], "early_anc_register": [], "anc_4_or_more": [], "pw_tt1_given": [], "pw_tt2_given": [], "pw_tt_booster_given": [], "pw_calcium": [],"pw_albendazole": [],"pw_ifa": [],"c_section_deliveries": [],"per_pw_reg_anc": [], "per_still_birth": [] }
 
     data.forEach(d => {
       oi.state.push(d.state);
@@ -275,6 +279,7 @@
       oi.pw_ifa.push(d.pw_ifa);
       oi.c_section_deliveries.push(d.c_section_deliveries);
       oi.per_pw_reg_anc.push(d.per_pw_reg_anc);
+      oi.per_still_birth.push(d.per_still_birth);
     });
 
     var color = d3.scaleSequential().domain([d3.min(arcInitial(oi)), d3.max(arcInitial(oi))])
@@ -493,6 +498,8 @@
     d.no_pw_given_albendazole = +d.no_pw_given_albendazole;
     d.no_pw_given_ifa = +d.no_pw_given_ifa;
     d.tot_c_section_deliveries = +d.tot_c_section_deliveries;
+    d.tot_still_birth = +d.tot_still_birth;
+    d.per_still_birth = +d.per_still_birth;
     d.per_pw_reg_anc = +d.per_pw_reg_anc;
     d.state = d.state;
     d.month = d.month;

@@ -34,7 +34,6 @@ class hmisLineChart(LoginRequiredMixin, TemplateView):
         data = HmisStatePw.objects.filter(Q(year=fy_name)).order_by('month').exclude(month='All')
         st_name = HmisStatePw.objects.values('state').distinct().order_by('state')
         jsondata = serializers.serialize('json',data)
-        print(jsondata)
 
         return render(request,'hmis_dash/linechart.html', {'data':jsondata, 'fy': fy_name, 'state':st_name})
 
@@ -50,7 +49,6 @@ class fyLine(LoginRequiredMixin, TemplateView):
         st_name = HmisStatePw.objects.values('state').distinct().order_by('state')
         fyList = HmisStatePw.objects.values('year').distinct().order_by('year')
         jsondata = serializers.serialize('json',data)
-        # print(jsondata)
 
         return render(request,'hmis_dash/fy_line.html', {'data':jsondata, 'fy': fy_name, 'fyList':fyList, 'dist_name': district, 'state':st_name})
 
@@ -66,7 +64,6 @@ class fyLineNum(LoginRequiredMixin, TemplateView):
         st_name = HmisStatePw.objects.values('state').distinct().order_by('state')
         fyList = HmisStatePw.objects.values('year').distinct().order_by('year')
         jsondata = serializers.serialize('json',data)
-        # print(jsondata)
 
         return render(request,'hmis_dash/fy_lineNum.html', {'data':jsondata, 'fy': fy_name, 'fyList':fyList, 'dist_name': district, 'state':st_name})
 

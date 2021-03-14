@@ -26,6 +26,8 @@ class HmisStatePw(models.Model):
     pw_albendazole = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     tot_c_section_deliveries = models.IntegerField(blank=True, null=True)
     c_section_deliveries = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    tot_still_birth = models.IntegerField(blank=True, null=True)
+    per_still_birth = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
 
     class Meta:
         managed = False

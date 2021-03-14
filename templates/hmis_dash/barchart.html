@@ -83,7 +83,7 @@
             <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
             <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
             <a class="dropdown-item" href="#">C-section deliveries</a>
-
+            <a class="dropdown-item" href="#">Still Birth</a>
         </div>
     </div>
 
@@ -351,6 +351,7 @@
 
             case "C-section deliveries": yValue = d => d.c_section_deliveries; sortBy = 'c_section_deliveries'; break;
 
+            case "Still Birth": yValue = d => d.per_still_birth; sortBy = 'per_still_birth'; break;
 
         }
 
@@ -409,6 +410,8 @@
             element.fields.pw_ifa = 200;
         if (element.fields.c_section_deliveries > 200)
             element.fields.c_section_deliveries = 200;
+        if (element.fields.per_still_birth > 200)
+            element.fields.per_still_birth = 200;
 
         data.push(element.fields);
     });
@@ -423,6 +426,7 @@
         d.pw_albendazole = +d.pw_albendazole;
         d.pw_ifa = +d.pw_ifa;
         d.c_section_deliveries = +d.c_section_deliveries;
+        d.per_still_birth = +d.per_still_birth;
         d.state = d.state;
         d.month = d.month;
         d.year = d.year;

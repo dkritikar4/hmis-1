@@ -84,7 +84,7 @@
             <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
             <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
             <a class="dropdown-item" href="#">C-section deliveries</a>
-
+            <a class="dropdown-item" href="#">Total no of Still Birth</a>
         </div>
     </div>
 
@@ -345,22 +345,18 @@
 
             case "C-section deliveries": yValue = d => d.tot_c_section_deliveries; sortBy = 'tot_c_section_deliveries'; break;
 
+            case "Total no of Still Birth": yValue = d => d.tot_still_birth; sortBy = 'tot_still_birth'; break;
 
         }
 
         if (selectedYear == '2020-2021') {
-            console.log(selectedYear, "FY")
             var valMonth = tickLabel21[$('#monthS').slider('getValue')];
         }
         else {
-            console.log(selectedYear, "FY in ELSE")
-
             var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
         }
-        console.log(valMonth, "VM")
 
         filterdata = filterCSV(data, 'month', valMonth);
-        console.log(filterdata, "filter")
         mydata = sortData(filterdata, sortBy);
         //tableData = tables(filterdata);
         svg.selectAll("*").remove();
@@ -399,13 +395,11 @@
         d.no_pw_given_albendazole = +d.no_pw_given_albendazole;
         d.no_pw_given_ifa = +d.no_pw_given_ifa;
         d.tot_c_section_deliveries = +d.tot_c_section_deliveries;
+        d.tot_still_birth = +d.tot_still_birth;
         d.state = d.state;
         d.month = d.month;
         d.year = d.year;
-
-
     });
-    //   console.log(data,"data")
 
 
     let tickLabel21 = ["All", "April", "May", "June"]

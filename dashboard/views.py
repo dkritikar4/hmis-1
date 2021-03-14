@@ -28,8 +28,6 @@ def create_post_area(request, fy=None, dist_name=None):
     ci_data = HmisStChldImmunzt.objects.filter(Q(state=areaSelected) & Q(year=fy_name) & Q(month=monthSelected))
     cd_data = HmisStChldDisease.objects.filter(Q(state=areaSelected) & Q(year=fy_name) & Q(month=monthSelected))
 
-    print(pw_data)
-
     pw_json = json.dumps(HmisStatePwSerializer(pw_data,  many=True).data)
     ci_json = json.dumps(HmisStCiSerializer(ci_data,  many=True).data)
     cd_json = json.dumps(HmisStCdSerializer(cd_data,  many=True).data)
