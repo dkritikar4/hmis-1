@@ -4,7 +4,7 @@ with open('/etc/config.json') as config_file:
         config = json.load(config_file)
 
 DEBUG = True
-ALLOWED_HOSTS = ['communitygis.net', 'hmis.communitygis.net']
+ALLOWED_HOSTS = ['communitygis.net', 'hmis.communitygis.net', '65.0.224.219']
 SECRET_KEY = config['SECRET_KEY'] 
 
 DATABASES = {
