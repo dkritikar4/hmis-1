@@ -321,3 +321,63 @@ class mapStChldDisease(LoginRequiredMixin, TemplateView):
         }
 
         return render(request,'hmis_dash/mapChldDisease.html', {'context':context, 'fy': fy_name})
+
+
+class fyChldImmuLine(LoginRequiredMixin, TemplateView):
+    login_url = '/login/'
+    redirect_field_name = 'login'
+
+    def get(self,request,fy=None, dist_name = None):
+        district = request.GET.get('dist_name', dist_name) 
+        fy_name = request.GET.get('fy', fy) 
+        data = HmisStChldImmunzt.objects.all().order_by('month').exclude(month='All')
+        st_name = HmisStChldImmunzt.objects.values('state').distinct().order_by('state')
+        fyList = HmisStChldImmunzt.objects.values('year').distinct().order_by('year')
+        jsondata = serializers.serialize('json',data)
+
+        return render(request,'hmis_dash/fy_ci_line.html', {'data':jsondata, 'fy': fy_name, 'fyList':fyList, 'dist_name': district, 'state':st_name})
+
+
+class fyChldImmuLineNum(LoginRequiredMixin, TemplateView):
+    login_url = '/login/'
+    redirect_field_name = 'login'
+
+    def get(self,request,fy=None, dist_name = None):
+        district = request.GET.get('dist_name', dist_name) 
+        fy_name = request.GET.get('fy', fy) 
+        data = HmisStChldImmunzt.objects.all().order_by('month').exclude(month='All')
+        st_name = HmisStChldImmunzt.objects.values('state').distinct().order_by('state')
+        fyList = HmisStChldImmunzt.objects.values('year').distinct().order_by('year')
+        jsondata = serializers.serialize('json',data)
+
+        return render(request,'hmis_dash/fy_ci_lineNum.html', {'data':jsondata, 'fy': fy_name, 'fyList':fyList, 'dist_name': district, 'state':st_name})
+
+
+class fyChldDiseaseLine(LoginRequiredMixin, TemplateView):
+    login_url = '/login/'
+    redirect_field_name = 'login'
+
+    def get(self,request,fy=None, dist_name = None):
+        district = request.GET.get('dist_name', dist_name) 
+        fy_name = request.GET.get('fy', fy) 
+        data = HmisStChldDisease.objects.all().order_by('month').exclude(month='All')
+        st_name = HmisStChldDisease.objects.values('state').distinct().order_by('state')
+        fyList = HmisStChldDisease.objects.values('year').distinct().order_by('year')
+        jsondata = serializers.serialize('json',data)
+
+        return render(request,'hmis_dash/fy_cd_line.html', {'data':jsondata, 'fy': fy_name, 'fyList':fyList, 'dist_name': district, 'state':st_name})
+
+
+class fyChldDiseaseLineNum(LoginRequiredMixin, TemplateView):
+    login_url = '/login/'
+    redirect_field_name = 'login'
+
+    def get(self,request,fy=None, dist_name = None):
+        district = request.GET.get('dist_name', dist_name) 
+        fy_name = request.GET.get('fy', fy) 
+        data = HmisStChldDisease.objects.all().order_by('month').exclude(month='All')
+        st_name = HmisStChldDisease.objects.values('state').distinct().order_by('state')
+        fyList = HmisStChldDisease.objects.values('year').distinct().order_by('year')
+        jsondata = serializers.serialize('json',data)
+
+        return render(request,'hmis_dash/fy_cd_lineNum.html', {'data':jsondata, 'fy': fy_name, 'fyList':fyList, 'dist_name': district, 'state':st_name})

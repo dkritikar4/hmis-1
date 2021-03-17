@@ -1,0 +1,637 @@
+{% extends 'dashboard/dash_base.html' %}
+{% load static %}
+
+{% block feature_css %}
+<link rel="stylesheet" href="{% static 'hmis_dash/css/index.css' %}">
+
+<style>
+    path {
+        stroke: #ccc;
+        stroke-width: 3;
+        fill: none;
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: grey;
+        stroke-width: 1;
+        shape-rendering: crispEdges;
+    }
+
+    div#legendList {
+        width: 250px;
+        height: 50px;
+    }
+
+    text.legend {
+        font-size: calc(50% + 0.7vw + 0.7vh);
+    }
+
+    .legendcheckbox {
+        cursor: pointer;
+    }
+
+    #showAll {
+        position: absolute;
+        top: 600px;
+        left: 880px;
+    }
+
+    #clearAll {
+        position: absolute;
+        top: 600px;
+        left: 950px;
+    }
+
+    input {
+        border-radius: 5px;
+        padding: 5px 10px;
+        background: #999;
+        border: 0;
+        color: #fff;
+    }
+
+    div#tooltip {
+        position: absolute;
+        text-align: center;
+        width: auto;
+        height: auto;
+        padding: 5px 0;
+        z-index: 1;
+        font-family: sans-serif;
+        font-size: calc(50% + 0.5vw + 0.5vh);
+        background: lightgrey;
+        border-radius: 10px;
+        pointer-events: none;
+    }
+
+    #inds {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+    }
+
+    .overlay {
+        fill: none;
+        pointer-events: all;
+    }
+
+    .plot {
+        fill: #fff;
+    }
+</style>
+{% endblock %}
+
+{% block feature %}
+<div class="row">
+    <div class="col-12 h-75">
+        <div class="heading text-center"> Indicators State-Wise</div>
+    </div>
+</div>
+
+<div class="row bg-dark mb-2">
+    <div class="dropdown m-1">
+        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Select Category
+            <span class="selectedCategory"></span>
+        </button>
+        <div class="dropdown-menu category" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">Total no of Children Born</a>
+            <a class="dropdown-item" href="#">Child Immunisation-Vitamin K1(Birth Dose)</a>
+            <a class="dropdown-item" href="#">Child Immunisation-BCG</a>
+            <a class="dropdown-item" href="#">Child Immunisation(9-11 months)-Measles & Rubella (MR) 1st Dose</a>
+            <a class="dropdown-item" href="#">Child Immunisation(9-11 months)-Measles 1st Dose</a>
+            <a class="dropdown-item" href="#">Child immunisation-Vitamin A Dose-1</a>
+            <a class="dropdown-item" href="#">Children(12-59 months) provided Albendazole</a>
+        </div>
+    </div>
+    <div class="dropdown m-1">
+        <select name="state" id="state" class="custom-select">
+            {% for state_select in state %}
+            <option value='{{ state_select.state }}'>{{ state_select.state }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="dropdown m-1">
+        <select name="fyList" id="fyList" class="selectpicker" multiple>
+            {% for fy_select in fyList %}
+            <option value='{{ fy_select.year }}'>{{ fy_select.year }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+  <button type="button" class="btn btn-light m-1" onclick="location.href=`{% url 'fy_ci_line' dist_name fy %}`">Percent</button>
+
+
+    <!-- <div class="dropdown m-1">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false">
+      Select State
+      <span class="selectedState"></span>
+    </button>
+    <div class="dropdown-menu state" aria-labelledby="dropdownMenuButton">
+      {% for state_select in state %}
+      <a class="dropdown-item" href="#">{{ state_select.state }}</a>
+      {% endfor %}
+    </div>
+  </div> -->
+    <!-- <div class="dropdown m-1">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false">
+      <span class="selectedPtype"></span>
+    </button>
+    <div class="dropdown-menu ptype" aria-labelledby="dropdownMenuButton">
+      <a class="dropdown-item" href="#">Urban</a>
+      <a class="dropdown-item" href="#">Rural</a>
+      <a class="dropdown-item" href="#">Tribal</a>
+    </div>-->
+</div>
+
+<!-- <div class="row">
+  <p>Click rectangle box besides block names to view month wise trend for
+    the project</p>
+</div> -->
+
+<div class="row m-2">
+    <div class="col-2" id="legendList">
+    </div>
+
+    <div class="col-10" id="chart">
+        <div id='tooltip'></div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block feature_js %}
+<script src="https://d3js.org/d3.v3.min.js"></script>
+
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+
+<script>
+    let width = 1000,
+        height = 550;
+
+    let sel_fy = '{{ fy }}';
+    let sel_st = '{{ dist_name }}';
+    let af_rm_sel_st= sel_st.replace(/_/g, ' ');
+
+    let stateName = [];
+    stateName.push(af_rm_sel_st);
+    let selectedYear = [];
+    selectedYear.push(sel_fy)
+
+    const svg = d3.select('#chart').append('svg').attr('id', 'svg1').attr('width', 1000)
+        .attr('height', 800).call(responsivefy);
+
+    const legendbox = d3.select('#legendList').append('svg').attr('id', 'svg2').attr('width', 250)
+        .attr('height', 950).call(responsivefy);
+
+    let ticks;
+    let selectedCategory = 'Total no of Children Born';
+
+    function responsivefy(svg) {
+
+        // Container is the DOM element, svg is appended. 
+        // Then we measure the container and find its 
+        // aspect ratio.
+
+        const container = d3.select(svg.node().parentNode),
+            width = parseInt(svg.style('width'), 10),
+            height = parseInt(svg.style('height'), 10),
+            aspect = width / height;
+
+        // Add viewBox attribute to set the value to initial size 
+        // add preserveAspectRatio attribute to specify how to scale  
+        // and call resize so that svg resizes on page load 
+        svg.attr('viewBox', `0 0 ${width} ${height}`).
+            attr('preserveAspectRatio', 'xMinYMin').
+            call(resize);
+
+        d3.select(window).on('resize.', resize);
+
+        function resize() {
+            const targetWidth = $(window).width();
+            const targetheight = $(window).height();
+            //var targetHeight = $(window).height();
+            d3.select('#svg1').attr('width', targetWidth);
+            d3.select('#svg1').attr('height', targetheight);
+            d3.select('#svg2').attr('width', targetWidth);
+            d3.select('#svg2').attr('height', targetheight);
+        }
+    }
+
+    function filterCSV(csv, key, value) {
+        var result = [];
+        for (var i = 0; i < value.length; i++) {
+            csv.forEach(function (val, idx, arr) {
+
+                if (val[key] == value[i]) {
+
+                    result.push(val)
+                }
+            })
+        }
+        return result;
+    }
+
+    var mouseG
+
+    var margin = { top: 10, right: 20, bottom: 30, left: 100 },
+        innerWidth = 1000 - margin.left - margin.right,
+        innerHeight = 550 - margin.top - margin.bottom;
+
+    // Set the ranges
+    var xScale = d3.scale.ordinal().rangePoints([0, innerWidth], 0.5);
+    var yScale = d3.scale.linear().range([innerHeight, 0]);
+
+    // Define the axes
+    var xAxis = d3.svg.axis().scale(xScale)
+        .orient("bottom")
+
+    var yAxis = d3.svg.axis().scale(yScale)
+        .orient("left");
+
+    // Define the line
+    var stateline = d3.svg.line()
+        .interpolate("linear")
+        .x(function (d) { return xScale(d.month); })
+        .y(function (d) { return yScale(d.value); });
+
+    var g = svg.append('g')
+        .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+    //make a rectangle so there is something to click on
+    g.append("rect")
+        .attr("width", innerWidth)
+        .attr("height", innerHeight)
+        .attr("class", "plot");
+
+    //make a clip path for the graph  
+    var clip = g.append("clipPath")
+        .attr("id", "clip")
+        .append("svg:rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", innerWidth)
+        .attr("height", innerHeight);
+
+
+    var color = d3.scale.category10();
+
+    const render = data => {
+        var width1;
+
+        // Scale the range of the data
+
+        ticks = data.map(function (d) {
+            return d.month
+        });
+        xScale.domain(ticks);
+
+        yScale.domain([d3.min(data, function (d) { return d.value; }), d3.max(data, function (d) { return d.value; })]);
+
+        // Nest the entries by block
+
+        dataNest = d3.nest()
+            .key(function (d) { return d.year })
+            .entries(data);
+
+        var result = dataNest.filter(function (val, idx, arr) {
+            return $("." + val.key).attr("fill") != "#ccc"
+            // matching the data with selector status
+        })
+
+
+        var block = g.selectAll(".line")
+            .data(result, function (d) { return d.key });
+
+        block.enter().append("path")
+            .attr("class", "line");
+
+        block.transition()
+            .style("stroke", function (d, i) { return d.color = color(d.key); })
+            .attr("id", function (d) { return 'tag' + d.key.replace(/\s+/g, ''); }) // assign ID
+            .attr("d", function (d) {
+                return stateline(d.values);
+            });
+
+
+        block.exit().remove();
+
+        let legend = d3.select("#svg2")
+            .selectAll("text")
+            .data(dataNest, function (d) { return d.key });
+
+
+        //checkboxes
+        legend.enter().append("rect")
+            .attr("width", 20)
+            .attr("height", 20)
+            .attr("x", 0)
+            .attr("y", function (d, i) { return 0 + i * 30; })  // spacing
+            .attr("fill", function (d) {
+                return color(d.key);
+
+            })
+            .attr("class", function (d, i) { return "legendcheckbox " + d.key })
+
+        // Add the Legend text
+        legend.enter().append("text")
+            .attr("x", 25)
+            .attr("y", function (d, i) { return 18 + i * 30; })
+            .attr("class", "legend");
+
+        legend.transition()
+            .style("fill", "#777")
+            .text(function (d) { return d.key; });
+
+        legend.exit().remove();
+
+        svg.selectAll(".axis").remove();
+
+        // Add the X Axis
+        g.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + innerHeight + ")")
+            .call(xAxis)
+            .attr("font-size", "20px")
+            .attr("font-weight", "bold")
+            .selectAll("text")
+            .attr("y", 0)
+            .attr("x", 9)
+            .attr("dy", ".35em")
+            .attr("transform", "rotate(45)")
+            .style("text-anchor", "start");
+
+        // Add the Y Axis
+        g.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+            .attr("font-size", "20px")
+            .attr("font-weight", "bold")
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em");
+
+
+        var mouseG = g.append("g")
+            .attr("class", "mouse-over-effects");
+
+
+        var tooltip = d3.select('#tooltip');
+
+        mouseG.append("path") // create vertical line to follow mouse
+            .data(result)
+            .attr("class", "mouse-line")
+            .style("stroke", "black")
+            .style("stroke-width", '3px')
+            .style("opacity", "0");
+
+        var lines = document.getElementsByClassName('line');
+
+        var mousePerLine = mouseG.selectAll('.mouse-per-line')
+            .data(result)
+            .enter()
+            .append("g")
+            .attr("class", "mouse-per-line");
+
+        mousePerLine.append("circle")
+            .attr('class', 'topic-circle')
+            .attr("r", 7)
+            .style("stroke", function (d) {
+                return color(d.key)
+            })
+            .style("fill", "none")
+            .style("stroke-width", '3px')
+            .style("opacity", "0");
+
+
+        mouseG.append('svg:rect')
+            .attr('width', width)
+            .attr('height', height)
+            .attr('opacity', 0)
+            .attr('pointer-events', 'all')
+            .on('mouseout', function () { // on mouse out hide line, circles and text
+                d3.select(".mouse-line")
+                    .style("opacity", "0");
+                d3.selectAll(".mouse-per-line circle")
+                    .style("opacity", "0");
+            })
+            .on('mouseover', function () { // on mouse in show line, circles and text
+                d3.select(".mouse-line")
+                    .style("opacity", "1");
+                d3.selectAll(".mouse-per-line circle")
+                    .style("opacity", "1")
+            })
+            .on('mousemove', drawTooltip)
+            .on('mouseout', removeTooltip);
+
+
+        function removeTooltip() {
+            if (tooltip) tooltip.style('display', 'none');
+            // if(mouseG)     mouseG.selectAll('.mouse-per-line').selectAll('.topic-circle').remove();
+        }
+
+        function drawTooltip() {
+
+            var monthX
+
+            var tickPos = xScale.range();
+            var m = d3.mouse(this),
+                lowDiff = 1e99,
+                xI = null;
+            d3.selectAll(".mouse-per-line")
+                .attr("transform", function (d, i) {
+                    for (var i = 0; i < tickPos.length; i++) {
+                        var diff = Math.abs(m[0] - tickPos[i]);
+                        if (diff < lowDiff) {
+                            lowDiff = diff;
+                            xI = i;
+
+                        }
+                    }
+                    d3.select(".mouse-line")
+                        .attr("d", function () {
+                            monthX = d.values[xI].month;
+                            stname = d.values[xI].state;
+                            var data = "M" + xScale(d.values[xI].month) + "," + height;
+                            data += " " + xScale(d.values[xI].month) + "," + 0;
+                            return data;
+                        });
+                    return "translate(" + xScale(d.values[xI].month) + "," + yScale(d.values[xI].value) + ")";
+
+
+                });
+
+            tooltip.html('<b style="color:#FF0000">' + monthX + '</b>' + '<br>' + '<b style="color: rgb(30, 6, 116)">State Name: ' + stname + '</b>')
+                .style('display', 'block')
+                .style('left', d3.event.pageX + "px")
+                .style('top', 40 + "px")
+                .selectAll()
+                .data(result).enter()
+                .append('div')
+                .style('color', 'black')
+                .html(d => d.key + ': ' + '<b>' + yScale.invert(yScale(d.values[xI].value)).toFixed(0) + '</b>');
+        }
+
+    };
+
+    function clearAll() {
+        d3.selectAll(".line")
+            .transition().duration(100)
+            .attr("d", function (d) {
+                return null;
+            });
+        d3.select("#legend").selectAll("rect")
+            .transition().duration(100)
+            .attr("fill", "#ccc");
+    };
+
+    function showAll() {
+        d3.selectAll(".line")
+            .transition().duration(100)
+            .attr("d", function (d) {
+                return stateline(d.values);
+            });
+        d3.select("#legend").selectAll("rect")
+            .attr("fill", function (d) {
+                if (d.active == true) {
+                    return color(d.key);
+                }
+            })
+    };
+
+    // Get the data
+    data_from_django = {{ data | safe }};
+    var data = []
+    data_from_django.forEach(element => {
+        data.push(element.fields);
+    });
+
+    data.forEach(function (d) {
+
+        d.tot_chld_born = +d.tot_chld_born;
+        d.chld_immunzt_vit_k1 = +d.chld_immunzt_vit_k1;
+        d.chld_immunzt_bcg = +d.chld_immunzt_bcg;
+        d.chld_immunzt_9to11m_mr = +d.chld_immunzt_9to11m_mr;
+        d.chld_immunzt_9to11m_measl_1st_dose = +d.chld_immunzt_9to11m_measl_1st_dose;
+        d.chld_immunzt_vit_a_dose_1 = +d.chld_immunzt_vit_a_dose_1;
+        d.no_chld_12to59m_albendazole = +d.no_chld_12to59m_albendazole;
+        d.state = d.state;
+        d.month = d.month;
+        d.year = d.year;
+    });
+
+    let section = 'tot_chld_born'
+
+    $(".category a").click(function () {
+        var val = $(this).text();
+        selectedCategory = val;
+        setSection(val);
+        st_data = filterCSV(data, 'state', stateName);
+        fyData = filterCSV(st_data, 'year', selectedYear);
+        d3.selectAll(".mouse-per-line circle").remove();
+        setData(fyData, section);
+
+    });
+
+    let choices = parseURLParameters(window.location.href);
+    if (choices.length > 0) {
+        let selectedCat = choices[0].replace(/_/g, ' ');
+        selectedCategory = selectedCat;
+        $('.category a').parents('.dropdown').find('.dropdown-toggle').html(selectedCat + ' <span class="selectedCategory"></span>');
+        st_data = filterCSV(data, 'state', stateName);
+        fyData = filterCSV(st_data, 'year', selectedYear);
+        setSection(selectedCat);
+        setData(fyData, section);
+    }
+    else {
+        st_data = filterCSV(data, 'state', stateName);
+        fyData = filterCSV(st_data, 'year', selectedYear);
+        setData(fyData, section);
+    }
+
+    function setSection(val) {
+        if (val == 'Total no of Children Born')
+            section = 'tot_chld_born';
+        else if (val == 'Child Immunisation-Vitamin K1(Birth Dose)')
+            section = 'chld_immunzt_vit_k1';
+        else if (val == 'Child Immunisation-BCG')
+            section = 'chld_immunzt_bcg';
+        else if (val == 'Child Immunisation(9-11 months)-Measles & Rubella (MR) 1st Dose')
+            section = 'chld_immunzt_9to11m_mr';
+        else if (val == 'Child Immunisation(9-11 months)-Measles 1st Dose')
+            section = 'chld_immunzt_9to11m_measl_1st_dose';
+        else if (val == 'Child immunisation-Vitamin A Dose-1')
+            section = 'chld_immunzt_vit_a_dose_1';
+        else
+            section = 'no_chld_12to59m_albendazole'
+  }
+
+    $("#state").change(function () {
+        stateName = [];
+        stateName.push($('#state').val());
+        st_data = filterCSV(data, 'state', stateName);
+        fyData = filterCSV(st_data, 'year', selectedYear);
+        legendbox.selectAll("*").remove();
+        setData(fyData, section);
+    });
+
+    $("#fyList").change(function () {
+        selectedYear = [];
+        selectedYear = $('#fyList').val();
+        st_data = filterCSV(data, 'state', stateName);
+        fyData = filterCSV(st_data, 'year', selectedYear);
+        legendbox.selectAll("*").remove();
+        setData(fyData, section);
+    });
+
+    function setData(data, section) {
+        var dataFilter = data.map(function (d) { return { year: d.year, month: d.month, state: d.state, value: d[section] } })
+
+        //debugger
+
+        dataFilter.forEach(function (d) {
+            d.value = +d.value;
+        });
+        //debugger
+        render(dataFilter);
+        jQuery('h1.page-header').html(section);
+    }
+
+
+    //Initial Graph
+    st_data = filterCSV(data, 'state', stateName);
+    fyData = filterCSV(st_data, 'year', selectedYear);
+    setData(fyData, section);
+
+    function parseURLParameters() {
+        var query = (window.location.search || '?').substr(1);
+        var map = [];
+        query.replace(/([^&=]+)=?([^&]*)(?:&+|$)/g, function (match, key, value) {
+            map.push(value);
+        });
+        return map;
+    }
+
+    $(function () {
+        //bind event
+        $('#state').val(af_rm_sel_st);
+        $('#fyList').val(sel_fy);
+
+        $(".category a").click(function () {
+            var valCategory = $(this).text();
+            $(this).parents('.dropdown').find('.dropdown-toggle').html(valCategory + ' <span class="selectedCategory"></span>');
+        });
+
+        //trigger event
+        if (choices.length <= 0)
+            $(".category a").first().trigger('click');
+
+    });
+</script>
+{% endblock %}

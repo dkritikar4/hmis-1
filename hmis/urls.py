@@ -19,7 +19,7 @@ from dashboard.views import DashboardView, RegionOverview
 from hmis_dash.views import (HMISDashboardView, hmisBarChart, hmisLineChart, hmisBarNumericChart, hmisLineNumericChart,
     chldImmuBar, chldImmuLine, chldImmuBarNumeric, chldImmuLineNumeric, chldDiseaseBar, chldDiseaseLine, chldDiseaseBarNumeric,
     chldDiseaseLineNumeric, hmisTableChart, pieStateLevel, pieChildDisease, pieChildImmu,mapStPW, mapStChldImmu, mapStChldDisease,
-    fyLine, fyLineNum)
+    fyLine, fyLineNum, fyChldImmuLine, fyChldImmuLineNum, fyChldDiseaseLine, fyChldDiseaseLineNum)
 from django.conf import settings
 from django.conf.urls.static import static
 from dashboard import views
@@ -55,6 +55,12 @@ urlpatterns = [
     url(r'^(?P<fy>[-\w\ ]+)/hmis_dash/pw_map$', mapStPW.as_view(), name='pw_map'),
     url(r'^(?P<fy>[-\w\ ]+)/hmis_dash/cd_map$', mapStChldDisease.as_view(), name='ci_map'),
     url(r'^(?P<fy>[-\w\ ]+)/hmis_dash/ci_map$', mapStChldImmu.as_view(), name='cd_map'),
+
+    url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/fy_ci_line$', fyChldImmuLine.as_view(), name='fy_ci_line'),
+    url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/fy_ci_lineNum$', fyChldImmuLineNum.as_view(), name='fy_ci_lineNum'),
+
+    url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/fy_cd_line$', fyChldDiseaseLine.as_view(), name='fy_cd_line'),
+    url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/fy_cd_lineNum$', fyChldDiseaseLineNum.as_view(), name='fy_cd_lineNum'),
 
 
     url(r'^admin/', admin.site.urls),
