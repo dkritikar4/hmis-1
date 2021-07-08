@@ -114,19 +114,12 @@
 
 <div class="row text-center">
     <div class="col-12 mb-5">
-        {% if fy == '2020-2021' %}
-        <input type="text" id="monthS" name="somename" data-provide="slider" data-slider-ticks="[0, 1, 2, 3]"
-            data-slider-ticks-labels='["All", "April", "May", "June"]' data-slider-min="0" data-slider-max="4"
-            data-slider-step="1" data-slider-value="0" data-slider-tooltip="hide">
-
-        {% else %}
+     
         <input type="text" id="monthSlider" name="somename" data-provide="slider"
             data-slider-ticks="[0, 1, 2, 3, 4, 5,6,7,8,9,10,11,12]"
-            data-slider-ticks-labels='["All", "April", "May", "June", "July", "August", "September", "October", "November", "December",  "January", "February", "March"]'
+            data-slider-ticks-labels='["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]'
             data-slider-min="0" data-slider-max="12" data-slider-step="1" data-slider-value="0"
             data-slider-tooltip="hide">
-        {% endif %}
-
     </div>
 </div>
 
@@ -307,7 +300,7 @@
         console.log("stateSelected", stateSelected);
 
         g.selectAll('rect')
-            .filter(function (d) { return d.state == stateSelected; })
+            .filter(function (d) { return d.area_id == stateSelected; })
             .style("stroke", "black")
             .style("stroke-width", 5);
     }
@@ -349,16 +342,10 @@
             case "Childhood Diseases-Severe Acute Malnutrition(SAM)": yValue = d => d.per_chld_disease_sam; sortBy = 'per_chld_disease_sam'; break;
         }
 
-        if (selectedYear == '2020-2021') {
-            var valMonth = tickLabel21[$('#monthS').slider('getValue')];
-        }
-        else {
             var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
-        }
 
         filterdata = filterCSV(data, 'month', valMonth);
         mydata = sortData(filterdata, sortBy);
-        tableData = tables(filterdata);
         svg.selectAll("*").remove();
         render(mydata);
     }
@@ -381,24 +368,24 @@
     data_from_django = {{ data | safe }};
     var data = []
     data_from_django.forEach(element => {
-        if (element.fields.per_chld_disease_pneumonia > 200)
-            element.fields.per_chld_disease_pneumonia = 200;
-        if (element.fields.per_chld_disease_sepsis > 200)
-            element.fields.per_chld_disease_sepsis = 200;
-        if (element.fields.per_chld_disease_tb > 200)
-            element.fields.per_chld_disease_tb = 200;
-        if (element.fields.per_chld_disease_malaria > 200)
-            element.fields.per_chld_disease_malaria = 200;
-        if (element.fields.per_chld_disease_diarrhoea > 200)
-            element.fields.per_chld_disease_diarrhoea = 200;
-        if (element.fields.per_chld_disease_diarrhoea_trtd_inpatnt > 200)
-            element.fields.per_chld_disease_diarrhoea_trtd_inpatnt = 200;
-        if (element.fields.per_chld_admtd_upper_resp_infec > 200)
-            element.fields.per_chld_admtd_upper_resp_infec = 200;
-        if (element.fields.per_chld_disease_sam > 200)
-            element.fields.per_chld_disease_sam = 200;
+        if (element.per_chld_disease_pneumonia > 200)
+            element.per_chld_disease_pneumonia = 200;
+        if (element.per_chld_disease_sepsis > 200)
+            element.per_chld_disease_sepsis = 200;
+        if (element.per_chld_disease_tb > 200)
+            element.per_chld_disease_tb = 200;
+        if (element.per_chld_disease_malaria > 200)
+            element.per_chld_disease_malaria = 200;
+        if (element.per_chld_disease_diarrhoea > 200)
+            element.per_chld_disease_diarrhoea = 200;
+        if (element.per_chld_disease_diarrhoea_trtd_inpatnt > 200)
+            element.per_chld_disease_diarrhoea_trtd_inpatnt = 200;
+        if (element.per_chld_admtd_upper_resp_infec > 200)
+            element.per_chld_admtd_upper_resp_infec = 200;
+        if (element.per_chld_disease_sam > 200)
+            element.per_chld_disease_sam = 200;
 
-        data.push(element.fields);
+        data.push(element);
     });
 
     data.forEach(d => {
@@ -410,36 +397,21 @@
         d.per_chld_disease_diarrhoea_trtd_inpatnt = +d.per_chld_disease_diarrhoea_trtd_inpatnt;
         d.per_chld_admtd_upper_resp_infec = +d.per_chld_admtd_upper_resp_infec;
         d.per_chld_disease_sam = +d.per_chld_disease_sam;
-        d.state = d.state;
+        d.area_id = d.area_id;
+        d.area_name = d.area_name;
         d.month = d.month;
         d.year = d.year;
 
 
     });
-    //   console.log(data,"data")
 
 
-    let tickLabel21 = ["All", "April", "May", "June"]
-
-    $('#monthS').slider().on('slideStop', function (ev) {
-        console.log("in monthS")
-
-        var val = tickLabel21[ev.value];
-        console.log(val, 'val in monthS')
-        filterdata = filterCSV(data, 'month', val);
-        mydata = sortData(filterdata, sortBy);
-        tableData = tables(filterdata);
-        svg.selectAll("*").remove();
-        render(mydata);
-    });
-
-    let tickLabels = ["All", "April", "May", "June", "July", "August", "September", "October", "November", "December", "January", "February", "March"]
+    let tickLabels = ["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]
 
     $('#monthSlider').slider().on('slideStop', function (ev) {
         var val = tickLabels[ev.value];
         filterdata = filterCSV(data, 'month', val);
         mydata = sortData(filterdata, sortBy);
-        tableData = tables(filterdata);
         svg.selectAll("*").remove();
         render(mydata);
     });
@@ -476,47 +448,6 @@
             map.push(value);
         });
         return map;
-    }
-
-    function tables(data) {
-        $(".hello").remove();
-        var tbdata = [];
-        data.forEach(d => {
-            var tbd = {}
-            tbd["State"] = d.state;
-            tbd["Number of Children 0-6 years old enrolled for services"] = d.no_enrolled;
-            tbd["Total No. of Children Eligible to be Weighed"] = d.tot_elgb_wghd;
-            tbd["Total No. of Children Eligible for measuring Height"] = d.tot_elgb_hght;
-            tbd["Total No. of Children Weighed"] = d.no_wt;
-            tbd["Total No. of Children whose Height has been measured"] = d.no_ht;
-            tbd["Total No. of Children whose Height and Weight has been measured"] = d.no_wt_ht;
-            tbdata.push(tbd);
-        });
-
-        var table = d3.select('div#table').append('table').attr('class', 'hello');
-        var titles = d3.keys(tbdata[0]);
-        var headers = table.append('thead').append('tr')
-            .selectAll('th')
-            .data(titles).enter()
-            .append('th')
-            .text(function (d) {
-                return d;
-            });
-
-        var rows = table.append('tbody').selectAll('tr')
-            .data(tbdata).enter()
-            .append('tr');
-
-        rows.selectAll('td')
-            .data(function (d) {
-                return titles.map(function (k) {
-                    return { 'value': d[k], 'name': k };
-                });
-            }).enter()
-            .append('td')
-            .text(function (d) {
-                return d.value;
-            });
     }
 
 </script>

@@ -40,7 +40,6 @@ class HmisPw(models.Model):
 class HmisChldDisease(models.Model):
     financial_year = models.CharField(max_length=20, blank=True, null=True)
     month = models.TextField(blank=True, null=True)  # This field type is a guess.
-    state = models.CharField(max_length=50, blank=True, null=True)
     tot_chld_born = models.IntegerField(blank=True, null=True)
     chld_disease_pneumonia = models.IntegerField(blank=True, null=True)
     per_chld_disease_pneumonia = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -69,7 +68,6 @@ class HmisChldDisease(models.Model):
 class HmisChldImmunzt(models.Model):
     financial_year = models.CharField(max_length=20, blank=True, null=True)
     month = models.TextField(blank=True, null=True)  # This field type is a guess.
-    state = models.CharField(max_length=50, blank=True, null=True)
     tot_chld_born = models.IntegerField(blank=True, null=True)
     chld_immunzt_vit_k1 = models.IntegerField(blank=True, null=True)
     per_chld_immunzt_vit_k1 = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
