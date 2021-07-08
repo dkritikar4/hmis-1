@@ -250,7 +250,7 @@
         chartText.enter().append("text")
             .filter(function (d, i) { return i === 0 || i === (data.length - 1) })
             .text(d => yValue(d).toFixed(2))
-            .attr('x', d => xScale(d.area_id))
+            .attr('x', d => xScale(d.area_name))
             .attr('y', d => yScale(yValue(d)) - 7)
             .attr("font-family", "sans-serif")
             .attr("fill", "blue")
@@ -371,32 +371,34 @@
     /////
 
     data_from_django = {{ data | safe }};
+    console.log(data_from_django)
     var data = []
     data_from_django.forEach(element => {
-        if (element.fields.early_anc_register > 200)
-            element.fields.early_anc_register = 200;
-        if (element.fields.anc_4_or_more > 200)
-            element.fields.anc_4_or_more = 200;
-        if (element.fields.pw_tt1_given > 200)
-            element.fields.pw_tt1_given = 200;
-        if (element.fields.pw_tt2_given > 200)
-            element.fields.pw_tt2_given = 200;
-        if (element.fields.pw_tt_booster_given > 200)
-            element.fields.pw_tt_booster_given = 200;
-        if (element.fields.pw_calcium > 200)
-            element.fields.pw_calcium = 200;
-        if (element.fields.pw_albendazole > 200)
-            element.fields.pw_albendazole = 200;
-        if (element.fields.pw_ifa > 200)
-            element.fields.pw_ifa = 200;
-        if (element.fields.c_section_deliveries > 200)
-            element.fields.c_section_deliveries = 200;
-        if (element.fields.per_still_birth > 200)
-            element.fields.per_still_birth = 200;
+        console.log(element)
+        if (element.early_anc_register > 200)
+            element.early_anc_register = 200;
+        if (element.anc_4_or_more > 200)
+            element.anc_4_or_more = 200;
+        if (element.pw_tt1_given > 200)
+            element.pw_tt1_given = 200;
+        if (element.pw_tt2_given > 200)
+            element.pw_tt2_given = 200;
+        if (element.pw_tt_booster_given > 200)
+            element.pw_tt_booster_given = 200;
+        if (element.pw_calcium > 200)
+            element.pw_calcium = 200;
+        if (element.pw_albendazole > 200)
+            element.pw_albendazole = 200;
+        if (element.pw_ifa > 200)
+            element.pw_ifa = 200;
+        if (element.c_section_deliveries > 200)
+            element.c_section_deliveries = 200;
+        if (element.per_still_birth > 200)
+            element.per_still_birth = 200;
 
-        data.push(element.fields);
+        data.push(element);
     });
-    console.log(data_from_django, "data_from_django")
+    // console.log(data_from_django, "data_from_django")
 
     data.forEach(d => {
         d.early_anc_register = +d.early_anc_register;
@@ -411,6 +413,7 @@
         d.per_still_birth = +d.per_still_birth;
         d.area_id = d.area_id;
         d.month = d.month;
+        d.area_name = d.area_name;
         d.year = d.year;
     });
 

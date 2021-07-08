@@ -5,6 +5,9 @@ from django.core import serializers
 from django.core.serializers import serialize
 from django.db.models import Q
 from dashboard.models import AreaDetails
+import json
+from django.core.serializers.json import DjangoJSONEncoder 
+
 from .models import (HmisPw, HmisChldImmunzt, HmisChldDisease, PieState, PieChldDisease, PieChldImmunzt, GeojsonIndiaLevel)
 
 # Create your views here.
@@ -21,16 +24,19 @@ class hmisBarChart(LoginRequiredMixin, TemplateView):
         district = request.GET.get('dist_name', dist_name) 
         fy_name = request.GET.get('fy', fy) 
         if district == '22': 
-            data = HmisPw.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22))
+            data = list(HmisPw.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22)).values())
             
         else:    
-            data = HmisPw.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=1))
+            data = list(HmisPw.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=1)).values())
 
         for i in data:
-            area_n = AreaDetails.objects.filter(Q(area_id = i.area_id)).values('area_name')
+            # print(i)
 
-        jsondata = serializers.serialize('json', data)
-        
+            area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
+            i.update(area_n[0])
+        # print(data[0])
+        jsondata = json.dumps(data, cls=DjangoJSONEncoder)
+        print(jsondata[0])
         
         return render(request,'hmis_dash/barchart.html', {'data':jsondata, 'fy': fy_name, 'dist_name': district})
 
