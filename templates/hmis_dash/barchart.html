@@ -114,19 +114,11 @@
 
 <div class="row text-center">
     <div class="col-12 mb-5">
-        {% if fy == '2020-2021' %}
-        <input type="text" id="monthS" name="somename" data-provide="slider" data-slider-ticks="[0, 1, 2, 3]"
-            data-slider-ticks-labels='["All", "April", "May", "June"]' data-slider-min="0" data-slider-max="4"
-            data-slider-step="1" data-slider-value="0" data-slider-tooltip="hide">
-
-        {% else %}
         <input type="text" id="monthSlider" name="somename" data-provide="slider"
             data-slider-ticks="[0, 1, 2, 3, 4, 5,6,7,8,9,10,11,12]"
-            data-slider-ticks-labels='["All", "April", "May", "June", "July", "August", "September", "October", "November", "December",  "January", "February", "March"]'
+            data-slider-ticks-labels='["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]'
             data-slider-min="0" data-slider-max="12" data-slider-step="1" data-slider-value="0"
             data-slider-tooltip="hide">
-        {% endif %}
-
     </div>
 </div>
 
@@ -196,7 +188,7 @@
     let sortBy = 'early_anc_register';
     let selectedYear = "{{fy}}";
     let yValue = d => d.early_anc_register;
-    const xValue = d => d.state;
+    const xValue = d => d.area_id;
     const margin = { left: 100, top: 20, right: 100, bottom: 90 };
     const innerWidth = 1250 - margin.left - margin.right;
     const innerHeight = 650 - margin.top - margin.bottom;
@@ -232,7 +224,7 @@
         chartText.exit().remove();
 
         chart.enter().append('rect')
-            .attr('x', d => xScale(d.state) + 1)
+            .attr('x', d => xScale(d.area_id) + 1)
             .attr('y', d => yScale(yValue(d)))
             .attr('height', d => innerHeight - yScale(yValue(d)))
             .attr('width', xScale.bandwidth())
@@ -243,7 +235,7 @@
                     .duration(200)
                     .style("opacity", 0.9);
                 tooltip
-                    .html(d.state + " : " + (yValue(d).toFixed(2)))
+                    .html(d.area_id + " : " + (yValue(d).toFixed(2)))
                     .style("left", d3.event.pageX + "px")
                     .style("top", d3.event.pageY - 30 + "px");
             })
@@ -258,7 +250,7 @@
         chartText.enter().append("text")
             .filter(function (d, i) { return i === 0 || i === (data.length - 1) })
             .text(d => yValue(d).toFixed(2))
-            .attr('x', d => xScale(d.state))
+            .attr('x', d => xScale(d.area_id))
             .attr('y', d => yScale(yValue(d)) - 7)
             .attr("font-family", "sans-serif")
             .attr("fill", "blue")
@@ -266,7 +258,7 @@
 
         chart.transition().duration(tansitionDuration)
             .attr('y', d => yScale(yValue(d)))
-            .attr('x', d => xScale(d.state))
+            .attr('x', d => xScale(d.area_id))
             .attr('height', d => innerHeight - yScale(yValue(d)))
             .attr("fill", d => myColor(yValue(d)))
 
@@ -275,7 +267,7 @@
             .filter(function (d, i) { return i === 0 || i === (data.length - 1) })
             .text(d => yValue(d))
             .attr('y', d => yScale(yValue(d)) - 7)
-            .attr('x', d => xScale(d.state))
+            .attr('x', d => xScale(d.area_id))
             .attr("font-family", "sans-serif")
             .attr("font-weight", "bold")
 
@@ -304,11 +296,10 @@
             .attr("stroke", "red");
 
         let stateSelected = '{{ dist_name}}';
-        stateSelected = stateSelected.replace(/_/g, ' ');
-        console.log("stateSelected", stateSelected);
+        // stateSelected = stateSelected.replace(/_/g, ' ');
 
         g.selectAll('rect')
-            .filter(function (d) { return d.state == stateSelected; })
+            .filter(function (d) { return d.area_id == stateSelected; })
             .style("stroke", "black")
             .style("stroke-width", 5);
     }
@@ -355,21 +346,11 @@
 
         }
 
-        if (selectedYear == '2020-2021') {
-            console.log(selectedYear, "FY")
-            var valMonth = tickLabel21[$('#monthS').slider('getValue')];
-        }
-        else {
-            console.log(selectedYear, "FY in ELSE")
-
-            var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
-        }
-        console.log(valMonth, "VM")
+        var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
 
         filterdata = filterCSV(data, 'month', valMonth);
         console.log(filterdata, "filter")
         mydata = sortData(filterdata, sortBy);
-        tableData = tables(filterdata);
         svg.selectAll("*").remove();
         render(mydata);
     }
@@ -415,6 +396,7 @@
 
         data.push(element.fields);
     });
+    console.log(data_from_django, "data_from_django")
 
     data.forEach(d => {
         d.early_anc_register = +d.early_anc_register;
@@ -427,33 +409,17 @@
         d.pw_ifa = +d.pw_ifa;
         d.c_section_deliveries = +d.c_section_deliveries;
         d.per_still_birth = +d.per_still_birth;
-        d.state = d.state;
+        d.area_id = d.area_id;
         d.month = d.month;
         d.year = d.year;
     });
 
-
-    let tickLabel21 = ["All", "April", "May", "June"]
-
-    $('#monthS').slider().on('slideStop', function (ev) {
-        console.log("in monthS")
-
-        var val = tickLabel21[ev.value];
-        console.log(val, 'val in monthS')
-        filterdata = filterCSV(data, 'month', val);
-        mydata = sortData(filterdata, sortBy);
-        tableData = tables(filterdata);
-        svg.selectAll("*").remove();
-        render(mydata);
-    });
-
-    let tickLabels = ["All", "April", "May", "June", "July", "August", "September", "October", "November", "December", "January", "February", "March"]
+    let tickLabels = ["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]
 
     $('#monthSlider').slider().on('slideStop', function (ev) {
         var val = tickLabels[ev.value];
         filterdata = filterCSV(data, 'month', val);
         mydata = sortData(filterdata, sortBy);
-        tableData = tables(filterdata);
         svg.selectAll("*").remove();
         render(mydata);
     });
@@ -490,47 +456,6 @@
             map.push(value);
         });
         return map;
-    }
-
-    function tables(data) {
-        $(".hello").remove();
-        var tbdata = [];
-        data.forEach(d => {
-            var tbd = {}
-            tbd["State"] = d.state;
-            tbd["Number of Children 0-6 years old enrolled for services"] = d.no_enrolled;
-            tbd["Total No. of Children Eligible to be Weighed"] = d.tot_elgb_wghd;
-            tbd["Total No. of Children Eligible for measuring Height"] = d.tot_elgb_hght;
-            tbd["Total No. of Children Weighed"] = d.no_wt;
-            tbd["Total No. of Children whose Height has been measured"] = d.no_ht;
-            tbd["Total No. of Children whose Height and Weight has been measured"] = d.no_wt_ht;
-            tbdata.push(tbd);
-        });
-
-        var table = d3.select('div#table').append('table').attr('class', 'hello');
-        var titles = d3.keys(tbdata[0]);
-        var headers = table.append('thead').append('tr')
-            .selectAll('th')
-            .data(titles).enter()
-            .append('th')
-            .text(function (d) {
-                return d;
-            });
-
-        var rows = table.append('tbody').selectAll('tr')
-            .data(tbdata).enter()
-            .append('tr');
-
-        rows.selectAll('td')
-            .data(function (d) {
-                return titles.map(function (k) {
-                    return { 'value': d[k], 'name': k };
-                });
-            }).enter()
-            .append('td')
-            .text(function (d) {
-                return d.value;
-            });
     }
 
 </script>

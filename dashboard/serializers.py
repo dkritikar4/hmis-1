@@ -1,20 +1,20 @@
 from rest_framework import serializers
 
-from .models import HmisStatePw, HmisStChldDisease, HmisStChldImmunzt
+from .models import HmisPw, HmisChldDisease, HmisChldImmunzt
 
-class HmisStatePwSerializer(serializers.ModelSerializer):
+class HmisPwSerializer(serializers.ModelSerializer):
     class Meta:
-        model = HmisStatePw
+        model = HmisPw
         fields = '__all__'
 
 
-class HmisStCdSerializer(serializers.ModelSerializer):
+class HmisCdSerializer(serializers.ModelSerializer):
     class Meta:
-        model = HmisStChldDisease
+        model = HmisChldDisease
         fields = '__all__'
 
 
-class HmisStCiSerializer(serializers.ModelSerializer):
+class HmisCiSerializer(serializers.ModelSerializer):
     class Meta:
-        model = HmisStChldImmunzt
+        model = HmisChldImmunzt
         fields = '__all__'

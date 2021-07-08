@@ -3,10 +3,20 @@ from django.contrib.gis.db import models
 
 # Create your models here.
 
-class HmisStatePw(models.Model):
-    year = models.CharField(max_length=20, blank=True, null=True)
+class AreaDetails(models.Model):
+    area_parent_id = models.IntegerField(blank=True, null=True)
+    area_name = models.CharField(max_length=100, blank=True, null=True)
+    area_level = models.IntegerField(blank=True, null=True)
+    area_id = models.AutoField(primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'area_details'
+
+
+class HmisPw(models.Model):
+    financial_year = models.CharField(max_length=20, blank=True, null=True)
     month = models.TextField(blank=True, null=True)  # This field type is a guess.
-    state = models.CharField(max_length=50, blank=True, null=True)
     tot_no_pw_reg_anc = models.IntegerField(blank=True, null=True)
     no_early_anc_register = models.IntegerField(blank=True, null=True)
     early_anc_register = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -26,16 +36,19 @@ class HmisStatePw(models.Model):
     pw_albendazole = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     tot_c_section_deliveries = models.IntegerField(blank=True, null=True)
     c_section_deliveries = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    tot_chld_born = models.IntegerField(blank=True, null=True)
     tot_still_birth = models.IntegerField(blank=True, null=True)
     per_still_birth = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    area_parent_id = models.IntegerField(blank=True, null=True)
+    area_id = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'hmis_state_pw'
+        db_table = 'hmis_pw'
 
 
-class HmisStChldDisease(models.Model):
-    year = models.CharField(max_length=20, blank=True, null=True)
+class HmisChldDisease(models.Model):
+    financial_year = models.CharField(max_length=20, blank=True, null=True)
     month = models.TextField(blank=True, null=True)  # This field type is a guess.
     state = models.CharField(max_length=50, blank=True, null=True)
     tot_chld_born = models.IntegerField(blank=True, null=True)
@@ -55,15 +68,17 @@ class HmisStChldDisease(models.Model):
     per_chld_admtd_upper_resp_infec = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     chld_disease_sam = models.IntegerField(blank=True, null=True)
     per_chld_disease_sam = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    area_parent_id = models.IntegerField(blank=True, null=True)
+    area_id = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'hmis_st_chld_disease'
+        db_table = 'hmis_chld_disease'
 
 
-class HmisStChldImmunzt(models.Model):
-    year = models.CharField(max_length=20, blank=True, null=True)
-    month = models.CharField(max_length=20, blank=True, null=True)
+class HmisChldImmunzt(models.Model):
+    financial_year = models.CharField(max_length=20, blank=True, null=True)
+    month = models.TextField(blank=True, null=True)  # This field type is a guess.
     state = models.CharField(max_length=50, blank=True, null=True)
     tot_chld_born = models.IntegerField(blank=True, null=True)
     chld_immunzt_vit_k1 = models.IntegerField(blank=True, null=True)
@@ -78,7 +93,9 @@ class HmisStChldImmunzt(models.Model):
     per_chld_immunzt_vit_a_dose_1 = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     no_chld_12to59m_albendazole = models.IntegerField(blank=True, null=True)
     per_no_chld_12to59m_albendazole = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    area_parent_id = models.IntegerField(blank=True, null=True)
+    area_id = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'hmis_st_chld_immunzt'
+        db_table = 'hmis_chld_immunzt'

@@ -4,7 +4,8 @@ from django.views.generic import TemplateView
 from django.core import serializers
 from django.core.serializers import serialize
 from django.db.models import Q
-from .models import (HmisStatePw, HmisStChldImmunzt, HmisStChldDisease, PieState, PieChldDisease, PieChldImmunzt, GeojsonIndiaLevel)
+from dashboard.models import AreaDetails
+from .models import (HmisPw, HmisChldImmunzt, HmisChldDisease, PieState, PieChldDisease, PieChldImmunzt, GeojsonIndiaLevel)
 
 # Create your views here.
 
@@ -19,8 +20,17 @@ class hmisBarChart(LoginRequiredMixin, TemplateView):
     def get(self, request, fy= None, dist_name = None):
         district = request.GET.get('dist_name', dist_name) 
         fy_name = request.GET.get('fy', fy) 
-        data = HmisStatePw.objects.filter(Q(year=fy_name)).exclude(state='All States')
+        if district == '22': 
+            data = HmisPw.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22))
+            
+        else:    
+            data = HmisPw.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=1))
+
+        for i in data:
+            area_n = AreaDetails.objects.filter(Q(area_id = i.area_id)).values('area_name')
+
         jsondata = serializers.serialize('json', data)
+        
         
         return render(request,'hmis_dash/barchart.html', {'data':jsondata, 'fy': fy_name, 'dist_name': district})
 
@@ -75,7 +85,7 @@ class hmisBarNumericChart(LoginRequiredMixin, TemplateView):
     def get(self, request, fy= None, dist_name = None):
         district = request.GET.get('dist_name', dist_name) 
         fy_name = request.GET.get('fy', fy) 
-        data = HmisStatePw.objects.filter(Q(year=fy_name)).exclude(state='All States')
+        data = HmisPw.objects.filter(Q(financial_year=fy_name)).exclude(area_id=1)
         jsondata = serializers.serialize('json', data)
         
         return render(request,'hmis_dash/barNumericChart.html', {'data':jsondata, 'fy': fy_name, 'dist_name': district})

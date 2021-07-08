@@ -103,14 +103,28 @@
                 </select>
             </div> -->
             <label class="d-inline-block ml-5" for="area_select">Select State:</label>
-            <select class="custom-select" name="area_select" id="area-1" style="width: auto">
-                {% for dist_select in dd_dt_data %}
-                <option value="{{ dist_select.state }}">{{ dist_select.state }}
+            <select class="custom-select" name="area_select" id="areaSt" style="width: auto">
+                {% for st_select in st_list %}
+                <option value="{{ st_select.area_id }}">{{ st_select.area_name }}
                 </option>
                 {% endfor %}
             </select>
         </div>
 
+        <!-- Optional District Dropdown  -->
+        <div class="dtList">
+            <div class="form-group">
+
+                <label class="d-inline-block ml-5" for="area_select">Select District:</label>
+                <select class="custom-select" name="area_select" id="areaDt" style="width: auto">
+                    <option value="0" selected>Select</option>
+                    {% for dist_select in dt_list %}
+                    <option value="{{ dist_select.area_id }}">{{ dist_select.area_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
     </div>
 
 </form>
@@ -1513,14 +1527,15 @@
     </div>
 </section>
 <script>
-    $("#area-1").change(function (e) {
+    $("#areaSt").change(function (e) {
         e.preventDefault();
         $.ajax({
             url: "{% url 'ajaxArea' fy %}", // the endpoint
             method: "GET", // http method
             data: {
-                area: $('#area-1').val(),
-                month: $('#month-1').val()
+                area: $('#areaSt').val(),
+                month: $('#month-1').val(),
+                area_district: $('#areaDt').val()
             },
             success: function (response) {
                 let pw_dataAjax = JSON.parse(response.context.pw_data);
@@ -1533,18 +1548,19 @@
         });
 
     });
-
 
     $("#month-1").change(function (e) {
-        areaSelected = $('#area-1').val();
+        areaSelected = $('#areaSt').val();
         monthSelected = $('#month-1').val();
+        dtSelected = $('#areaDt').val();
         e.preventDefault();
         $.ajax({
             url: "{% url 'ajaxArea' fy %}", // the endpoint
             method: "GET", // http method
             data: {
-                area: $('#area-1').val(),
-                month: $('#month-1').val()
+                area: $('#areaSt').val(),
+                month: $('#month-1').val(),
+                area_district: $('#areaDt').val()
             },
             success: function (response) {
                 let pw_dataAjax = JSON.parse(response.context.pw_data);
@@ -1559,6 +1575,29 @@
 
     });
 
+    $("#areaDt").change(function (e) {
+        areaSelected = $('#areaSt').val();
+        monthSelected = $('#month-1').val();
+        dtSelected = $('#areaDt').val();
+        e.preventDefault();
+        $.ajax({
+            url: "{% url 'ajaxArea' fy %}", // the endpoint
+            method: "GET", // http method
+            data: {
+                area: $('#areaSt').val(),
+                month: $('#month-1').val(),
+                area_district: $('#areaDt').val()
+            },
+            success: function (response) {
+                let pw_dataAjax = JSON.parse(response.context.pw_data);
+                let ci_dataAjax = JSON.parse(response.context.ci_data);
+                let cd_dataAjax = JSON.parse(response.context.cd_data);
+                let district = response.dist_name;
+                updateData(pw_dataAjax, ci_dataAjax, cd_dataAjax);
+            }
+        });
+
+    });
 
 
     data_from_django = {{ context.pw_data | safe }};
@@ -1582,7 +1621,7 @@
 
 
     $(function () {
-        $("#area-1").val('All States');
+        $("#areaSt").val(1);
         $("#month-1").val('All');
         updateData(pw_data, ci_data, cd_data);
 
@@ -1670,25 +1709,37 @@
 
         document.getElementById('st_nocdsam').innerHTML = cd_data[0].chld_disease_sam;
         document.getElementById('st_cdsam').innerHTML = cd_data[0].per_chld_disease_sam + "%";
-        let state = '{{ dist_name}}';
+
+        let state = '{{ dist_name }}';
         // state =  state.replace(/ /g, '_');
         // if(pw_data[0].state != 'state')
         //     {
-        let newState = pw_data[0].state;
-        newState = newState.replace(/ /g, '_');
+        let newState = pw_data[0].area_id;
+        // newState = newState.replace(/ /g, '_');
         $('a.lc_link').each(function () {
             var oldUrl = $(this).attr("href"); // Get current url
             let stateVal = oldUrl.split('/')[1];
-
             if (!stateVal.startsWith('20'))
                 var newUrl = oldUrl.replace(stateVal, newState); // Create new url
 
-            $(this).attr("href", newUrl); // Set herf value
+            $(this).attr("href", newUrl); // Set href value
         });
 
         // }
 
     }
+
+
+$(document).ready(function() {
+    $('#areaSt').bind('change', function() {
+        var elements = $('.dtList').children().hide(); // hide all the elements
+        var value = $(this).val();
+        if (value == 22) { // if somethings' selected
+            elements.show(); // show the ones we want
+        }
+    }).trigger('change');
+
+});
 
 </script>
 
