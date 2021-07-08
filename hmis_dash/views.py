@@ -5,10 +5,10 @@ from django.views.generic import TemplateView
 from django.core import serializers
 from django.core.serializers import serialize
 from django.db.models import Q
-from dashboard.models import AreaDetails
+from dashboard.models import AreaDetails, HmisPw, HmisChldImmunzt, HmisChldDisease
 from django.core.serializers.json import DjangoJSONEncoder 
 
-from .models import (HmisPw, HmisChldImmunzt, HmisChldDisease, PieState, PieChldDisease, PieChldImmunzt, GeojsonIndiaLevel)
+from .models import (PieState, PieChldDisease, PieChldImmunzt, GeojsonIndiaLevel)
 
 # Create your views here.
 
