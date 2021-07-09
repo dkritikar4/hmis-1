@@ -117,14 +117,13 @@
   </div>
   <div class="dropdown m-1">
     <select name="state" id="state" class="selectpicker" multiple>
-      {% for state_select in state %}
-      <option value='{{ state_select.state }}'>{{ state_select.state }}</option>
+      {% for area_select in area_list %}
+      <option value='{{ area_select.area_name }}'>{{ area_select.area_name }}</option>
       {% endfor %}
     </select>
   </div>
 
-  <button type="button" class="btn btn-light m-1" onclick="location.href=`{% url 'linenumeric' fy %}`">Count</button>
-
+  <button type="button" class="btn btn-light m-1" onclick="location.href=`{% url 'linenumeric' dist_name fy %}`">Count</button>
   <!-- <div class="dropdown m-1">
     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
       aria-haspopup="true" aria-expanded="false">
@@ -175,8 +174,8 @@
     height = 550;
 
   //   let prjType = 'Urban';
-  let stateName = [];
-  stateName.push('All States');
+  let areaName = [];
+  areaName.push("India");
   let selectedYear = "{{fy}}";
 
   const svg = d3.select('#chart').append('svg').attr('id', 'svg1').attr('width', 1000)
@@ -278,7 +277,7 @@
   var color = d3.scale.category10();
 
   const render = data => {
-    console.log(data, "data in render")
+    // console.log(data, "data in render")
     var width1;
 
     // Scale the range of the data
@@ -293,7 +292,7 @@
     // Nest the entries by block
 
     dataNest = d3.nest()
-      .key(function (d) { return d.state })
+      .key(function (d) { return d.areaN })
       .entries(data);
 
     var result = dataNest.filter(function (val, idx, arr) {
@@ -505,8 +504,9 @@
   data_from_django = {{ data | safe }};
   var data = []
   data_from_django.forEach(element => {
-    data.push(element.fields);
+    data.push(element);
   });
+
 
   data.forEach(function (d) {
 
@@ -520,9 +520,10 @@
     d.pw_ifa = +d.pw_ifa;
     d.c_section_deliveries = +d.c_section_deliveries;
     d.per_still_birth = +d.per_still_birth;
-    d.state = d.state;
+    d.area_id = +d.area_id;
+    d.area_name = d.area_name;
     d.month = d.month;
-    d.year = d.year;
+    d.financial_year = d.financial_year;
   });
 
   let section = 'early_anc_register'
@@ -531,7 +532,7 @@
     var val = $(this).text();
     selectedCategory = val;
     setSection(val);
-    st_data = filterCSV(data, 'state', stateName);
+    st_data = filterCSV(data, 'area_name', areaName);
     d3.selectAll(".mouse-per-line circle").remove();
     setData(st_data, section);
 
@@ -542,12 +543,12 @@
     let selectedCat = choices[0].replace(/_/g, ' ');
     selectedCategory = selectedCat;
     $('.category a').parents('.dropdown').find('.dropdown-toggle').html(selectedCat + ' <span class="selectedCategory"></span>');
-    st_data = filterCSV(data, 'state', stateName);
+    st_data = filterCSV(data, 'area_name', areaName);
     setSection(selectedCat);
     setData(st_data, section);
   }
   else {
-    st_data = filterCSV(data, 'state', stateName);
+    st_data = filterCSV(data, 'area_name', areaName);
     setData(st_data, section);
   }
 
@@ -584,15 +585,15 @@
   // });
 
   $("#state").change(function () {
-    stateName = [];
-    stateName = $('#state').val();
-    st_data = filterCSV(data, 'state', stateName);
+    areaName = [];
+    areaName = $('#state').val();
+    st_data = filterCSV(data, 'area_name', areaName);
     legendbox.selectAll("*").remove();
     setData(st_data, section);
   });
 
   function setData(data, section) {
-    var dataFilter = data.map(function (d) { return { year: d.year, month: d.month, state: d.state, value: d[section] } })
+    var dataFilter = data.map(function (d) { return { financial_year: d.financial_year, month: d.month, areaID:d.area_id, areaN: d.area_name, value: d[section] } })
 
     //debugger
     //   console.log(data,"data in setData")
@@ -609,9 +610,10 @@
 
 
   //Initial Graph
-  st_data = filterCSV(data, 'state', stateName);
+  st_data = filterCSV(data, 'area_name', areaName);
 
-  console.log(st_data, "fyData")
+
+  // console.log(st_data, "fyData")
   setData(st_data, section);
 
   function parseURLParameters() {
@@ -625,7 +627,7 @@
 
   $(function () {
     //bind event
-    $('#state').val('All States');
+    $('#state').val("India");
     // $('.state a').parents('.dropdown').find('.dropdown-toggle').html('All States' + ' <span class="selectedState"></span>');
 
     $(".category a").click(function () {

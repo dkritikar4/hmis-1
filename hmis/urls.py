@@ -33,9 +33,9 @@ urlpatterns = [
     url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/barchart$', hmisBarChart.as_view(), name='barchart'),
     url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/fy_line$', fyLine.as_view(), name='fy_line'),
     url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/fy_lineNum$', fyLineNum.as_view(), name='fy_lineNum'),
-    url(r'^(?P<fy>[-\w\ ]+)/hmis_dash/linechart$', hmisLineChart.as_view(), name='linechart'),
+    url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/linechart$', hmisLineChart.as_view(), name='linechart'),
     url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/barnumeric$', hmisBarNumericChart.as_view(), name='barnumeric'),
-    url(r'^(?P<fy>[-\w\ ]+)/hmis_dash/linenumeric$', hmisLineNumericChart.as_view(), name='linenumeric'),
+    url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/linenumeric$', hmisLineNumericChart.as_view(), name='linenumeric'),
 
     url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/ci_bar$', chldImmuBar.as_view(), name='ci_bar'),
     url(r'^(?P<fy>[-\w\ ]+)/hmis_dash/ci_line$', chldImmuLine.as_view(), name='ci_line'),
@@ -48,7 +48,7 @@ urlpatterns = [
     url(r'^(?P<fy>[-\w\ ]+)/hmis_dash/cd_linenumeric$', chldDiseaseLineNumeric.as_view(), name='cd_linenumeric'),
 
     url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/tableOverview$', hmisTableChart.as_view(), name='tablechart'),
-    url(r'^(?P<fy>[-\w\ ]+)/hmis_dash/stlvl_pie$', pieStateLevel.as_view(), name='stlvl_pie'),
+    url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/stlvl_pie$', pieStateLevel.as_view(), name='stlvl_pie'),
     url(r'^(?P<fy>[-\w\ ]+)/hmis_dash/ci_pie$', pieChildImmu.as_view(), name='ci_pie'),
     url(r'^(?P<fy>[-\w\ ]+)/hmis_dash/cd_pie$', pieChildDisease.as_view(), name='cd_pie'),
 

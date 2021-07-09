@@ -92,22 +92,15 @@
 
 <div class="row text-center">
   <div class="col-12 mb-5">
-      {% if fy == '2020-2021' %}
-      <input type="text" id="monthS" name="somename" data-provide="slider" data-slider-ticks="[0, 1, 2, 3]"
-          data-slider-ticks-labels='["All", "April", "May", "June"]' data-slider-min="0" data-slider-max="4"
-          data-slider-step="1" data-slider-value="0" data-slider-tooltip="hide">
-
-      {% else %}
       <input type="text" id="monthSlider" name="somename" data-provide="slider"
             data-slider-ticks="[0, 1, 2, 3, 4, 5,6,7,8,9,10,11,12]"
-            data-slider-ticks-labels='["All", "April", "May", "June", "July", "August", "September", "October", "November", "December",  "January", "February", "March"]'
+            data-slider-ticks-labels='["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]'
             data-slider-min="0" data-slider-max="12" data-slider-step="1" data-slider-value="0"
             data-slider-tooltip="hide">
-      {% endif %}
   </div>
 </div>
 
-<div id="zero_percent">State Labels with less than 1.5% are are not visible please hover to see details</div>
+<div id="zero_percent">Pie Labels with less than 1.5% are are not visible please hover to see details</div>
 
 <div class="col-12" id="chart">
 </div>
@@ -265,10 +258,10 @@
       div.html("<b>" + "<span id='paraText'>" + 10 + "</span>" + "</b><br>" + arcInitial(d.data) + "%");
     }
 
-    oi = { "state": [], "early_anc_register": [], "anc_4_or_more": [], "pw_tt1_given": [], "pw_tt2_given": [], "pw_tt_booster_given": [], "pw_calcium": [],"pw_albendazole": [],"pw_ifa": [],"c_section_deliveries": [],"per_pw_reg_anc": [], "per_still_birth": [] }
+    oi = { "area_name": [], "early_anc_register": [], "anc_4_or_more": [], "pw_tt1_given": [], "pw_tt2_given": [], "pw_tt_booster_given": [], "pw_calcium": [],"pw_albendazole": [],"pw_ifa": [],"c_section_deliveries": [],"per_pw_reg_anc": [], "per_still_birth": [] }
 
     data.forEach(d => {
-      oi.state.push(d.state);
+      oi.area_name.push(d.area_name);
       oi.early_anc_register.push(d.early_anc_register);
       oi.anc_4_or_more.push(d.anc_4_or_more);
       oi.pw_tt1_given.push(d.pw_tt1_given);
@@ -300,7 +293,7 @@
 
 
     arcEnter.on("mouseover", function (d) {
-      d3.select("#tooltip #stateN").text("State Name:" + d.data.state)
+      d3.select("#tooltip #stateN").text("Area Name:" + d.data.area_name)
       d3.select("#tooltip")
         .transition().duration(200)
         .style("left", d3.event.pageX + "px")
@@ -342,7 +335,7 @@
         .attr("class", "arc");
 
       arcEnter.on("mouseover", function (d) {
-        d3.select("#tooltip #stateN").text("State Name:" + d.data.state)
+        d3.select("#tooltip #stateN").text("State Name:" + d.data.area_name)
         d3.select("#tooltip")
           .transition().duration(200)
           .style("left", d3.event.pageX + "px")
@@ -393,7 +386,7 @@
       // Add the polylines between chart and labels:
       arcEnter
         .append('text')
-        .text(function (d) { if (arcInitial(d.data) > 1.5) { return d.data.state } })
+        .text(function (d) { if (arcInitial(d.data) > 1.5) { return d.data.area_name } })
         .attr('transform', function (d) {
           var pos = label.centroid(d);
           var midangle = d.startAngle + (d.endAngle - d.startAngle) / 2
@@ -475,7 +468,7 @@
   data_from_django = {{ data | safe }};
   var data = []
   data_from_django.forEach(element => {
-    data.push(element.fields);
+    data.push(element);
   });
 
   data.forEach(d => {
@@ -501,32 +494,18 @@
     d.tot_still_birth = +d.tot_still_birth;
     d.per_still_birth = +d.per_still_birth;
     d.per_pw_reg_anc = +d.per_pw_reg_anc;
-    d.state = d.state;
+    d.area_id = +d.area_id;
+    d.area_name = d.area_name;
     d.month = d.month;
-    d.year = d.year;
+    d.financial_year = d.financial_year;
   });
 
-
-let tickLabel21 = ["All", "April", "May", "June"]
-
-$('#monthS').slider().on('slideStop', function (ev) {
-    console.log("in monthS")
-
-    var val = tickLabel21[ev.value];
-    console.log(val, 'val in monthS')
-    document.getElementById('bartitleMonth').innerHTML = val;
-    mydata = filterCSV(data, 'month', val);
-    svg.selectAll("*").remove();
-    render(mydata);
-});
-
-let tickLabels = ["All", "April", "May", "June", "July", "August", "September", "October", "November", "December", "January", "February", "March"]
+let tickLabels = ["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]
 
 $('#monthSlider').slider().on('slideStop', function (ev) {
     var val = tickLabels[ev.value];
     document.getElementById('bartitleMonth').innerHTML = val;
     mydata = filterCSV(data, 'month', val);
-    console.log("MonthSlider Data", mydata)
     svg.selectAll("*").remove();
     render(mydata);
 });

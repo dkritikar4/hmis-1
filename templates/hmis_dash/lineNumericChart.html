@@ -118,13 +118,13 @@
   </div>
   <div class="dropdown m-1">
     <select name="state" id="state" class="selectpicker" multiple>
-      {% for state_select in state %}
-      <option value='{{ state_select.state }}'>{{ state_select.state }}</option>
+      {% for area_select in area_list %}
+      <option value='{{ area_select.area_id }}'>{{ area_select.area_name }}</option>
       {% endfor %}
     </select>
   </div>
 
-  <button type="button" class="btn btn-light m-1" onclick="location.href=`{% url 'linechart' fy %}`">Percent</button>
+  <button type="button" class="btn btn-light m-1" onclick="location.href=`{% url 'linechart' dist_name fy %}`">Percent</button>
 
   <!-- <div class="dropdown m-1">
     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
@@ -606,7 +606,6 @@
   //Initial Graph
   st_data = filterCSV(data, 'state', stateName);
 
-  console.log(st_data, "fyData")
   setData(st_data, section);
 
   function parseURLParameters() {
