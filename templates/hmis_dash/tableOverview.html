@@ -63,9 +63,9 @@
             <span class="selectedCategory"></span>
         </button>
         <div class="dropdown-menu category" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#" onclick="block()">State</a>
+            <a class="dropdown-item" href="#" onclick="block()">Area</a>
         </div>
-    </div>
+    </div> 
     <!-- <div class="dropdown m-1">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
@@ -91,7 +91,7 @@
 <div class="row text-center">
     <div class="col-12 mb-3">
         <input type="text" id="monthSlider" name="somename" data-provide="slider" data-slider-ticks="[0, 1, 2, 3, 4, 5,6,7,8,9,10,11,12]"
-        data-slider-ticks-labels='["All", "April", "May", "June", "July", "August", "September", "October", "November", "December",  "January", "February", "March"]' data-slider-min="0"
+        data-slider-ticks-labels='["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]' data-slider-min="0"
         data-slider-max="5" data-slider-step="1" data-slider-value="0" data-slider-tooltip="hide">
     </div>
 </div>
@@ -150,11 +150,12 @@
 
     var data_pw = []
     data_from_django.forEach(element => {
-        data_pw.push(element.fields);
+        data_pw.push(element);
     });
 
+    console.log(data_from_django, "data_from_django")
     data_pw.forEach(d => {
-        d.state = d.state;
+        d.area_name = d.area_name;
         d.early_anc_register = +d.early_anc_register;
         d.anc_4_or_more = +d.anc_4_or_more;
         d.pw_tt1_given = +d.pw_tt1_given;
@@ -181,11 +182,11 @@
 
     var data_childIm = []
     data_from_django_Im.forEach(element => {
-        data_childIm.push(element.fields);
+        data_childIm.push(element);
     });
 
     data_childIm.forEach(d => {
-        d.state = d.state;
+        d.area_name = d.area_name;
         d.chld_immunzt_vit_k1 = +d.chld_immunzt_vit_k1;
         d.per_chld_immunzt_vit_k1 = +d.per_chld_immunzt_vit_k1;
         d.chld_immunzt_bcg = +d.chld_immunzt_bcg;
@@ -204,12 +205,12 @@
 
     var data_childDi = []
     data_from_django_Di.forEach(element => {
-        data_childDi.push(element.fields);
+        data_childDi.push(element);
     });
 
    
     data_childDi.forEach(d => {
-        d.state = d.state;
+        d.area_name = d.area_name;
         d.chld_disease_pneumonia = +d.chld_disease_pneumonia;
         d.per_chld_disease_pneumonia = +d.per_chld_disease_pneumonia;
         d.chld_disease_sepsis = +d.chld_disease_sepsis;
@@ -226,7 +227,7 @@
     });
     
 
-    var tickLabels = ["All", "April", "May", "June", "July", "August", "September", "October", "November", "December",  "January", "February", "March"]
+    var tickLabels = ["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]
     $('#monthSlider').slider().on('slideStop', function (ev) {
         var val = tickLabels[ev.value];
         dataPw = filterCSV(data_pw, 'month', val);
@@ -272,7 +273,7 @@
             console.log("dataPw", dataPw);
             dataPw.forEach(d => {
                 var tbd = {}
-                tbd['State'] = d.state;
+                tbd['Area Name'] = d.area_name;
                 tbd['Total no of PW registered for ANC'] = d.tot_no_pw_reg_anc;
                 tbd['No. of Early ANC Registeration'] = d.no_early_anc_register;
                 tbd['Early ANC Registeration(%)'] = d.early_anc_register;
@@ -298,13 +299,13 @@
                 tbdata.push(tbd);
             });
             console.log("tbdata", tbdata);
-            column_data = { "state": [], "tot_no_pw_reg_anc": [], "no_early_anc_register": [], "early_anc_register": [], "no_anc_4_or_more": [], "anc_4_or_more": [], "no_pw_given_tt1": [],
+            column_data = { "area_name": [], "tot_no_pw_reg_anc": [], "no_early_anc_register": [], "early_anc_register": [], "no_anc_4_or_more": [], "anc_4_or_more": [], "no_pw_given_tt1": [],
             "pw_tt1_given": [], "no_pw_given_tt2": [], "pw_tt2_given": [], "no_pw_given_tt_booster": [], "pw_tt_booster_given": [], "no_pw_given_calcium": [], "pw_calcium": [], "no_pw_given_ifa": [],
             "pw_ifa": [], "no_pw_given_albendazole": [], "pw_albendazole": [], "tot_c_section_deliveries": [] , "c_section_deliveries": [], "tot_still_birth": [], "per_still_birth": [] } 
 
 
             dataPw.forEach(d => {
-                column_data.state.push(d.state);
+                column_data.area_name.push(d.area_name);
                 column_data.tot_no_pw_reg_anc.push(+d.tot_no_pw_reg_anc);
                 column_data.no_early_anc_register.push(+d.no_early_anc_register);
                 column_data.early_anc_register.push(+d.early_anc_register);
@@ -524,7 +525,7 @@
 
             dataChildIm.forEach(d => {
                 var tabdt = {}
-                tabdt['State'] = d.state;
+                tabdt['Area Name'] = d.area_name;
                 tabdt['Child immunisation - Vitamin K1'] = d.chld_immunzt_vit_k1;
                 tabdt['Child immunisation - Vitamin K1(%)'] = d.per_chld_immunzt_vit_k1;
                 tabdt['Child immunisation - BCG'] = d.chld_immunzt_bcg;
@@ -543,11 +544,11 @@
 
            console.log("tbdata2", tbdata2)
            console.log("dataChildIm", dataChildIm)
-            column_data = { "state": [], "chld_immunzt_vit_k1": [], "per_chld_immunzt_vit_k1": [], "chld_immunzt_bcg": [], "per_chld_immunzt_bcg": [], "chld_immunzt_9to11m_mr": [], "per_chld_immunzt_9to11m_mr": [], "chld_immunzt_9to11m_measl_1st_dose": [], "per_chld_immunzt_9to11m_measl_1st_dose": [], "chld_immunzt_vit_a_dose_1": [],"per_chld_immunzt_vit_a_dose_1": [],"no_chld_12to59m_albendazole": [], "per_no_chld_12to59m_albendazole": []} //"HeightP":[],"WeightP":[], "HeightWeightP":[] }
+            column_data = { "area_name": [], "chld_immunzt_vit_k1": [], "per_chld_immunzt_vit_k1": [], "chld_immunzt_bcg": [], "per_chld_immunzt_bcg": [], "chld_immunzt_9to11m_mr": [], "per_chld_immunzt_9to11m_mr": [], "chld_immunzt_9to11m_measl_1st_dose": [], "per_chld_immunzt_9to11m_measl_1st_dose": [], "chld_immunzt_vit_a_dose_1": [],"per_chld_immunzt_vit_a_dose_1": [],"no_chld_12to59m_albendazole": [], "per_no_chld_12to59m_albendazole": []} //"HeightP":[],"WeightP":[], "HeightWeightP":[] }
 
 
             dataChildIm.forEach(d => {
-                column_data.state.push(d.state);
+                column_data.area_name.push(d.area_name);
                 column_data.chld_immunzt_vit_k1.push(+d.chld_immunzt_vit_k1);
                 column_data.per_chld_immunzt_vit_k1.push(+d.per_chld_immunzt_vit_k1);
                 column_data.chld_immunzt_bcg.push(+d.chld_immunzt_bcg);
@@ -697,7 +698,7 @@
 
             dataChildDi.forEach(d => {
                 var tbdt = {}
-                tbdt['State'] = d.state;
+                tbdt['Area Name'] = d.area_name;
                 tbdt['Childhood Diseases - Pneumonia'] = d.chld_disease_pneumonia;
                 tbdt['Childhood Diseases - Pneumonia(%)'] = d.per_chld_disease_pneumonia;
                 tbdt['Childhood Diseases - Sepsis'] = d.chld_disease_sepsis;
@@ -714,11 +715,11 @@
 
                 tbdata2.push(tbdt);
             });
-            column_data = { "state": [], "chld_disease_pneumonia": [], "per_chld_disease_pneumonia": [], "chld_disease_sepsis": [], "per_chld_disease_sepsis": [], "chld_disease_tb": [], "per_chld_disease_tb": [], "chld_disease_malaria": [], "per_chld_disease_malaria": [], "chld_disease_diarrhoea": [], "per_chld_disease_diarrhoea": [], "chld_disease_sam": [] , "per_chld_disease_sam": []  } //"HeightP":[],"WeightP":[], "HeightWeightP":[] }
+            column_data = { "area_name": [], "chld_disease_pneumonia": [], "per_chld_disease_pneumonia": [], "chld_disease_sepsis": [], "per_chld_disease_sepsis": [], "chld_disease_tb": [], "per_chld_disease_tb": [], "chld_disease_malaria": [], "per_chld_disease_malaria": [], "chld_disease_diarrhoea": [], "per_chld_disease_diarrhoea": [], "chld_disease_sam": [] , "per_chld_disease_sam": []  } //"HeightP":[],"WeightP":[], "HeightWeightP":[] }
             console.log("dataChildDi", dataChildDi);
 
             dataChildDi.forEach(d => {
-                column_data.state.push(d.state);
+                column_data.area_name.push(d.area_name);
                 column_data.chld_disease_pneumonia.push(+d.chld_disease_pneumonia);
                 column_data.per_chld_disease_pneumonia.push(+d.per_chld_disease_pneumonia);
                 column_data.chld_disease_sepsis.push(+d.chld_disease_sepsis);

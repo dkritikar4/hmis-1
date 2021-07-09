@@ -215,15 +215,36 @@ class hmisTableChart(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     redirect_field_name = 'login'
 
-    def get(self,request,fy=None):
+    def get(self,request,fy=None, dist_name = None):
+        district = request.GET.get('dist_name', dist_name) 
+        print(district)
         fy_name = request.GET.get('fy', fy) 
-        pw_data = HmisStatePw.objects.filter(Q(year=fy_name)).order_by('month') 
-        childIm_data=HmisStChldImmunzt.objects.filter(Q(year=fy_name)).order_by('month')
-        childDi_data=HmisStChldDisease.objects.filter(Q(year=fy_name)).order_by('month')
-        st_name = HmisStatePw.objects.values('state').distinct().order_by('state')
-        json_childIm_data = serializers.serialize('json',childIm_data)
-        json_childDi_data = serializers.serialize('json',childDi_data)
-        jsonpw_data = serializers.serialize('json',pw_data)
+        if district == '22': 
+            pw_data = list(HmisPw.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22)).values())
+            childIm_data = list(HmisChldImmunzt.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22)).values())
+            childDi_data = list(HmisChldDisease.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22)).values())
+            # area_list = AreaDetails.objects.filter(Q(area_parent_id=22)).values('area_name').distinct().order_by('area_id')
+        else:
+            pw_data = list(HmisPw.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=1)).values())
+            childIm_data = list(HmisChldImmunzt.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=1)).values())
+            childDi_data = list(HmisChldDisease.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=1)).values())
+            # area_list = AreaDetails.objects.filter(Q(area_parent_id=1)).values('area_name').distinct().order_by('area_id')
+
+        for i in pw_data:
+            area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
+            i.update(area_n[0])
+
+        for i in childIm_data:
+            area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
+            i.update(area_n[0])   
+
+        for i in childDi_data:
+            area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
+            i.update(area_n[0])  
+
+        json_childIm_data = json.dumps(childIm_data, cls=DjangoJSONEncoder)
+        json_childDi_data = json.dumps(childDi_data, cls=DjangoJSONEncoder)
+        jsonpw_data = json.dumps(pw_data, cls=DjangoJSONEncoder)
 
         context = {
             'chilIm_data': json_childIm_data,
@@ -231,7 +252,7 @@ class hmisTableChart(LoginRequiredMixin, TemplateView):
             'pw_data': jsonpw_data
         }
 
-        return render(request,'hmis_dash/tableOverview.html', {'context':context, 'fy': fy_name, 'state':st_name})
+        return render(request,'hmis_dash/tableOverview.html', {'context':context, 'fy': fy_name, 'dist_name': district})
 
 
 class pieStateLevel(LoginRequiredMixin, TemplateView):
