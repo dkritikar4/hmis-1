@@ -671,7 +671,7 @@
                             </tr>
 
                             <tr class="per_value">
-                                <td>1.2.7</td>
+                                <td>3.1</td>
                                 <td colspan="6"> C-section deliveries: <span id="dt_csection"></span></td>
                                 <td colspan="2">
                                     <a href="{% url 'barchart' dist_name fy %}?id1=C-section_deliveries" class="lc_link"
@@ -1710,11 +1710,18 @@
         document.getElementById('st_nocdsam').innerHTML = cd_data[0].chld_disease_sam;
         document.getElementById('st_cdsam').innerHTML = cd_data[0].per_chld_disease_sam + "%";
 
+        let newState;
         let state = '{{ dist_name }}';
         // state =  state.replace(/ /g, '_');
         // if(pw_data[0].state != 'state')
         //     {
-        let newState = pw_data[0].area_id;
+        if (pw_data[0].area_parent_id == 22 ){
+            newState = pw_data[0].area_parent_id;
+        }
+        else{
+            newState = pw_data[0].area_id;
+        }
+
         // newState = newState.replace(/ /g, '_');
         $('a.lc_link').each(function () {
             var oldUrl = $(this).attr("href"); // Get current url

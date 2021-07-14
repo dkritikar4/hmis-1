@@ -64,7 +64,7 @@ class RegionOverview(LoginRequiredMixin, TemplateView):
         cd_data = HmisChldDisease.objects.filter(Q(area_id=1) & Q(financial_year=fy_name) & Q(month='All'))
 
         st_name = AreaDetails.objects.filter(Q(area_level = 1) | Q(area_level = 2)).values('area_name', 'area_id').distinct().order_by('area_id')
-        dt_name = AreaDetails.objects.filter(Q(area_level = 3) & Q(area_parent_id = 22)).values('area_name', 'area_id').distinct().order_by('area_id')
+        dt_name = AreaDetails.objects.filter(Q(area_parent_id = 22)).values('area_name', 'area_id').distinct().order_by('area_id')
 
         month_name = HmisPw.objects.filter(Q(financial_year=fy_name)).values('month').distinct().order_by('month')
 
