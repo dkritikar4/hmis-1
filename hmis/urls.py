@@ -49,8 +49,8 @@ urlpatterns = [
 
     url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/tableOverview$', hmisTableChart.as_view(), name='tablechart'),
     url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/stlvl_pie$', pieStateLevel.as_view(), name='stlvl_pie'),
-    url(r'^(?P<fy>[-\w\ ]+)/hmis_dash/ci_pie$', pieChildImmu.as_view(), name='ci_pie'),
-    url(r'^(?P<fy>[-\w\ ]+)/hmis_dash/cd_pie$', pieChildDisease.as_view(), name='cd_pie'),
+    url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/ci_pie$', pieChildImmu.as_view(), name='ci_pie'),
+    url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/cd_pie$', pieChildDisease.as_view(), name='cd_pie'),
 
     url(r'^(?P<fy>[-\w\ ]+)/hmis_dash/pw_map$', mapStPW.as_view(), name='pw_map'),
     url(r'^(?P<fy>[-\w\ ]+)/hmis_dash/cd_map$', mapStChldDisease.as_view(), name='ci_map'),

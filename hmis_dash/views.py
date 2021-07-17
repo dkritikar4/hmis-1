@@ -348,24 +348,45 @@ class pieChildImmu(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     redirect_field_name = 'login'
 
-    def get(self, request, fy= None):
+    def get(self, request, fy= None, dist_name = None):
+        district = request.GET.get('dist_name', dist_name) 
         fy_name = request.GET.get('fy', fy) 
-        data = PieChldImmunzt.objects.filter(Q(year=fy_name))
-        jsondata = serializers.serialize('json', data)
+        fy_name = request.GET.get('fy', fy) 
+        if district == '22': 
+            data = list(CiPie.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22)).values())
+            
+        else:    
+            data = list(CiPie.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=1)).values())
 
-        return render(request,'hmis_dash/pieChldImmu.html', {'data':jsondata, 'fy': fy_name})
+        for i in data:
+            area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
+            i.update(area_n[0])
+
+        jsondata = json.dumps(data, cls=DjangoJSONEncoder)
+
+        return render(request,'hmis_dash/pieChldImmu.html', {'data':jsondata, 'fy': fy_name, 'dist_name':district})
 
 
 class pieChildDisease(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     redirect_field_name = 'login'
 
-    def get(self, request, fy= None):
+    def get(self, request, fy= None, dist_name = None):
+        district = request.GET.get('dist_name', dist_name)
         fy_name = request.GET.get('fy', fy) 
-        data = PieChldDisease.objects.filter(Q(year=fy_name))
-        jsondata = serializers.serialize('json', data)
+        if district == '22': 
+            data = list(CdPie.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22)).values())
+            
+        else:    
+            data = list(CdPie.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=1)).values())
 
-        return render(request,'hmis_dash/pieChldDisease.html', {'data':jsondata, 'fy': fy_name})
+        for i in data:
+            area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
+            i.update(area_n[0])
+
+        jsondata = json.dumps(data, cls=DjangoJSONEncoder)
+
+        return render(request,'hmis_dash/pieChldDisease.html', {'data':jsondata, 'fy': fy_name, 'dist_name':district})
 
 
 class mapStPW(LoginRequiredMixin, TemplateView):
