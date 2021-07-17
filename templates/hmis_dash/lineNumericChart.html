@@ -176,8 +176,12 @@
     height = 550;
 
   //   let prjType = 'Urban';
-  let stateName = [];
-  stateName.push('All States');
+  let selectedArea = "{{ dist_name }}";
+  let areaName = [];
+  if (selectedArea == '22')
+    areaName.push(405);  
+  else
+    areaName.push(1);
   let selectedYear = "{{fy}}";
 
   const svg = d3.select('#chart').append('svg').attr('id', 'svg1').attr('width', 1000)
@@ -293,7 +297,7 @@
     // Nest the entries by block
 
     dataNest = d3.nest()
-      .key(function (d) { return d.state })
+      .key(function (d) { return d.areaN})
       .entries(data);
 
     var result = dataNest.filter(function (val, idx, arr) {
@@ -505,7 +509,7 @@
   data_from_django = {{ data | safe }};
   var data = []
   data_from_django.forEach(element => {
-    data.push(element.fields);
+    data.push(element);
   });
 
   data.forEach(function (d) {
@@ -521,9 +525,10 @@
     d.no_pw_given_albendazole = +d.no_pw_given_albendazole;
     d.tot_c_section_deliveries = +d.tot_c_section_deliveries;
     d.tot_still_birth = +d.tot_still_birth;
-    d.state = d.state;
+    d.area_id = +d.area_id;
+    d.area_name = d.area_name;
     d.month = d.month;
-    d.year = d.year;
+    d.financial_year = d.financial_year;
   });
 
   let section = 'no_early_anc_register'
@@ -532,7 +537,7 @@
     var val = $(this).text();
     selectedCategory = val;
     setSection(val);
-    st_data = filterCSV(data, 'state', stateName);
+    st_data = filterCSV(data, 'area_id', areaName);
     d3.selectAll(".mouse-per-line circle").remove();
     setData(st_data, section);
 
@@ -543,12 +548,12 @@
     let selectedCat = choices[0].replace(/_/g, ' ');
     selectedCategory = selectedCat;
     $('.category a').parents('.dropdown').find('.dropdown-toggle').html(selectedCat + ' <span class="selectedCategory"></span>');
-    st_data = filterCSV(data, 'state', stateName);
+    st_data = filterCSV(data, 'area_id', areaName);
     setSection(selectedCat);
     setData(st_data, section);
   }
   else {
-    st_data = filterCSV(data, 'state', stateName);
+    st_data = filterCSV(data, 'area_id', areaName);
     setData(st_data, section);
   }
 
@@ -579,15 +584,15 @@
 
 
   $("#state").change(function () {
-    stateName = [];
-    stateName = $('#state').val();
-    st_data = filterCSV(data, 'state', stateName);
+    areaName = [];
+    areaName = $('#state').val();
+    st_data = filterCSV(data, 'area_id', areaName);
     legendbox.selectAll("*").remove();
     setData(st_data, section);
   });
 
   function setData(data, section) {
-    var dataFilter = data.map(function (d) { return { year: d.year, month: d.month, state: d.state, value: d[section] } })
+    var dataFilter = data.map(function (d) { return { financial_year: d.financial_year, month: d.month, areaID:d.area_id, areaN: d.area_name, value: d[section] } })
 
     //debugger
     //   console.log(data,"data in setData")
@@ -604,7 +609,7 @@
 
 
   //Initial Graph
-  st_data = filterCSV(data, 'state', stateName);
+  st_data = filterCSV(data, 'area_id', areaName);
 
   setData(st_data, section);
 
@@ -619,7 +624,10 @@
 
   $(function () {
     //bind event
-    $('#state').val('All States');
+    if(selectedArea == '22')
+      $('#state').val(405);
+    else
+      $('#state').val(1);
 
     $(".category a").click(function () {
       var valCategory = $(this).text();

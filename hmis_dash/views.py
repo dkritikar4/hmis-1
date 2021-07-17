@@ -60,7 +60,7 @@ class hmisLineChart(LoginRequiredMixin, TemplateView):
 
         jsondata = json.dumps(data, cls=DjangoJSONEncoder)
 
-        return render(request,'hmis_dash/linechart.html', {'data':jsondata, 'fy': fy_name, 'area_list':area_list, 'dist_name': district})
+        return render(request,'hmis_dash/linechart.html', {'data':jsondata, 'fy': fy_name, 'area_list': area_list, 'dist_name': district})
 
 
 class fyLine(LoginRequiredMixin, TemplateView):
@@ -167,13 +167,26 @@ class chldImmuLine(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     redirect_field_name = 'login'
 
-    def get(self,request,fy=None):
+    def get(self,request,fy=None, dist_name = None):
+        district = request.GET.get('dist_name', dist_name) 
         fy_name = request.GET.get('fy', fy) 
-        data = HmisStChldImmunzt.objects.filter(Q(year=fy_name)).order_by('month').exclude(month='All')
-        st_name = HmisStChldImmunzt.objects.values('state').distinct().order_by('state')
-        jsondata = serializers.serialize('json',data)
 
-        return render(request,'hmis_dash/chldImmuLine.html', {'data':jsondata, 'fy': fy_name, 'state':st_name})
+        if district == '22': 
+            data = list(HmisChldImmunzt.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22)).order_by('month').exclude(month='All').values())
+            area_list = AreaDetails.objects.filter(Q(area_parent_id=22)).values('area_name', 'area_id').distinct().order_by('area_id')
+            
+        else:    
+            data = list(HmisChldImmunzt.objects.filter(Q(financial_year=fy_name) & (Q(area_parent_id=1) | Q(area_parent_id=-1))).order_by('month').exclude(month='All').values())
+            area_list = AreaDetails.objects.filter(Q(area_parent_id=1) | Q(area_parent_id=-1)).values('area_name', 'area_id').distinct().order_by('area_id')
+
+        for i in data:
+            area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
+            i.update(area_n[0])
+
+        jsondata = json.dumps(data, cls=DjangoJSONEncoder)
+
+
+        return render(request,'hmis_dash/chldImmuLine.html', {'data':jsondata, 'fy': fy_name, 'area_list': area_list, 'dist_name': district})
 
 
 class chldImmuBarNumeric(LoginRequiredMixin, TemplateView):
@@ -202,13 +215,26 @@ class chldImmuLineNumeric(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     redirect_field_name = 'login'
 
-    def get(self,request,fy=None):
+    def get(self,request,fy=None, dist_name = None):
+        district = request.GET.get('dist_name', dist_name) 
         fy_name = request.GET.get('fy', fy) 
-        data = HmisStChldImmunzt.objects.filter(Q(year=fy_name)).order_by('month').exclude(month='All')
-        st_name = HmisStChldImmunzt.objects.values('state').distinct().order_by('state')
-        jsondata = serializers.serialize('json',data)
 
-        return render(request,'hmis_dash/chldImmuLineNumeric.html', {'data':jsondata, 'fy': fy_name, 'state':st_name})
+        if district == '22': 
+            data = list(HmisChldImmunzt.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22)).order_by('month').exclude(month='All').values())
+            area_list = AreaDetails.objects.filter(Q(area_parent_id=22)).values('area_name', 'area_id').distinct().order_by('area_id')
+            
+        else:    
+            data = list(HmisChldImmunzt.objects.filter(Q(financial_year=fy_name) & (Q(area_parent_id=1) | Q(area_parent_id=-1))).order_by('month').exclude(month='All').values())
+            area_list = AreaDetails.objects.filter(Q(area_parent_id=1) | Q(area_parent_id=-1)).values('area_name', 'area_id').distinct().order_by('area_id')
+
+        for i in data:
+            area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
+            i.update(area_n[0])
+
+        jsondata = json.dumps(data, cls=DjangoJSONEncoder)
+
+
+        return render(request,'hmis_dash/chldImmuLineNumeric.html', {'data':jsondata, 'fy': fy_name, 'area_list': area_list, 'dist_name': district})
 
 
 class chldDiseaseBar(LoginRequiredMixin, TemplateView):
@@ -237,13 +263,25 @@ class chldDiseaseLine(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     redirect_field_name = 'login'
 
-    def get(self,request,fy=None):
+    def get(self,request,fy=None, dist_name = None):
+        district = request.GET.get('dist_name', dist_name) 
         fy_name = request.GET.get('fy', fy) 
-        data = HmisStChldDisease.objects.filter(Q(year=fy_name)).order_by('month').exclude(month='All')
-        st_name = HmisStChldDisease.objects.values('state').distinct().order_by('state')
-        jsondata = serializers.serialize('json',data)
 
-        return render(request,'hmis_dash/chldDiseaseLine.html', {'data':jsondata, 'fy': fy_name, 'state':st_name})
+        if district == '22': 
+            data = list(HmisChldDisease.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22)).order_by('month').exclude(month='All').values())
+            area_list = AreaDetails.objects.filter(Q(area_parent_id=22)).values('area_name', 'area_id').distinct().order_by('area_id')
+            
+        else:    
+            data = list(HmisChldDisease.objects.filter(Q(financial_year=fy_name) & (Q(area_parent_id=1) | Q(area_parent_id=-1))).order_by('month').exclude(month='All').values())
+            area_list = AreaDetails.objects.filter(Q(area_parent_id=1) | Q(area_parent_id=-1)).values('area_name', 'area_id').distinct().order_by('area_id')
+
+        for i in data:
+            area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
+            i.update(area_n[0])
+
+        jsondata = json.dumps(data, cls=DjangoJSONEncoder)
+
+        return render(request,'hmis_dash/chldDiseaseLine.html', {'data':jsondata, 'fy': fy_name, 'area_list':area_list, 'dist_name': district})
 
 
 class chldDiseaseBarNumeric(LoginRequiredMixin, TemplateView):
@@ -272,13 +310,26 @@ class chldDiseaseLineNumeric(LoginRequiredMixin, TemplateView):
     login_url = '/login/'
     redirect_field_name = 'login'
 
-    def get(self,request,fy=None):
+    def get(self,request,fy=None, dist_name = None):
+        district = request.GET.get('dist_name', dist_name) 
         fy_name = request.GET.get('fy', fy) 
-        data = HmisStChldDisease.objects.filter(Q(year=fy_name)).order_by('month').exclude(month='All')
-        st_name = HmisStChldDisease.objects.values('state').distinct().order_by('state')
-        jsondata = serializers.serialize('json',data)
 
-        return render(request,'hmis_dash/chldDiseaseLineNumeric.html', {'data':jsondata, 'fy': fy_name, 'state':st_name})
+        if district == '22': 
+            data = list(HmisChldDisease.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22)).exclude(month='All').values())
+            area_list = AreaDetails.objects.filter(Q(area_parent_id=22)).values('area_name', 'area_id').distinct().order_by('area_id')
+            
+        else:    
+            data = list(HmisChldDisease.objects.filter(Q(financial_year=fy_name) & (Q(area_parent_id=1) | Q(area_parent_id=-1))).exclude(month='All').values())
+            area_list = AreaDetails.objects.filter(Q(area_parent_id=1) | Q(area_parent_id=-1)).values('area_name', 'area_id').distinct().order_by('area_id')
+
+        for i in data:
+            area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
+            i.update(area_n[0])
+        print(area_list)
+
+        jsondata = json.dumps(data, cls=DjangoJSONEncoder)
+
+        return render(request,'hmis_dash/chldDiseaseLineNumeric.html', {'data':jsondata, 'fy': fy_name, 'area_list':area_list,'dist_name': district})
 
     
 class hmisTableChart(LoginRequiredMixin, TemplateView):
