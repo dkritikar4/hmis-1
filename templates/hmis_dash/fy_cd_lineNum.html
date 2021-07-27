@@ -107,16 +107,16 @@
         </div>
     </div>
     <div class="dropdown m-1">
-        <select name="state" id="state" class="custom-select">
-            {% for state_select in state %}
-            <option value='{{ state_select.state }}'>{{ state_select.state }}</option>
+        <select name="state" id="state" class="selectpicker" multiple>
+            {% for area_select in area_list %}
+            <option value='{{ area_select.area_id }}'>{{ area_select.area_name }}</option>
             {% endfor %}
         </select>
     </div>
     <div class="dropdown m-1">
         <select name="fyList" id="fyList" class="selectpicker" multiple>
             {% for fy_select in fyList %}
-            <option value='{{ fy_select.year }}'>{{ fy_select.year }}</option>
+            <option value='{{ fy_select.financial_year }}'>{{ fy_select.financial_year }}</option>
             {% endfor %}
         </select>
     </div>
@@ -131,8 +131,8 @@
       <span class="selectedState"></span>
     </button>
     <div class="dropdown-menu state" aria-labelledby="dropdownMenuButton">
-      {% for state_select in state %}
-      <a class="dropdown-item" href="#">{{ state_select.state }}</a>
+      {% for area_select in area_list %}
+      <a class="dropdown-item" href="#">{{ area_select.area_name }}</a>
       {% endfor %}
     </div>
   </div> -->
@@ -175,10 +175,13 @@
 
     let sel_fy = '{{ fy }}';
     let sel_st = '{{ dist_name }}';
-    let af_rm_sel_st= sel_st.replace(/_/g, ' ');
-
-    let stateName = [];
-    stateName.push(af_rm_sel_st);
+    
+    let areaName = [];
+    if (sel_st == '22')
+        areaName.push(405);  
+    else
+        areaName.push(1);
+        
     let selectedYear = [];
     selectedYear.push(sel_fy)
 
@@ -295,7 +298,7 @@
         // Nest the entries by block
 
         dataNest = d3.nest()
-            .key(function (d) { return d.year })
+            .key(function (d) { return d.financial_year })
             .entries(data);
 
         var result = dataNest.filter(function (val, idx, arr) {
@@ -456,7 +459,7 @@
                     d3.select(".mouse-line")
                         .attr("d", function () {
                             monthX = d.values[xI].month;
-                            stname = d.values[xI].state;
+                            stname = d.values[xI].areaN;
                             var data = "M" + xScale(d.values[xI].month) + "," + height;
                             data += " " + xScale(d.values[xI].month) + "," + 0;
                             return data;
@@ -508,7 +511,7 @@
     data_from_django = {{ data | safe }};
     var data = []
     data_from_django.forEach(element => {
-        data.push(element.fields);
+        data.push(element);
     });
 
     data.forEach(function (d) {
@@ -521,9 +524,10 @@
         d.chld_disease_diarrhoea_trtd_inpatnt = +d.chld_disease_diarrhoea_trtd_inpatnt;
         d.chld_admtd_upper_resp_infec = +d.chld_admtd_upper_resp_infec;
         d.chld_disease_sam = +d.chld_disease_sam;
-        d.state = d.state;
+        d.area_id = +d.area_id;
+        d.area_name = d.area_name;
         d.month = d.month;
-        d.year = d.year;
+        d.financial_year = d.financial_year;
     });
 
     let section = 'chld_disease_pneumonia'
@@ -532,8 +536,8 @@
         var val = $(this).text();
         selectedCategory = val;
         setSection(val);
-        st_data = filterCSV(data, 'state', stateName);
-        fyData = filterCSV(st_data, 'year', selectedYear);
+        st_data = filterCSV(data, 'area_id', areaName);
+        fyData = filterCSV(st_data, 'financial_year', selectedYear);
         d3.selectAll(".mouse-per-line circle").remove();
         setData(fyData, section);
 
@@ -544,14 +548,14 @@
         let selectedCat = choices[0].replace(/_/g, ' ');
         selectedCategory = selectedCat;
         $('.category a').parents('.dropdown').find('.dropdown-toggle').html(selectedCat + ' <span class="selectedCategory"></span>');
-        st_data = filterCSV(data, 'state', stateName);
-        fyData = filterCSV(st_data, 'year', selectedYear);
+        st_data = filterCSV(data, 'area_id', areaName);
+        fyData = filterCSV(st_data, 'financial_year', selectedYear);
         setSection(selectedCat);
         setData(fyData, section);
     }
     else {
-        st_data = filterCSV(data, 'state', stateName);
-        fyData = filterCSV(st_data, 'year', selectedYear);
+        st_data = filterCSV(data, 'area_id', areaName);
+        fyData = filterCSV(st_data, 'financial_year', selectedYear);
         setData(fyData, section);
     }
 
@@ -575,10 +579,10 @@
   }
 
     $("#state").change(function () {
-        stateName = [];
-        stateName.push($('#state').val());
-        st_data = filterCSV(data, 'state', stateName);
-        fyData = filterCSV(st_data, 'year', selectedYear);
+        areaName = [];
+        areaName.push($('#state').val());
+        st_data = filterCSV(data, 'area_id', areaName);
+        fyData = filterCSV(st_data, 'financial_year', selectedYear);
         legendbox.selectAll("*").remove();
         setData(fyData, section);
     });
@@ -586,14 +590,14 @@
     $("#fyList").change(function () {
         selectedYear = [];
         selectedYear = $('#fyList').val();
-        st_data = filterCSV(data, 'state', stateName);
-        fyData = filterCSV(st_data, 'year', selectedYear);
+        st_data = filterCSV(data, 'area_id', areaName);
+        fyData = filterCSV(st_data, 'financial_year', selectedYear);
         legendbox.selectAll("*").remove();
         setData(fyData, section);
     });
 
     function setData(data, section) {
-        var dataFilter = data.map(function (d) { return { year: d.year, month: d.month, state: d.state, value: d[section] } })
+        var dataFilter = data.map(function (d) { return { financial_year: d.financial_year, month: d.month, areaID:d.area_id, areaN: d.area_name, value: d[section] } })
 
         //debugger
 
@@ -607,8 +611,8 @@
 
 
     //Initial Graph
-    st_data = filterCSV(data, 'state', stateName);
-    fyData = filterCSV(st_data, 'year', selectedYear);
+    st_data = filterCSV(data, 'area_id', areaName);
+    fyData = filterCSV(st_data, 'financial_year', selectedYear);
     setData(fyData, section);
 
     function parseURLParameters() {
@@ -622,7 +626,10 @@
 
     $(function () {
         //bind event
-        $('#state').val(af_rm_sel_st);
+        if(sel_st == '22')
+            $('#state').val(405);
+        else
+            $('#state').val(1);
         $('#fyList').val(sel_fy);
 
         $(".category a").click(function () {
