@@ -108,7 +108,7 @@
         </div>
     </div>
     <div class="dropdown m-1">
-        <select name="state" id="state" class="selectpicker" multiple>
+        <select name="state" id="state" class="custom-select">
             {% for area_select in area_list %}
             <option value='{{ area_select.area_id }}'>{{ area_select.area_name }}</option>
             {% endfor %}
