@@ -342,7 +342,7 @@
             case "Childhood Diseases-Severe Acute Malnutrition(SAM)": yValue = d => d.per_chld_disease_sam; sortBy = 'per_chld_disease_sam'; break;
         }
 
-            var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
+        var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
 
         filterdata = filterCSV(data, 'month', valMonth);
         mydata = sortData(filterdata, sortBy);

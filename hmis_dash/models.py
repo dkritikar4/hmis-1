@@ -101,7 +101,22 @@ class GeojsonIndiaLevel(models.Model):
     length = models.FloatField(blank=True, null=True)
     area = models.FloatField(blank=True, null=True)
     wkb_geometry = models.GeometryField(blank=True, null=True)
+    area_id = models.IntegerField(blank=True, null=True)
+    area_parent_id = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'geojson_india_level'
+
+
+class MhDtGeojson(models.Model):
+    ogc_fid = models.AutoField(primary_key=True)
+    district = models.CharField(max_length=75, blank=True, null=True)
+    wkb_geometry = models.MultiPolygonField(blank=True, null=True)
+    state = models.CharField(max_length=50, blank=True, null=True)
+    area_id = models.IntegerField(blank=True, null=True)
+    area_parent_id = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'mh_dt_geojson'

@@ -334,12 +334,8 @@
 
         }
 
-        if (selectedYear == '2020-2021') {
-            var valMonth = tickLabel21[$('#monthS').slider('getValue')];
-        }
-        else {
-            var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
-        }
+        
+        var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
 
         filterdata = filterCSV(data, 'month', valMonth);
         mydata = sortData(filterdata, sortBy);
@@ -380,7 +376,7 @@
         d.chld_disease_sam = +d.chld_disease_sam;
         d.area_name = d.area_name;
         d.month = d.month;
-        d.year = d.year;
+        d.financial_year = d.financial_year;
 
 
     });

@@ -104,29 +104,22 @@
 </div>
 <div class="row text-center">
     <div class="col-12 mb-5">
-        {% if fy == '2020-2021' %}
-        <input type="text" id="monthS" name="somename" data-provide="slider" data-slider-ticks="[0, 1, 2, 3]"
-            data-slider-ticks-labels='["All", "April", "May", "June"]' data-slider-min="0" data-slider-max="4"
-            data-slider-step="1" data-slider-value="0" data-slider-tooltip="hide">
-  
-        {% else %}
         <input type="text" id="monthSlider" name="somename" data-provide="slider"
             data-slider-ticks="[0, 1, 2, 3, 4, 5,6,7,8,9,10,11,12]"
-            data-slider-ticks-labels='["All", "April", "May", "June", "July", "August", "September", "October", "November", "December",  "January", "February", "March"]'
+            data-slider-ticks-labels='["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]'
             data-slider-min="0" data-slider-max="12" data-slider-step="1" data-slider-value="0"
             data-slider-tooltip="hide">
-        {% endif %}
     </div>
   </div>
 
-<!-- <div class="row">
+<div class="row">
   <div class="col-12">
     <button type="button" class="btn btn-dark back-button m-2">back</button>
     <span class='info info-hirar'>{{dist_name}}</span>
-    <p>Click on the Polygon(Block/Project/Beat) to view the Lower Level <span class="drilldown">(Drilldown)</span>
+    <p>Click on the Polygon(District) to view the Lower Level <span class="drilldown">(Drilldown)</span>
       </p>
   </div>
-</div> -->
+</div>
 
 <div class="row">
   <div class="col-md-8" id="mymap"></div>
@@ -191,7 +184,7 @@
   const transitionDuration = 1000;
   let level = 0;
   let levelLocation = [];
-  let month_hack = "Nov";
+  let month_hack;
   let direction = 1;
   let circleEnter, rowEnter;
   let zoomBox = { 'translate': [], 'scale': [] };
@@ -238,16 +231,14 @@
   selectedCategory.replace(/ /g, '_');
 
   const render = (
-    // district,
+    district,
     // block,
     state,
-    // districtData,
+    dtData,
     // blockData,
     stData
 
   ) => {
-    //   console.log("state", state)
-    //   console.log("stData", stData)
 
     
       //initail value of tooltip
@@ -405,7 +396,6 @@
     if (choices.length > 0) {
      updateviz(parseInt(choices[0])); 
      selectedCategory = updatedCat;
-     console.log(selectedCategory, 'selectedCategory')
      if (selectedCategory != 'C-section deliveries' && selectedCategory != 'Still Birth') {
           d3.select("line.leftcolor").attr("stroke", "red");
           d3.select("line.track-inset").attr("stroke", "green");
@@ -420,7 +410,9 @@
     //makemap
     const makemap = (geojson, tdata) => {
       d3.select('.info-hirar').text(function () {
-        var hirarchy = "India";
+        // let displayVal = d => d.properties.area_name; 
+        // console.log(displayVal, "d")
+        let hirarchy = "India";
         levelLocation.forEach(loc => {
           hirarchy += ">" + loc;
         })
@@ -430,18 +422,20 @@
       if (level == 0 && direction == 1) {
         TextValue = d => d.properties.state;
       } 
-      // else if (level == 1 && direction == 1) {
-      //   TextValue = d => d.properties.project;
-      // } else if (level == 2 && direction == 1) {
+      else if (level == 1 && direction == 1) {
+        TextValue = d => d.properties.district;
+      }
+      //  else if (level == 2 && direction == 1) {
       //   TextValue = d => d.properties.beat_na;
       // } else if (level == 2 && direction == 0) {
       //   TextValue = d => d.properties.beat_na;
-      // } else if (level == 1 && direction == 0) {
-      //   TextValue = d => d.properties.project;
       // } 
-      else if (level == 0 && direction == 0) {
-        TextValue = d => d.properties.state;
-      }
+      // else if (level == 1 && direction == 0) {
+      //   TextValue = d => d.properties.district;
+      // } 
+      // else if (level == 0 && direction == 0) {
+      //   TextValue = d => d.properties.state;
+      // }
       let min = d3.min(geojson, ColorValue);
       let max = d3.max(geojson, ColorValue);
       let comp = (max - min) / 3;
@@ -548,7 +542,7 @@
         // }
       });
       
-      // pathEnter.on("click", clicked);
+      pathEnter.on("click", clicked);
       // makePoint
       // const makePoint = geoPoint => {
 
@@ -556,27 +550,29 @@
       //makeTable
 
       let tbdata = [];
-      let LocationValue = d => d.state;
+      let LocationValue = d => d.area_name;
       let PercentageValue = TPercentValue;
       let ActualValue = TActualValue;
       tdata.forEach(d => {
         let temp = {};
         if (level === 0 && direction == 1) {
-          LocationValue = d => d.state;
+          LocationValue = d => d.area_name;
         } 
-        // else if (level === 1 && direction == 1) {
-        //   LocationValue = d => d.project_n;
-        // } else if (level === 2 && direction == 1) {
+        else if (level === 1 && direction == 1) {
+          LocationValue = d => d.area_name;
+        } 
+        // else if (level === 2 && direction == 1) {
         //   LocationValue = d => d.beat_n;
         // } else if (level === 3 && direction == 1) {
         //   LocationValue = d => d.awc_with_code;
         // } else if (level === 2 && direction === 0) {
         //   LocationValue = d => d.beat_n;
-        // } else if (level === 1 && direction == 0) {
-        //   LocationValue = d => d.project_n;
         // } 
+        else if (level === 1 && direction == 0) {
+          LocationValue = d => d.area_name;
+        } 
         else if (level === 0 && direction == 0) {
-          LocationValue = d => d.state;
+          LocationValue = d => d.area_name;
         }
 
         temp["Location"] = LocationValue(d);
@@ -634,7 +630,6 @@
 
         let selCat = $(this).text();
         let val;
-        console.log(selCat, 'selCat')
         if (selCat != 'C-section deliveries' && selCat != 'Still Birth' ) {
           d3.select("line.leftcolor").attr("stroke", "red");
           d3.select("line.track-inset").attr("stroke", "green");
@@ -759,11 +754,12 @@
         }
         let newtbdata = [];
         if (level === 0) {
-          LocationValue = d => d.state;
+          LocationValue = d => d.area_name;
         } 
-        // else if (level === 1) {
-        //   LocationValue = d => d.project_n;
-        // } else if (level === 2) {
+        else if (level === 1) {
+          LocationValue = d => d.area_name;
+        }
+        //  else if (level === 2) {
         //   LocationValue = d => d.beat_n;
         // }
         tdata.forEach(d => {
@@ -838,58 +834,59 @@
   }
 };
   
-// d3.select(".back-button").on("click", function () {
-//         if (level > 0) {
-//           level--;
-//           zoomBox['translate'].pop(); zoomBox['scale'].pop();
+d3.select(".back-button").on("click", function () {
+        if (level > 0) {
+          level--;
+          zoomBox['translate'].pop(); zoomBox['scale'].pop();
 
-//           direction = 0;
-//           let loc = levelLocation.pop();
-//           rowEnter.selectAll("*").remove();
-//           g.selectAll("*").remove();
-//           let svgTrans = svg.transition().duration(transitionDuration);
-//           // calculation for zoom
-//           let transLength = zoomBox.translate.length;
-//           let scaleLength = zoomBox.scale.length;
-//           let transX, transY, scaleV;
-//           if (level !== 0) {
-//             transX = zoomBox.translate[transLength - 1][0];
-//             transY = zoomBox.translate[transLength - 1][1];
-//             scaleV = zoomBox.scale[scaleLength - 1];
-//           }
-//           if (level === 0)
-//             svgTrans.call(zzoom.transform, d3.zoomIdentity);
-//           else
-//             svgTrans.call(zzoom.transform, d3.zoomIdentity.translate(transX, transY).scale(scaleV))
+          direction = 0;
+          let loc = levelLocation.pop();
+          rowEnter.selectAll("*").remove();
+          g.selectAll("*").remove();
+          let svgTrans = svg.transition().duration(transitionDuration);
+          // calculation for zoom
+          let transLength = zoomBox.translate.length;
+          let scaleLength = zoomBox.scale.length;
+          let transX, transY, scaleV;
+          if (level !== 0) {
+            transX = zoomBox.translate[transLength - 1][0];
+            transY = zoomBox.translate[transLength - 1][1];
+            scaleV = zoomBox.scale[scaleLength - 1];
+          }
+          if (level === 0)
+            svgTrans.call(zzoom.transform, d3.zoomIdentity);
+          else
+            svgTrans.call(zzoom.transform, d3.zoomIdentity.translate(transX, transY).scale(scaleV))
 
-//           updateCategory("Early ANC Registeration");
-//           let LocationMonth, LocationDataMonth;
-//           if (level === 0) {
-//             LocationDataMonth = filterCSV(blockData, 'month_n', month_hack);
-//             LocationMonth = addProperty(LocationDataMonth, block);
-//             makemap(LocationMonth, LocationDataMonth);
-//           }
-//           else if (level === 1) {
-//             LocationDataMonth = filterCSV(projectData, 'month_n', month_hack);
-//             LocationMonth = addProperty(LocationDataMonth, project);
+          updateCategory("Early ANC Registeration");
+          let LocationMonth, LocationDataMonth;
+          if (level === 0) {
+            LocationDataMonth = filterCSV(stData, 'month', month_hack);
+            LocationMonth = addProperty(LocationDataMonth, state);
+            makemap(LocationMonth, LocationDataMonth);
+          }
+          else if (level === 1) {
+            LocationDataMonth = filterCSV(dtData, 'month', month_hack);
+            LocationMonth = addProperty(LocationDataMonth, district);
 
-//             let previousBlock = levelLocation[levelLocation.length - 1];
+            let previousBlock = levelLocation[levelLocation.length - 1];
 
-//             let selectedjson = selectedSubFeature(LocationMonth, previousBlock);
-//             let selectedcsv = selectedSubData(LocationDataMonth, previousBlock);
+            let selectedjson = selectedSubFeature(LocationMonth, previousBlock);
+            let selectedcsv = selectedSubData(LocationDataMonth, previousBlock);
 
-//             makemap(selectedjson, selectedcsv);
-//           } else if (level === 2) {
-//             LocationDataMonth = filterCSV(beatData, 'month_n', month_hack);
-//             LocationMonth = addProperty(LocationDataMonth, beat);
-//             //select beats map from project_name
-//             let previousProject = levelLocation[levelLocation.length - 1];
-//             let selectedjson = selectedSubFeature(LocationMonth, previousProject);
-//             let selectedcsv = selectedSubData(LocationDataMonth, previousProject);
-//             makemap(selectedjson, selectedcsv);
-//           }
-//         }//if condition ends here
-//       });
+            makemap(selectedjson, selectedcsv);
+          }
+          //  else if (level === 2) {
+          //   LocationDataMonth = filterCSV(beatData, 'month_n', month_hack);
+          //   LocationMonth = addProperty(LocationDataMonth, beat);
+          //   //select beats map from project_name
+          //   let previousProject = levelLocation[levelLocation.length - 1];
+          //   let selectedjson = selectedSubFeature(LocationMonth, previousProject);
+          //   let selectedcsv = selectedSubData(LocationDataMonth, previousProject);
+          //   makemap(selectedjson, selectedcsv);
+          // }
+        }//if condition ends here
+      });
 
 
 
@@ -912,10 +909,19 @@ $('#monthSlider').slider().on('slideStop', function (ev) {
           if (level === 0) {
             LocationDataMonth = filterCSV(stData, 'month', month_hack);
             LocationMonth = addProperty(LocationDataMonth, state);
-            console.log("LocationDataMonth", LocationDataMonth);
-            console.log("LocationMonth", LocationMonth);
+            // console.log("LocationDataMonth", LocationDataMonth);
+            // console.log("LocationMonth", LocationMonth);
 
             makemap(LocationMonth, LocationDataMonth);
+          }
+          else if (level === 1) {
+            LocationDataMonth = filterCSV(dtData, 'month', month_hack);
+            LocationMonth = addProperty(LocationDataMonth, district);
+            //select beats map from project_name
+            let previousProject = levelLocation[levelLocation.length - 1];
+            let selectedjson = selectedSubFeature(LocationMonth, previousProject);
+            let selectedcsv = selectedSubData(LocationDataMonth, previousProject);
+            makemap(selectedjson, selectedcsv);
           }
 // else if (level === 2) {
 //         LocationDataMonth = filterCSV(beatData, 'month_n', month_hack);
@@ -970,51 +976,54 @@ $('#monthSlider').slider().on('slideStop', function (ev) {
 //     });
 	
 	   // clicked
-      // const clicked = d => {
-      //   if (level < 3) {
-      //     level++;
-      //     direction = 1;
-      //     zoomToBoundingBox(d);
-      //     let clickedLocation;
-      //     if (level === 1) {
-      //       clickedLocation = d.properties.state;
-      //     } 
-      //     else if (level === 2) {
-      //       clickedLocation = d.properties.project;
-      //     } else if (level === 3) {
-      //       clickedLocation = d.properties.beat_na;
-      //     }
+      const clicked = d => {
+        if (level < 3) {
+          level++;
+          direction = 1;
+          zoomToBoundingBox(d);
+          let clickedLocation;
+          if (level === 1) {
+            clickedLocation = d.properties.area_id;
+          } 
+          // else if (level === 2) {
+          //   clickedLocation = d.properties.district;
+          // } 
+          // else if (level === 3) {
+          //   clickedLocation = d.properties.beat_na;
+          // }
+          // if(d.properties.area_id = clickedLocation){
+          //   levelLocation.push(d.properties.area_name);
+          // }
+            levelLocation.push(clickedLocation);
 
-      //     levelLocation.push(clickedLocation);
+          let selectedJSON, selectedData;
+          let selectedPoints;
+          if (level === 1) {
+            selectedData = filterCSV(dtData, 'month', month_hack);
+            selectedJSON = addProperty(selectedData, district);
+          } 
+          // else if (level === 2) {
+          //   selectedData = filterCSV(beatData, 'month_n', month_hack);
+          //   selectedJSON = addProperty(selectedData, beat);
+          // } else if (level === 3) {
+          //   selectedData = filterCSV(awcData, 'month_n', month_hack);
+          //   selectedJSON = addProperty(selectedData, beat);
+          //   selectedPoints = addProperty(selectedData, awc);
+          // }
+          let selectedjson = selectedSubFeature(selectedJSON, clickedLocation);
+          let selecteddata = selectedSubData(selectedData, clickedLocation);
+          g.selectAll("*").remove();
+          rowEnter.selectAll("*").remove();
+          // tooltip.remove();
 
-      //     let selectedJSON, selectedData;
-      //     let selectedPoints;
-      //     if (level === 1) {
-      //       selectedData = filterCSV(projectData, 'month_n', month_hack);
-      //       selectedJSON = addProperty(selectedData, project);
-      //     } 
-      //     else if (level === 2) {
-      //       selectedData = filterCSV(beatData, 'month_n', month_hack);
-      //       selectedJSON = addProperty(selectedData, beat);
-      //     } else if (level === 3) {
-      //       selectedData = filterCSV(awcData, 'month_n', month_hack);
-      //       selectedJSON = addProperty(selectedData, beat);
-      //       selectedPoints = addProperty(selectedData, awc);
-      //     }
-      //     let selectedjson = selectedSubFeature(selectedJSON, clickedLocation);
-      //     let selecteddata = selectedSubData(selectedData, clickedLocation);
-      //     g.selectAll("*").remove();
-      //     rowEnter.selectAll("*").remove();
-      //     // tooltip.remove();
+          makemap(selectedjson, selecteddata);
 
-      //     makemap(selectedjson, selecteddata);
-
-      //     //Make geopoints for awc
-      //     if (level === 3) {
-      //       makegeoPoints(selectedPoints, clickedLocation);
-      //     }
-      //   }// if condition ends here
-      // };
+          //Make geopoints for awc
+          // if (level === 3) {
+          //   makegeoPoints(selectedPoints, clickedLocation);
+          // }
+        }// if condition ends here
+      };
     
       // const makegeoPoints = (selectedPoints,clickedLocation)  => {
 
@@ -1061,28 +1070,29 @@ $('#monthSlider').slider().on('slideStop', function (ev) {
       // }
       
 	  //selectmap
-      // const selectedSubFeature = (geojson, location) => {
-      //   let selection = [];
-      //   let geomType;
-      //   // if(level === 3 && direction == 0){
-      //   // } 
-      //   geojson.forEach(sel => {
-      //     if (level === 1) {
-      //       if (sel.properties.state === location) {
-      //         selection.push(sel);
-      //       }
-      //     } else if (level === 2) {
-      //       if (sel.properties.project === location) {
-      //         selection.push(sel);
-      //       }
-      //     } else if (level === 3) {
-      //       if (sel.properties.beat_na === location) {
-      //         selection.push(sel);
-      //       }
-      //     }
-      //   });
-      //   return selection;
-      // };
+      const selectedSubFeature = (geojson, location) => {
+        let selection = [];
+        let geomType;
+        // if(level === 3 && direction == 0){
+        // } 
+        geojson.forEach(sel => {
+          if (level === 1) {
+            if (sel.properties.area_parent_id === location) {
+              selection.push(sel);
+            }
+          } else if (level === 2) {
+            if (sel.properties.area_parent_id === location) {
+              selection.push(sel);
+            }
+          } 
+          // else if (level === 3) {
+          //   if (sel.properties.beat_na === location) {
+          //     selection.push(sel);location
+          //   }
+          // }
+        });
+        return selection;
+      };
 
       // select sub points
       // const selectedSubPoint = (geojson, location) => {
@@ -1095,38 +1105,39 @@ $('#monthSlider').slider().on('slideStop', function (ev) {
       //   return selection;
       // };
 
-      // const selectedSubData = (csv, location) => {
-      //   let selection = [];
-      //   csv.forEach(sel => {
-      //     if (level === 1 && direction === 1) {
-      //       if (sel.block_n == location) {
-      //         selection.push(sel);
-      //       }
-      //     } else if (level === 2 && direction === 1) {
-      //       if (sel.project_n == location) {
-      //         selection.push(sel);
-      //       }
-      //     } else if (level === 3 && direction === 1) {
-      //       if (sel.beat_n == location) {
-      //         selection.push(sel);
-      //       }
-      //     }
-      //     else if (level === 2 && direction === 0) {
-      //       if (sel.project_n === location) {
-      //         selection.push(sel);
-      //       }
-      //     } else if (level === 1 && direction === 0) {
-      //       if (sel.block_n == location) {
-      //         selection.push(sel);
-      //       }
-      //     } else if (level === 0 && direction === 0) {
-      //       if (sel.block_n == location) {
-      //         selection.push(sel);
-      //       }
-      //     }
-      //   });
-      //   return selection;
-      // };
+      const selectedSubData = (csv, location) => {
+        let selection = [];
+        csv.forEach(sel => {
+          if (level === 1 && direction === 1) {
+            if (sel.area_parent_id == location) {
+              selection.push(sel);
+            }
+          } else if (level === 2 && direction === 1) {
+            if (sel.area_parent_id == location) {
+              selection.push(sel);
+            }
+          } 
+          // else if (level === 3 && direction === 1) {
+          //   if (sel.beat_n == location) {
+          //     selection.push(sel);
+          //   }
+          // }
+          else if (level === 2 && direction === 0) {
+            if (sel.area_parent_id === location) {
+              selection.push(sel);
+            }
+          } else if (level === 1 && direction === 0) {
+            if (sel.area_parent_id == location) {
+              selection.push(sel);
+            }
+          } else if (level === 0 && direction === 0) {
+            if (sel.area_parent_id == location) {
+              selection.push(sel);
+            }
+          }
+        });
+        return selection;
+      };
 	  
 	    const zoomToBoundingBox = d => {
         let bounds = pathGenerator.bounds(d),
@@ -1152,10 +1163,9 @@ $('#monthSlider').slider().on('slideStop', function (ev) {
       };
    
     //initial map
-let tickLabels = ["All", "April", "May", "June", "July", "August", "September", "October", "November", "December", "January", "February", "March"]
+let tickLabels = ["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]
     month_hack = tickLabels[0];
     let monthdata = filterCSV(stData, 'month', month_hack);
-    console.log(monthdata, "monthdata")
     let monthjson = addProperty(monthdata, state);
     makemap(monthjson, monthdata);
   };
@@ -1172,6 +1182,7 @@ let tickLabels = ["All", "April", "May", "June", "July", "August", "September", 
 //   scaleCenter = calculateScaleCenter(projectJSON);
 
   let stJSON = {{ context.st_geodata| safe }};
+
   // console.log("ST GeoJSON", stJSON )
   scaleCenter = calculateScaleCenter(stJSON);
 
@@ -1179,9 +1190,16 @@ let tickLabels = ["All", "April", "May", "June", "July", "August", "September", 
     .center(scaleCenter.center)
     .translate([innerWidth / 2, innerHeight / 2]);
 
+  let dtJSON = {{ context.dt_geodata| safe }};
+  // console.log("ST GeoJSON", dtJSON )
+  scaleCenter = calculateScaleCenter(dtJSON);
+
+
 //   geoJSONBundle.blockJSON = blockJSON.features;
 //   geoJSONBundle.projectJSON = projectJSON.features;
   geoJSONBundle.stJSON = stJSON.features;
+  geoJSONBundle.dtJSON = dtJSON.features;
+
 
   return geoJSONBundle;
 }
@@ -1231,38 +1249,39 @@ let tickLabels = ["All", "April", "May", "June", "July", "August", "September", 
         d.no_pw_given_ifa = +d.no_pw_given_ifa;
         d.tot_c_section_deliveries = +d.tot_c_section_deliveries;
         d.tot_still_birth = +d.tot_still_birth;
-        d.state = d.state;
+        d.area_name = d.area_name;
         d.month = d.month;
-        d.year = d.year;
+        d.financial_year = d.financial_year;
 
     });
   };
 
   const addProperty = (data, geojson) => {
-      console.log("DATA In addProperty", data)
-      console.log("GeoJSon In addProperty", geojson)
 
     var x, y;
     for (let i = 0; i < data.length; i++) {
       for (let j = 0; j < geojson.length; j++) {
-        if (geojson[j].properties.state) {
-          x = data[i].state;
-          y = geojson[j].properties.state;
+        if (geojson[j].properties.area_id) {
+          x = data[i].area_id;
+          y = geojson[j].properties.area_id;
         } 
         // else if (geojson[j].properties.beat_na) {
         //   x = data[i].beat_n;
         //   y = geojson[j].properties.beat_na;
-        // } else if (geojson[j].properties.project) {
-        //   x = data[i].project_n;
-        //   y = geojson[j].properties.project;
-        // } else {
-        //   x = data[i].block_n;
-        //   y = geojson[j].properties.block;
-        // }
+        // } 
+        else if (geojson[j].properties.district) {
+          x = data[i].area_id;
+          y = geojson[j].properties.area_id;
+        } else {
+          x = data[i].area_id;
+          y = geojson[j].properties.area_id;
+        }
 
         // if (x.trim() === y.trim()) {
         if (x === y) {
-          geojson[j].properties.year = data[i].year;
+          geojson[j].properties.area_name = data[i].area_name;
+          geojson[j].properties.area_parent_id = data[i].area_parent_id;
+          geojson[j].properties.financial_year = data[i].financial_year;
           geojson[j].properties.no_pw_given_tt2 = data[i].no_pw_given_tt2;
           geojson[j].properties.no_anc_4_or_more = data[i].no_anc_4_or_more;
           geojson[j].properties.no_pw_given_calcium = data[i].no_pw_given_calcium;
@@ -1290,6 +1309,7 @@ let tickLabels = ["All", "April", "May", "June", "July", "August", "September", 
         }
       }
     }
+
     return geojson;
   };
   async function mergeData(geoJSON) {
@@ -1324,19 +1344,30 @@ let tickLabels = ["All", "April", "May", "June", "July", "August", "September", 
   data_from_django = {{ context.st_data | safe }};
   var data = []
   data_from_django.forEach(element => {
-    data.push(element.fields);
+    data.push(element);
   });
   let stCSV = data;
-// console.log(stCSV, "st_data")
   monthWiseCSV(stCSV);
   let stGeoJSONAug = JSON.parse(JSON.stringify(stGeoJSON));
 
+  let dtGeoJSON = geoJSON.dtJSON;
+
+  data_from_django = {{ context.dt_data | safe }};
+  var data = []
+  data_from_django.forEach(element => {
+    data.push(element);
+  });
+  let dtCSV = data;
+  monthWiseCSV(dtCSV);
+  let dtGeoJSONAug = JSON.parse(JSON.stringify(dtGeoJSON));
+
+
 
   render(
-    // blockGeoJSONAug,
+    dtGeoJSONAug,
     // projectGeoJSONAug,
     stGeoJSONAug,
-    // blockCSV,
+    dtCSV,
     // projectCSV,
     stCSV
   );

@@ -7,24 +7,6 @@
 <link rel="stylesheet" href="{% static 'hmis_dash/css/index.css' %}">
 
 <style>
-    #table {
-        width: 90%;
-        height: 75%;
-        font-size: calc(50% + 0.5vw + 0.5vh);
-    }
-
-    th {
-        border: 2px solid black;
-        font-weight: bolder;
-        text-align: center;
-        background-color: rgb(165, 199, 243);
-    }
-
-    td {
-        border: 2px solid black;
-        text-align: center;
-    }
-
     .scroll-down {
         float: right;
         font-weight: bold;
@@ -212,8 +194,14 @@
         const g = svg.append('g').attr("preserveAspectRatio", "xMinYMin meet")
             .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-        var myColor = d3.scaleSequential().domain([d3.min(data, yValue), d3.max(data, yValue)])
-            .interpolator(d3.interpolateRdYlGn);
+        let myColor; 
+        if (yValue == 'd => d.c_section_deliveries' || yValue == 'd => d.per_still_birth' ) {
+            myColor = d3.scaleSequential().domain([d3.max(data, yValue), d3.min(data, yValue)])
+                .interpolator(d3.interpolateRdYlGn);
+        }else{
+            myColor = d3.scaleSequential().domain([d3.min(data, yValue), d3.max(data, yValue)])
+                .interpolator(d3.interpolateRdYlGn);
+        }
 
         let chart = g.selectAll("rect").data(data)
 
@@ -429,7 +417,6 @@
 
     let choices = parseURLParameters(window.location.href);
 
-    console.log(choices, "choices")
     if (choices.length > 0) {
         let categoryChoices = choices[0].replace(/_/g, ' ');
         console.log(categoryChoices, "[0]")

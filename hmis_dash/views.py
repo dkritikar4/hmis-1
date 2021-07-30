@@ -7,8 +7,9 @@ from django.core.serializers import serialize
 from django.db.models import Q
 from dashboard.models import AreaDetails, HmisPw, HmisChldImmunzt, HmisChldDisease
 from django.core.serializers.json import DjangoJSONEncoder 
+from django.db.models import F
 
-from .models import (PwPie, CdPie, CiPie, GeojsonIndiaLevel)
+from .models import (PwPie, CdPie, CiPie, GeojsonIndiaLevel, MhDtGeojson)
 
 # Create your views here.
 
@@ -83,7 +84,7 @@ class fyLine(LoginRequiredMixin, TemplateView):
             i.update(area_n[0])
 
         
-        fyList = HmisPw.objects.values('financial_year').distinct().order_by('financial_year')
+        fyList = HmisPw.objects.values('financial_year').distinct().order_by('financial_year').exclude(financial_year='2021-2022')
         jsondata = json.dumps(data, cls=DjangoJSONEncoder)
         return render(request,'hmis_dash/fy_line.html', {'data':jsondata, 'fy': fy_name, 'fyList':fyList, 'dist_name': district, 'area_list': area_list})
 
@@ -106,7 +107,7 @@ class fyLineNum(LoginRequiredMixin, TemplateView):
         for i in data:
             area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
             i.update(area_n[0])
-        fyList = HmisPw.objects.values('financial_year').distinct().order_by('financial_year')
+        fyList = HmisPw.objects.values('financial_year').distinct().order_by('financial_year').exclude(financial_year='2021-2022')
         jsondata = json.dumps(data, cls=DjangoJSONEncoder)
 
         return render(request,'hmis_dash/fy_lineNum.html', {'data':jsondata, 'fy': fy_name, 'fyList':fyList, 'dist_name': district, 'area_list': area_list})
@@ -465,17 +466,35 @@ class mapStPW(LoginRequiredMixin, TemplateView):
 
     def get(self,request,fy=None):
         fy_name = request.GET.get('fy', fy) 
-        st_data = HmisStatePw.objects.filter(Q(year=fy_name)).exclude(state='All States')
+        st_data = list(HmisPw.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=1)).values())
+
+        dt_data = list(HmisPw.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22)).values())
+
+        for i in st_data:
+            area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
+            i.update(area_n[0])
+
+        for i in dt_data:
+            area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
+            i.update(area_n[0])            
         
-        st_jsondata = serializers.serialize('json', st_data)
+        st_jsondata = json.dumps(st_data, cls=DjangoJSONEncoder)
+
+        dt_jsondata = json.dumps(dt_data, cls=DjangoJSONEncoder)
         
         st_geodata = serialize('geojson', GeojsonIndiaLevel.objects.all(),
                                 geometry_field = 'wkb_geometry',
-                                fields = ('ogc_fid','state'))
+                                fields = ('ogc_fid','state', 'area_id'))
+
+        dt_geodata = serialize('geojson', MhDtGeojson.objects.all(),
+                                geometry_field = 'wkb_geometry',
+                                fields = ('ogc_fid','state', 'district', 'area_id'))                                
         
         context = {
             'st_data': st_jsondata,
-            'st_geodata': st_geodata
+            'dt_data': dt_jsondata,
+            'st_geodata': st_geodata,
+            'dt_geodata': dt_geodata
         }
 
         return render(request,'hmis_dash/mapPW.html', {'context':context, 'fy': fy_name})
@@ -543,34 +562,11 @@ class fyChldImmuLine(LoginRequiredMixin, TemplateView):
         for i in data:
             area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
             i.update(area_n[0])
-        fyList = HmisChldImmunzt.objects.values('financial_year').distinct().order_by('financial_year')
-        jsondata = json.dumps(data, cls=DjangoJSONEncoder)
-
-        return render(request,'hmis_dash/fy_ci_lineNum.html', {'data':jsondata, 'fy': fy_name, 'fyList':fyList, 'dist_name': district, 'area_list': area_list})
-
-
-class fyChldDiseaseLine(LoginRequiredMixin, TemplateView):
-    login_url = '/login/'
-    redirect_field_name = 'login'
-
-    def get(self,request,fy=None, dist_name = None):
-        district = request.GET.get('dist_name', dist_name) 
-        fy_name = request.GET.get('fy', fy)
-        if district == '22': 
-            data = list(HmisChldDisease.objects.filter( Q(area_parent_id=22)).order_by('month').exclude(month='All').values())
-            area_list = AreaDetails.objects.filter(Q(area_parent_id=22)).values('area_name', 'area_id').distinct().order_by('area_id')
-            
-        else:    
-            data = list(HmisChldDisease.objects.filter( Q(area_parent_id=1) | Q(area_parent_id=-1)).order_by('month').exclude(month='All').values())
-            area_list = AreaDetails.objects.filter(Q(area_parent_id=1) | Q(area_parent_id=-1)).values('area_name', 'area_id').distinct().order_by('area_id')
-
-        for i in data:
-            area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
-            i.update(area_n[0])
-        fyList = HmisChldDisease.objects.values('financial_year').distinct().order_by('financial_year')
+        fyList = HmisChldImmunzt.objects.values('financial_year').distinct().order_by('financial_year').exclude(financial_year='2021-2022')
         jsondata = json.dumps(data, cls=DjangoJSONEncoder)
 
         return render(request,'hmis_dash/fy_ci_line.html', {'data':jsondata, 'fy': fy_name, 'fyList':fyList, 'dist_name': district, 'area_list': area_list})
+
 
 
 class fyChldImmuLineNum(LoginRequiredMixin, TemplateView):
@@ -591,7 +587,7 @@ class fyChldImmuLineNum(LoginRequiredMixin, TemplateView):
         for i in data:
             area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
             i.update(area_n[0])
-        fyList = HmisChldImmunzt.objects.values('financial_year').distinct().order_by('financial_year')
+        fyList = HmisChldImmunzt.objects.values('financial_year').distinct().order_by('financial_year').exclude(financial_year='2021-2022')
         jsondata = json.dumps(data, cls=DjangoJSONEncoder)
 
         return render(request,'hmis_dash/fy_ci_lineNum.html', {'data':jsondata, 'fy': fy_name, 'fyList':fyList, 'dist_name': district, 'area_list': area_list})
@@ -615,7 +611,7 @@ class fyChldDiseaseLine(LoginRequiredMixin, TemplateView):
         for i in data:
             area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
             i.update(area_n[0])
-        fyList = HmisChldDisease.objects.values('financial_year').distinct().order_by('financial_year')
+        fyList = HmisChldDisease.objects.values('financial_year').distinct().order_by('financial_year').exclude(financial_year='2021-2022')
         jsondata = json.dumps(data, cls=DjangoJSONEncoder)
 
         return render(request,'hmis_dash/fy_cd_line.html', {'data':jsondata, 'fy': fy_name, 'fyList':fyList, 'dist_name': district, 'area_list': area_list})
@@ -640,6 +636,50 @@ class fyChldDiseaseLineNum(LoginRequiredMixin, TemplateView):
             area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
             i.update(area_n[0])
             
-        fyList = HmisChldDisease.objects.values('financial_year').distinct().order_by('financial_year')
+        fyList = HmisChldDisease.objects.values('financial_year').distinct().order_by('financial_year').exclude(financial_year='2021-2022')
         jsondata = json.dumps(data, cls=DjangoJSONEncoder)
         return render(request,'hmis_dash/fy_cd_lineNum.html', {'data':jsondata, 'fy': fy_name, 'fyList':fyList, 'dist_name': district, 'area_list': area_list})
+
+
+class CompBarPw(LoginRequiredMixin, TemplateView):
+    login_url = '/login/'
+    redirect_field_name = 'login'
+
+    def get(self, request, fy= None, dist_name = None):
+        district = request.GET.get('dist_name', dist_name) 
+        fy_name = request.GET.get('fy', fy) 
+        if district == '22': 
+            data = list(HmisPw.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22)).values())
+            
+        else:    
+            data = list(HmisPw.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=1)).values())
+
+        for i in data:
+            area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
+            i.update(area_n[0])
+
+        jsondata = json.dumps(data, cls=DjangoJSONEncoder)
+        
+        return render(request,'hmis_dash/compBarPW.html', {'data':jsondata, 'fy': fy_name, 'dist_name': district})        
+
+
+class CompBarPwNumeric(LoginRequiredMixin, TemplateView):
+    login_url = '/login/'
+    redirect_field_name = 'login'
+
+    def get(self, request, fy= None, dist_name = None):
+        district = request.GET.get('dist_name', dist_name) 
+        fy_name = request.GET.get('fy', fy) 
+        if district == '22': 
+            data = list(HmisPw.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22)).values())
+            
+        else:    
+            data = list(HmisPw.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=1)).values())
+
+        for i in data:
+            area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
+            i.update(area_n[0])
+
+        jsondata = json.dumps(data, cls=DjangoJSONEncoder)
+        
+        return render(request,'hmis_dash/compBarPWNumeric.html', {'data':jsondata, 'fy': fy_name, 'dist_name': district})                

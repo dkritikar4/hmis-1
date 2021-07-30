@@ -70,10 +70,14 @@
     .dropdown-toggle,
     .dropdown-item {
         font-size: calc(25% + 0.5vw + 0.5vh);
-        color: #878a03;
         background-color: rgb(233, 227, 227);
     }
-
+    .lineColor{
+        color: #878a03;
+    }
+    .barColor{
+        color: #972097;   
+    }
     .numeric {
         background-color: rgb(255, 255, 255);
     }
@@ -161,11 +165,23 @@
                                 <td class="ind_code">1.1</td>
                                 <td colspan="6">Total number of pregnant women registered for ANC: <span
                                         id="st_totpwanc"></span></td>
-                                <td colspan="2"><a
-                                        href="{% url 'barnumeric' dist_name fy %}?id1=Total_no_of_PW_registered_for_ANC"
-                                        class="lc_link" target="_blank" style="color: #972097;">BAR</a>
+                                <td colspan="2">
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric barColor"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            BAR
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" 
+                                            href="{% url 'barnumeric' dist_name fy %}?id1=Total_no_of_PW_registered_for_ANC"
+                                            target="_blank">Individual</a>
+                                            <a class="dropdown-item" 
+                                            href="{% url 'pw_compbarNumeric' dist_name fy %}?id1=Total_no_of_PW_registered_for_ANC"
+                                            target="_blank">Compare</a>
+                                        </div>
+                                    </div>
+                                    <div class="btn-group dropright mr-1">
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -191,7 +207,7 @@
                                         href="{% url 'barnumeric' dist_name fy %}?id1=Early_ANC_Registeration"
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -215,10 +231,24 @@
                                 <td>1.1.1</td>
                                 <td colspan="6">% Early ANC Registeration fraction of registered PW for ANC: <span
                                         id="dt_earlyanc"></span></td>
-                                <td colspan="2"><a href="{% url 'barchart' dist_name fy %}?id1=Early_ANC_Registeration"
-                                        class="lc_link" target="_blank" style="color: #972097;">BAR</a>
+                                <td colspan="2">
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle"
+                                        <button type="button" class="btn btn-light dropdown-toggle barColor"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            BAR
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item"
+                                                href="{% url 'barchart' dist_name fy %}?id1=Early_ANC_Registeration"
+                                                target="_blank">Individual</a>
+                                            <a class="dropdown-item" 
+                                            href="{% url 'pw_compbar' dist_name fy %}?id1=Early_ANC_Registeration"
+                                            target="_blank">Compare</a>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="btn-group dropright mr-1">
+                                        <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -248,7 +278,7 @@
                                         href="{% url 'barnumeric' dist_name fy %}?id1=PW_received_4_or_more_ANC_check_ups"
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -276,7 +306,7 @@
                                         href="{% url 'barchart' dist_name fy %}?id1=PW_received_4_or_more_ANC_check_ups"
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle"
+                                        <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -302,7 +332,7 @@
                                 <td colspan="2"><a href="{% url 'barnumeric' dist_name fy %}?id1=PW_given_TT1"
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -330,7 +360,7 @@
                                     <a href="{% url 'barchart' dist_name fy %}?id1=PW_given_TT1" class="lc_link"
                                         target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle"
+                                        <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -357,7 +387,7 @@
                                 <td colspan="2"><a href="{% url 'barnumeric' dist_name fy %}?id1=PW_given_TT2"
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -385,7 +415,7 @@
                                     <a href="{% url 'barchart' dist_name fy %}?id1=PW_given_TT2" class="lc_link"
                                         target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle"
+                                        <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -412,7 +442,7 @@
                                 <td colspan="2"><a href="{% url 'barnumeric' dist_name fy %}?id1=PW_given_TT_Booster"
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -440,7 +470,7 @@
                                     <a href="{% url 'barchart' dist_name fy %}?id1=PW_given_TT_Booster" class="lc_link"
                                         target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle"
+                                        <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -468,7 +498,7 @@
                                         href="{% url 'barnumeric' dist_name fy %}?id1=PW_given_180_Iron_Folic_Acid_(IFA)_tablets"
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -497,7 +527,7 @@
                                     <a href="{% url 'barchart' dist_name fy %}?id1=PW_given_180_Iron_Folic_Acid_(IFA)_tablets"
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle"
+                                        <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -525,7 +555,7 @@
                                         href="{% url 'barnumeric' dist_name fy %}?id1=PW_given_360_Calcium_tablets"
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -552,7 +582,7 @@
                                     <a href="{% url 'barchart' dist_name fy %}?id1=PW_given_360_Calcium_tablets"
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle"
+                                        <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -580,7 +610,7 @@
                                         href="{% url 'barnumeric' dist_name fy %}?id1=PW_given_one_Albendazole_tablet_after_1st_trimester"
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -608,7 +638,7 @@
                                         href="{% url 'barchart' dist_name fy %}?id1=PW_given_one_Albendazole_tablet_after_1st_trimester"
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle"
+                                        <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -650,7 +680,7 @@
                                 <td colspan="2"><a href="{% url 'barnumeric' dist_name fy %}?id1=C-section_deliveries"
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -677,7 +707,7 @@
                                     <a href="{% url 'barchart' dist_name fy %}?id1=C-section_deliveries" class="lc_link"
                                         target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle"
+                                        <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -703,7 +733,7 @@
                                         href="{% url 'barnumeric' dist_name fy %}?id1=Total_no_of_Still_Birth"
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -729,7 +759,7 @@
                                     <a href="{% url 'barchart' dist_name fy %}?id1=Still_Birth" class="lc_link"
                                         target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle"
+                                        <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -776,7 +806,7 @@
                                         href="{% url 'ci_barnumeric' dist_name fy %}?id1=Total_no_of_Children_Born"
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -802,7 +832,7 @@
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -831,7 +861,7 @@
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle"
+                                        <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -858,7 +888,7 @@
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -886,7 +916,7 @@
                                         target="_blank" style="color: #972097;">BAR</a>
 
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle"
+                                        <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -914,7 +944,7 @@
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
 
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -943,7 +973,7 @@
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
 
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle"
+                                        <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -970,7 +1000,7 @@
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
 
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -999,7 +1029,7 @@
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle"
+                                        <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -1025,7 +1055,7 @@
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
 
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -1054,7 +1084,7 @@
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle"
+                                        <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -1081,7 +1111,7 @@
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
 
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -1110,7 +1140,7 @@
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
 
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle"
+                                        <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -1155,7 +1185,7 @@
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
 
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -1183,7 +1213,7 @@
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
 
                                         <div class="btn-group dropright mr-1">
-                                            <button type="button" class="btn btn-light dropdown-toggle"
+                                            <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 LINE
                                             </button>
@@ -1210,7 +1240,7 @@
                                         href="{% url 'cd_barnumeric' dist_name fy %}?id1=Childhood_Diseases-Sepsis"
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -1238,7 +1268,7 @@
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     
                                         <div class="btn-group dropright mr-1">
-                                            <button type="button" class="btn btn-light dropdown-toggle"
+                                            <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 LINE
                                             </button>
@@ -1263,7 +1293,7 @@
                                         href="{% url 'cd_barnumeric' dist_name fy %}?id1=Childhood_Diseases-Tuberculosis_(TB)"
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -1291,7 +1321,7 @@
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     
                                         <div class="btn-group dropright mr-1">
-                                            <button type="button" class="btn btn-light dropdown-toggle"
+                                            <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 LINE
                                             </button>
@@ -1316,7 +1346,7 @@
                                         href="{% url 'cd_barnumeric' dist_name fy %}?id1=Childhood_Diseases-Malaria"
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                         <div class="btn-group dropright mr-1">
-                                            <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                            <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 LINE
                                             </button>
@@ -1344,7 +1374,7 @@
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     
                                         <div class="btn-group dropright mr-1">
-                                            <button type="button" class="btn btn-light dropdown-toggle"
+                                            <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 LINE
                                             </button>
@@ -1369,7 +1399,7 @@
                                         href="{% url 'cd_barnumeric' dist_name fy %}?id1=Childhood_Diseases-Diarrhoea"
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                         <div class="btn-group dropright mr-1">
-                                            <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                            <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 LINE
                                             </button>
@@ -1397,7 +1427,7 @@
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
 
                                         <div class="btn-group dropright mr-1">
-                                            <button type="button" class="btn btn-light dropdown-toggle"
+                                            <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 LINE
                                             </button>
@@ -1473,7 +1503,7 @@
                                         href="{% url 'cd_barnumeric' dist_name fy %}?id1=Childhood_Diseases-Severe_Acute_Malnutrition(SAM)"
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                     <div class="btn-group dropright mr-1">
-                                        <button type="button" class="btn btn-light dropdown-toggle numeric"
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             LINE
                                         </button>
@@ -1501,7 +1531,7 @@
                                         class="lc_link" target="_blank" style="color: #972097;">BAR</a>
                                         
                                         <div class="btn-group dropright mr-1">
-                                            <button type="button" class="btn btn-light dropdown-toggle"
+                                            <button type="button" class="btn btn-light dropdown-toggle lineColor"
                                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                 LINE
                                             </button>

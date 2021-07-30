@@ -1,0 +1,737 @@
+{% extends 'dashboard/dash_base.html' %}
+
+{% load static %}
+
+{% block feature_css %}
+
+<link rel="stylesheet" href="{% static 'hmis_dash/css/index.css' %}">
+
+<style>
+  .full-height {
+    height: 100%;
+  }
+
+  .header {
+    height: 50px;
+  }
+
+  #b2 {
+    display: block;
+  }
+  
+  text {
+    font-size: 1.1rem
+  }
+
+  .scroll-down {
+    float: right;
+    font-size: calc(40% + 0.5vw + 0.5vh);
+  }
+  
+  div.tooltip {
+    position: absolute;
+    text-align: center;
+    width: auto;
+    height: auto;
+    color: rgb(5, 14, 145);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: calc(30% + 0.5vw + 0.5vh);
+    font-weight: bold;
+    z-index: 10;
+    background: rgb(233, 235, 241);
+    padding: 10px;
+    border: 3px solid black;
+    border-radius: 10px;
+    /* box-shadow: 0 0px 10px black; */
+  }
+</style>
+
+{% endblock %}
+
+{% block feature %}
+
+<div class="row">
+    <div class="col-12 h-75">
+        <div class="heading text-center" id="barTitle"> Indicator </div>
+    </div>
+</div>
+
+<!-- <div class="row header h-75">
+  <div class="col bg-info">
+  </div>
+</div> -->
+
+<div class="row bg-dark">
+
+  <div class="col-xs-8 col-sm-8 col-md-6 bg-dark">
+
+    <div class="dropdown m-1">
+
+      <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+
+        Select Category
+
+        <span class="selectedCategory"></span>
+
+      </button>
+
+      <div class="dropdown-menu category" aria-labelledby="dropdownMenuButton">
+
+        <a class="dropdown-item" href="#">Early ANC Registeration</a>
+        <a class="dropdown-item" href="#">PW received 4 or more ANC check ups</a>
+        <a class="dropdown-item" href="#">PW given TT1</a>
+        <a class="dropdown-item" href="#">PW given TT2</a>
+        <a class="dropdown-item" href="#">PW given TT Booster</a>
+        <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
+        <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
+        <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
+        <a class="dropdown-item" href="#">C-section deliveries</a>
+        <a class="dropdown-item" href="#">Still Birth</a>
+      </div>
+
+
+
+    </div>
+    <button class='btn btn-light toggle m-1'>Compare</button>
+  </div>
+
+
+
+  <div class="col-xs-4 col-sm-4 col-md-6 bg-dark">
+    
+    <div class="dropdown m-1" id="cat2">
+
+      <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+
+        Select Category
+
+        <span class="selectedCategory"></span>
+
+      </button>
+
+      <div class="dropdown-menu category2" aria-labelledby="dropdownMenuButton">
+
+        <a class="dropdown-item" href="#">Early ANC Registeration</a>
+        <a class="dropdown-item" href="#">PW received 4 or more ANC check ups</a>
+        <a class="dropdown-item" href="#">PW given TT1</a>
+        <a class="dropdown-item" href="#">PW given TT2</a>
+        <a class="dropdown-item" href="#">PW given TT Booster</a>
+        <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
+        <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
+        <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
+        <a class="dropdown-item" href="#">C-section deliveries</a>
+        <a class="dropdown-item" href="#">Still Birth</a>
+
+      </div>
+    </div>
+  </div>
+
+
+</div>
+  <div class="scroll-down">
+    Please click "<b>Compare</b>" button if you want to see Indicators Comparison
+  </div>
+
+<div class="row text-center">
+    <div class="col-12 mb-5">
+        <input type="text" id="monthSlider" name="somename" data-provide="slider"
+            data-slider-ticks="[0, 1, 2, 3, 4, 5,6,7,8,9,10,11,12]"
+            data-slider-ticks-labels='["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]'
+            data-slider-min="0" data-slider-max="12" data-slider-step="1" data-slider-value="0"
+            data-slider-tooltip="hide">
+    </div>
+</div>
+
+<div id='sw' class="spinner-wrapper">
+
+  <div class="spinner"></div>
+
+</div>
+
+<div class="row">
+  <div class="col-6" id='b1'>
+  </div>
+  <div class="col-6" id='b2'>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block feature_js %}
+
+<script>
+
+  const width = 700;
+  const height = 1500;
+
+
+  const tansitionDuration = 500;
+
+  const bar1 = d3.select('#b1').append("svg").attr('id', 'svg1').attr('width', 700).attr('height', 1600).call(responsivefy);
+
+  const bar2 = d3.select('#b2').append("svg").attr('id', 'svg2').attr('width', 700).attr('height', 1600).call(responsivefy);
+
+
+  function responsivefy(svg) {
+
+    // Container is the DOM element, svg is appended. 
+    // Then we measure the container and find its 
+    // aspect ratio.
+
+    const container = d3.select(svg.node().parentNode),
+      width = parseInt(svg.style('width'), 10),
+      height = parseInt(svg.style('height'), 10),
+      aspect = width / height;
+
+    // console.log("width&height", width, height)
+    // Add viewBox attribute to set the value to initial size 
+    // add preserveAspectRatio attribute to specify how to scale  
+    // and call resize so that svg resizes on page load 
+    svg.attr('viewBox', `0 0 ${width} ${height}`).
+      attr('preserveAspectRatio', 'xMinYMin').
+      call(resize);
+
+    d3.select(window).on('resize.', resize);
+
+    function resize() {
+      const targetWidth = $(window).width();
+      const targetheight = $(window).height();
+      //var targetHeight = $(window).height();
+    //   console.log("tw&h", targetWidth, targetheight);
+      d3.select('#svg1').attr('width', targetWidth);
+      d3.select('#svg1').attr('height', targetheight);
+      d3.select('#svg2').attr('width', targetWidth);
+      d3.select('#svg2').attr('height', targetheight);
+    }
+  }
+
+  let sortByL = 'early_anc_register';
+
+  let sortByR = 'early_anc_register';
+
+  let xValue = d => d.early_anc_register;
+  let xValueR = d => d.early_anc_register;
+
+  let stateSelected = '{{ dist_name }}';
+
+  let yValue = d => d.area_name;
+
+  const marginLeft = { left: 270, top: 50, right: 0, bottom: 30 };
+
+  const innerWidthLeft = width - marginLeft.left - marginLeft.right;
+
+  const innerHeightLeft = height - marginLeft.top - marginLeft.bottom;
+
+  const marginRight = { left: 270, top: 50, right: 0, bottom: 30 };
+
+  const innerWidthRight = width - marginRight.left - marginRight.right;
+
+  const innerHeightRight = height - marginRight.top - marginRight.bottom;
+
+
+  const g1 = bar1.append('g').attr('transform', `translate(${marginLeft.left}, ${marginLeft.top})`);
+
+  const g2 = bar2.append('g').attr('transform', `translate(${marginRight.left}, ${marginRight.top})`);
+
+
+  let tooltip = d3.select("body")
+    .append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+  let bar_height = 40;
+
+  function filterCSV(csv, key, value) {
+    var result = [];
+    csv.forEach(function (val, idx, arr) {
+
+      if (val[key] == value) {
+
+        result.push(val)
+      }
+    })
+    return result;
+  }
+
+
+  const drawLeft = data => {
+
+    const xScaleLeft = d3.scaleLinear().domain([0, 1.2 * (d3.max(data, xValue))]).range([0, innerWidthLeft]);
+
+    const yScale = d3.scaleBand().range([bar_height * data.length, 0]).padding(0.1);
+    yScale.domain(data.map(yValue))
+
+    let getColor;
+
+    if (xValue == 'd => d.c_section_deliveries' || xValue == 'd => d.per_still_birth' ) {
+      getColor = d3.scaleSequential().domain([d3.max(data, xValue), d3.min(data, xValue)])
+
+        .interpolator(d3.interpolateRdYlGn);
+    }
+    else {
+      getColor = d3.scaleSequential().domain([d3.min(data, xValue), d3.max(data, xValue)])
+
+        .interpolator(d3.interpolateRdYlGn);
+    }
+
+    let chart = g1.selectAll("rect").data(data)
+
+    let chartText = g1.selectAll('text').data(data)
+
+    chart.exit().remove();
+
+    chartText.exit().remove();
+
+    chart.enter().append('rect')
+      .attr('width', d => xScaleLeft(xValue(d)))
+      .attr("y", d => yScale(d.area_name))
+      .attr("height", yScale.bandwidth())
+      .attr("fill", d => getColor(xValue(d)))
+      .on("mouseover", d => {
+        tooltip
+          .transition()
+          .duration(200)
+          .style("opacity", 0.9);
+        tooltip
+          .html(d.area_name + " : " + (xValue(d).toFixed(2)))
+          .style("left", d3.event.pageX + "px")
+          .style("top", d3.event.pageY - 30 + "px");
+      })
+      .on("mouseout", function (d) {
+        tooltip
+          .transition()
+          .duration(500)
+          .style("opacity", 0);
+      });
+
+
+    chartText.enter().append('text')
+      .filter(function (d, i) { return i === 0 || i === (data.length - 1) })
+
+      .text(d => xValue(d).toFixed(2))
+
+      .attr('x', d => xScaleLeft(xValue(d))+ 5)
+
+      .attr('y', d => yScale(d.area_name) + yScale.bandwidth() / 2)
+
+      .attr("font-family", "sans-serif")
+
+      // .attr("font-size", "12px")
+
+      .attr("fill", "blue")
+
+      .attr("font-weight", "bold");
+
+    chart.transition().duration(tansitionDuration)
+
+      .attr('width', d => xScaleLeft(xValue(d)))
+
+      .attr("y", d => yScale(d.area_name))
+
+      .attr("height", yScale.bandwidth())
+      .attr("fill", d => getColor(xValue(d)))
+
+    chartText.transition().duration(tansitionDuration)
+      .filter(function (d, i) { return i === 0 || i === (data.length - 1) })
+
+      .text(d => xValue(d).toFixed(2))
+
+      .attr('x', d => xScaleLeft(xValue(d)))
+
+      .attr('y', d => yScale(d.area_name) + yScale.bandwidth() / 2);
+
+    let xaxisLeft = g1.append('g').call(d3.axisBottom(xScaleLeft))
+
+      .attr('transform', `translate(0, ${bar_height * data.length})`)
+
+    xaxisLeft.selectAll("text").attr("font-size", "12px")
+      .attr("font-weight", "bold")
+      .style("text-anchor", "middle");
+
+    let yaxisLeft = g1.append('g')
+      .call(d3.axisLeft(yScale))
+      .attr("font-size", "12px")
+      .attr("font-weight", "bold"); 
+
+    
+      chart.append("line")
+            .attr("x1", function () { return xScaleLeft(100) })
+            .attr("x2", function () { return xScaleLeft(100) })
+            .attr("y1", 0)
+            .attr("y2", 1.5 * bar_height * data.length)
+            .attr("stroke-width", 4)
+            .attr("stroke-dasharray", '20,10,5,5,5,10')
+            .attr("stroke", "red");
+
+    // g1.selectAll(".highlighted_bar").remove();
+      
+    // g1.selectAll('rect')
+    //     .attr("class", "highlighted_bar")
+    //     .filter(function (d) { return d.area_id == stateSelected; })
+    //     .style("stroke", "black")
+    //     .style("stroke-width", 5);   
+
+  }
+
+  //******************************
+
+  const drawRight = data => {
+    // $(".highlighted_bar").remove();
+    const xScaleRight = d3.scaleLinear().domain([0, 1.2 * (d3.max(data, xValueR))]).range([0, innerWidthRight]);
+
+    const yScale = d3.scaleBand().range([bar_height * data.length, 0]).padding(0.1);
+
+    yScale.domain(data.map(yValue))
+
+    let getColor;
+
+    if (xValueR == 'd => d.c_section_deliveries' || xValueR == 'd => d.per_still_birth' ) {
+      getColor = d3.scaleSequential().domain([d3.max(data, xValueR), d3.min(data, xValueR)])
+        .interpolator(d3.interpolateRdYlGn);
+    }
+    else {
+      getColor = d3.scaleSequential().domain([d3.min(data, xValueR), d3.max(data, xValueR)])
+        .interpolator(d3.interpolateRdYlGn);
+    }
+
+    let chart = g2.selectAll("rect").data(data)
+
+    let chartText = g2.selectAll('text').data(data)
+
+    chart.exit().remove();
+
+    chartText.exit().remove();
+
+    chart.enter().append('rect')
+
+      //.attr('x',d => x(xValue(d)))
+      .attr('width', d => xScaleRight(xValueR(d)))
+
+      .attr("y", d => yScale(d.area_name))
+
+      .attr("height", yScale.bandwidth())
+
+      .attr("fill", d => getColor(xValueR(d)))
+      .on("mouseover", d => {
+        tooltip
+          .transition()
+          .duration(200)
+          .style("opacity", 0.9);
+        tooltip
+          .html(d.area_name + " : " + (xValueR(d).toFixed(2)))
+          .style("left", d3.event.pageX + "px")
+          .style("top", d3.event.pageY - 30 + "px");
+      })
+      .on("mouseout", function (d) {
+        tooltip
+          .transition()
+          .duration(500)
+          .style("opacity", 0);
+      });
+
+    chartText.enter().append('text')
+      .filter(function (d, i) { return i === 0 || i === (data.length - 1) })
+
+      .text(d => xValueR(d).toFixed(2))
+
+      .attr('x', d => xScaleRight(xValueR(d)) + 5)
+
+      .attr('y', d => yScale(d.area_name) + yScale.bandwidth() / 2)
+
+      .attr("font-family", "sans-serif")
+
+      .attr("font-size", "12px")
+
+      .attr("fill", "blue")
+
+      .attr("font-weight", "bold");
+
+
+
+
+    chart.transition().duration(tansitionDuration)
+
+      //.attr('x',d => x(xValue(d)))
+
+      .attr('width', d => xScaleRight(xValueR(d)))
+
+      .attr("y", d => yScale(d.area_name))
+
+      //.attr("height", y.bandwidth())
+      .attr("fill", d => getColor(xValueR(d)));
+
+    chartText.transition().duration(tansitionDuration)
+      .filter(function (d, i) { return i === 0 || i === (data.length - 1) })
+
+      .text(d => xValueR(d).toFixed(2))
+
+      .attr('x', d => xScaleRight(xValueR(d)))
+
+      .attr('y', d => yScale(d.area_name) + yScale.bandwidth() / 2);
+
+
+    let xaxisRight = g2.append('g').call(d3.axisBottom(xScaleRight))
+
+      .attr('transform', `translate(0, ${bar_height * data.length})`);
+
+
+
+    xaxisRight.selectAll("text").attr("font-size", "12px")
+      .attr("font-weight", "bold")
+      .style("text-anchor", "middle");
+
+
+
+
+    let yaxisRight = g2.append('g')
+
+      .call(d3.axisLeft(yScale))
+
+      .attr("font-size", "12px")
+
+      .attr("font-weight", "bold");
+
+
+    g2.append("line")
+        .attr("x1", function () { return xScaleLeft(100) })
+        .attr("x2", function () { return xScaleLeft(100) })
+        .attr("y1", 0)
+        .attr("y2", 1.5 * bar_height * data.length)
+        .attr("stroke-width", 4)
+        .attr("stroke-dasharray", '20,10,5,5,5,10')
+        .attr("stroke", "red");  
+
+    // g2.selectAll('rect')
+    // .attr("class", "highlighted_bar")
+    // .filter(function (d) { return d.area_id == stateSelected; })
+    // .style("stroke", "black")
+    // .style("stroke-width", 5);     
+
+  }
+
+  const sortData = (data, parameter) => {
+
+    let sortedData = data.slice().sort((a, b) => d3.descending(a[parameter], b[parameter]))
+
+    return sortedData;
+
+  }
+
+  data_from_django = {{ data | safe }};
+
+  var data = []
+
+  data_from_django.forEach(element => {
+        if (element.early_anc_register > 200)
+            element.early_anc_register = 200;
+        if (element.anc_4_or_more > 200)
+            element.anc_4_or_more = 200;
+        if (element.pw_tt1_given > 200)
+            element.pw_tt1_given = 200;
+        if (element.pw_tt2_given > 200)
+            element.pw_tt2_given = 200;
+        if (element.pw_tt_booster_given > 200)
+            element.pw_tt_booster_given = 200;
+        if (element.pw_calcium > 200)
+            element.pw_calcium = 200;
+        if (element.pw_albendazole > 200)
+            element.pw_albendazole = 200;
+        if (element.pw_ifa > 200)
+            element.pw_ifa = 200;
+        if (element.c_section_deliveries > 200)
+            element.c_section_deliveries = 200;
+        if (element.per_still_birth > 200)
+            element.per_still_birth = 200;
+
+        data.push(element);
+    });
+
+  data.forEach(d => {
+    d.early_anc_register = +d.early_anc_register;
+        d.anc_4_or_more = +d.anc_4_or_more;
+        d.pw_tt1_given = +d.pw_tt1_given;
+        d.pw_tt2_given = +d.pw_tt2_given;
+        d.pw_tt_booster_given = +d.pw_tt_booster_given;
+        d.pw_calcium = +d.pw_calcium;
+        d.pw_albendazole = +d.pw_albendazole;
+        d.pw_ifa = +d.pw_ifa;
+        d.c_section_deliveries = +d.c_section_deliveries;
+        d.per_still_birth = +d.per_still_birth;
+        d.area_id = +d.area_id;
+        d.area_name = d.area_name;
+        d.month = d.month;
+        d.financial_year = d.financial_year;
+
+  });
+
+
+  var tickLabels = ["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]
+
+  $('#monthSlider').slider().on('slideStop', function (ev) {
+    var val = tickLabels[ev.value];
+    filterdata = filterCSV(data, 'month', val);
+    monthDataL = sortData(filterdata, sortByL);
+    monthDataR = sortData(filterdata, sortByR);
+    drawLeft(monthDataL);
+    drawRight(monthDataR);
+  });
+
+
+  $(".category a").click(function () {
+
+    $(this).parents(".dropdown").find('.btn').html($(this).text());
+
+    let valCategory = $(this).text();
+    displayLeftChart(valCategory)
+
+  });
+
+  function displayLeftChart(valCategory)
+  {
+    var displayVal = valCategory.substring(0, valCategory.length);
+        let fy = '{{ fy }}';
+        document.getElementById('barTitle').innerHTML = "(%) Indicator: " + displayVal + " (" + fy + ")";
+
+    switch (valCategory) {
+
+        case "Early ANC Registeration": xValue = d => d.early_anc_register; sortByL = 'early_anc_register'; break;
+
+        case "PW received 4 or more ANC check ups": xValue = d => d.anc_4_or_more; sortByL = 'anc_4_or_more'; break;
+
+        case "PW given TT1": xValue = d => d.pw_tt1_given; sortByL = 'pw_tt1_given'; break;
+
+        case "PW given TT2": xValue = d => d.pw_tt2_given; sortByL = 'pw_tt2_given'; break;
+
+        case "PW given TT Booster": xValue = d => d.pw_tt_booster_given; sortByL = 'pw_tt_booster_given'; break;
+
+        case "PW given 360 Calcium tablets": xValue = d => d.pw_calcium; sortByL = 'pw_calcium'; break;
+
+        case "PW given 180 Iron Folic Acid (IFA) tablets": xValue = d => d.pw_ifa; sortByL = 'pw_ifa'; break;
+
+        case "PW given one Albendazole tablet after 1st trimester": xValue = d => d.pw_albendazole; sortByL = 'pw_albendazole'; break;
+
+        case "C-section deliveries": xValue = d => d.c_section_deliveries; sortByL = 'c_section_deliveries'; break;
+
+        case "Still Birth": xValue = d => d.per_still_birth; sortByL = 'per_still_birth'; break;
+    }
+
+    var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
+    filterdata = filterCSV(data, 'month', valMonth);
+    monthDataL = sortData(filterdata, sortByL);
+    drawLeft(monthDataL);
+  }
+
+
+
+  $(".category2 a").click(function () {
+
+    $(this).parents(".dropdown").find('.btn').html($(this).text());
+
+    let valCategory = $(this).text();
+
+    switch (valCategory) {
+
+        case "Early ANC Registeration": xValueR = d => d.early_anc_register; sortByR = 'early_anc_register'; break;
+
+        case "PW received 4 or more ANC check ups": xValueR = d => d.anc_4_or_more; sortByR = 'anc_4_or_more'; break;
+
+        case "PW given TT1": xValueR = d => d.pw_tt1_given; sortByR = 'pw_tt1_given'; break;
+
+        case "PW given TT2": xValueR = d => d.pw_tt2_given; sortByR = 'pw_tt2_given'; break;
+
+        case "PW given TT Booster": xValueR = d => d.pw_tt_booster_given; sortByR = 'pw_tt_booster_given'; break;
+
+        case "PW given 360 Calcium tablets": xValueR = d => d.pw_calcium; sortByR = 'pw_calcium'; break;
+
+        case "PW given 180 Iron Folic Acid (IFA) tablets": xValueR = d => d.pw_ifa; sortByR = 'pw_ifa'; break;
+
+        case "PW given one Albendazole tablet after 1st trimester": xValueR = d => d.pw_albendazole; sortByR = 'pw_albendazole'; break;
+
+        case "C-section deliveries": xValueR = d => d.c_section_deliveries; sortByR = 'c_section_deliveries'; break;
+
+        case "Still Birth": xValueR = d => d.per_still_birth; sortByR = 'per_still_birth'; break;
+
+    }
+
+    var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
+    filterdata = filterCSV(data, 'month', valMonth);
+    monthDataR = sortData(filterdata, sortByR);
+    drawRight(monthDataR);
+
+  });
+
+  $(".toggle").click(function () {
+
+    $(this).text($(this).text() == 'Compare' ? 'Hide' : 'Compare');
+
+    let x = document.getElementById("b2");
+    let y = document.getElementById("cat2");
+
+    if (x.style.display === "none" && y.style.display === "none") {
+
+      x.style.display = "block";
+
+      y.style.display = "block";
+      x.text = "Hide";
+
+    } else {
+
+      x.style.display = "none";
+      y.style.display = "none";
+      x.text = "Show";
+
+    }
+
+    $(".category2 a").click(function () {
+
+      var valCategory = $(this).text();
+
+      $(this).parents('.dropdown').find('.dropdown-toggle').html(valCategory + ' <span class="selectedCategory2"></span>');
+
+    });
+    //trigger event
+
+    $(".category2 a").first().trigger('click');
+
+  });
+
+  let choices = parseURLParameters(window.location.href);
+  if (choices.length > 0) {
+    let selectedCat = choices[0].replace(/_/g, ' ');
+    $('.category a').parents('.dropdown').find('.dropdown-toggle').html(selectedCat + ' <span class="selectedCategory"></span>');
+    displayLeftChart(selectedCat); 
+  }
+
+  function parseURLParameters() {
+    var query = (window.location.search || '?').substr(1);
+    var map = [];
+    query.replace(/([^&=]+)=?([^&]*)(?:&+|$)/g, function (match, key, value) {
+      map.push(value);
+    });
+    return map;
+  }
+
+
+  $(function () {
+    document.getElementById("b2").style.display = 'none';
+    document.getElementById("cat2").style.display = 'none';
+    document.getElementById('sw').style.display = 'none';
+
+    $(".category a").click(function () {
+
+      var valCategory = $(this).text();
+
+      $(this).parents('.dropdown').find('.dropdown-toggle').html(valCategory + ' <span class="selectedCategory"></span>');
+
+    });
+
+    if (choices.length <= 0)
+    $(".category a").first().trigger('click');
+
+  });
+
+</script>
+
+{% endblock %}

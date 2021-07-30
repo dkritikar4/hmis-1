@@ -189,7 +189,7 @@
     }
 
     let bar_width = 40;
-    let sortBy = 'early_anc_register';
+    let sortBy = 'no_early_anc_register';
     let selectedYear = "{{fy}}";
     let yValue = d => d.no_early_anc_register;
     const xValue = d => d.area_name;
@@ -217,8 +217,14 @@
         const g = svg.append('g').attr("preserveAspectRatio", "xMinYMin meet")
             .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-        var myColor = d3.scaleSequential().domain([d3.min(data, yValue), d3.max(data, yValue)])
-            .interpolator(d3.interpolateRdYlGn);
+        let myColor; 
+        if (yValue == 'd => d.tot_c_section_deliveries' || yValue == 'd => d.tot_still_birth' ) {
+            myColor = d3.scaleSequential().domain([d3.max(data, yValue), d3.min(data, yValue)])
+                .interpolator(d3.interpolateRdYlGn);
+        }else{
+            myColor = d3.scaleSequential().domain([d3.min(data, yValue), d3.max(data, yValue)])
+                .interpolator(d3.interpolateRdYlGn);
+        }
 
         let chart = g.selectAll("rect").data(data)
 
@@ -344,10 +350,8 @@
 
         }
 
-        
-            var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
-        
-
+            
+        var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
         filterdata = filterCSV(data, 'month', valMonth);
         mydata = sortData(filterdata, sortBy);
         svg.selectAll("*").remove();

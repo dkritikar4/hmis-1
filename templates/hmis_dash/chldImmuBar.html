@@ -338,12 +338,7 @@
 
         }
 
-        if (selectedYear == '2020-2021') {
-            var valMonth = tickLabel21[$('#monthS').slider('getValue')];
-        }
-        else {
-            var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
-        }
+        var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
 
         filterdata = filterCSV(data, 'month', valMonth);
         mydata = sortData(filterdata, sortBy);
