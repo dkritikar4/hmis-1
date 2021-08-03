@@ -142,13 +142,13 @@
         <nav>
             <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
                 <a class="nav-item nav-link active" id="nav-pw-tab" data-toggle="tab" href="#nav-pw" role="tab"
-                    aria-controls="nav-pw" aria-selected="true">Pregnant Women related Indicators</a>
+                    aria-controls="nav-pw" aria-selected="true">ANC Services</a>
                 <a class="nav-item nav-link" id="nav-dl-tab" data-toggle="tab" href="#nav-dl" role="tab"
-                    aria-controls="nav-dl" aria-selected="true">Delivery related Indicators</a>
+                    aria-controls="nav-dl" aria-selected="true">Child Birth</a>
                 <a class="nav-item nav-link" id="nav-ci-tab" data-toggle="tab" href="#nav-ci" role="tab"
-                    aria-controls="nav-ci" aria-selected="false">Child Immunisation related Indicators</a>
+                    aria-controls="nav-ci" aria-selected="false">Child Immunisation</a>
                 <a class="nav-item nav-link" id="nav-cd-tab" data-toggle="tab" href="#nav-cd" role="tab"
-                    aria-controls="nav-cd" aria-selected="false">Child Diseases related Indicators</a>
+                    aria-controls="nav-cd" aria-selected="false">Childhood Diseases</a>
             </div>
         </nav>
         <div class="tab-content" id="nav-tabContent">
@@ -176,10 +176,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barnumeric' dist_name fy %}?id1=Total_no_of_PW_registered_for_ANC"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbarNumeric' dist_name fy %}?id1=Total_no_of_PW_registered_for_ANC"
                                                 target="_blank">Compare</a>
                                         </div>
@@ -214,10 +214,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barnumeric' dist_name fy %}?id1=Early_ANC_Registeration"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbarNumeric' dist_name fy %}?id1=Early_ANC_Registeration"
                                                 target="_blank">Compare</a>
                                         </div>
@@ -255,10 +255,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barchart' dist_name fy %}?id1=Early_ANC_Registeration"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbar' dist_name fy %}?id1=Early_ANC_Registeration"
                                                 target="_blank">Compare</a>
                                         </div>
@@ -298,10 +298,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barnumeric' dist_name fy %}?id1=PW_received_4_or_more_ANC_check_ups"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbarNumeric' dist_name fy %}?id1=PW_received_4_or_more_ANC_check_ups"
                                                 target="_blank">Compare</a>
                                         </div>
@@ -339,10 +339,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barchart' dist_name fy %}?id1=PW_received_4_or_more_ANC_check_ups"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbar' dist_name fy %}?id1=PW_received_4_or_more_ANC_check_ups"
                                                 target="_blank">Compare</a>
                                         </div>
@@ -379,10 +379,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barnumeric' dist_name fy %}?id1=PW_given_TT1"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbarNumeric' dist_name fy %}?id1=PW_given_TT1"
                                                 target="_blank">Compare</a>
                                         </div>
@@ -420,10 +420,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barchart' dist_name fy %}?id1=PW_given_TT1"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbar' dist_name fy %}?id1=PW_given_TT1"
                                                 target="_blank">Compare</a>
                                         </div>
@@ -461,10 +461,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barnumeric' dist_name fy %}?id1=PW_given_TT2"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbarNumeric' dist_name fy %}?id1=PW_given_TT2"
                                                 target="_blank">Compare</a>
                                         </div>
@@ -502,10 +502,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barchart' dist_name fy %}?id1=PW_given_TT2"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbar' dist_name fy %}?id1=PW_given_TT2"
                                                 target="_blank">Compare</a>
                                         </div>
@@ -543,10 +543,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barnumeric' dist_name fy %}?id1=PW_given_TT_Booster"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbarNumeric' dist_name fy %}?id1=PW_given_TT_Booster"
                                                 target="_blank">Compare</a>
                                         </div>
@@ -584,10 +584,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barchart' dist_name fy %}?id1=PW_given_TT_Booster"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbar' dist_name fy %}?id1=PW_given_TT_Booster"
                                                 target="_blank">Compare</a>
                                         </div>
@@ -625,10 +625,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barnumeric' dist_name fy %}?id1=PW_given_180_Iron_Folic_Acid_(IFA)_tablets"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbarNumeric' dist_name fy %}?id1=PW_given_180_Iron_Folic_Acid_(IFA)_tablets"
                                                 target="_blank">Compare</a>
                                         </div>
@@ -667,10 +667,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barchart' dist_name fy %}?id1=PW_given_180_Iron_Folic_Acid_(IFA)_tablets"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbar' dist_name fy %}?id1=PW_given_180_Iron_Folic_Acid_(IFA)_tablets"
                                                 target="_blank">Compare</a>
                                         </div>
@@ -708,10 +708,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barnumeric' dist_name fy %}?id1=PW_given_360_Calcium_tablets"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbarNumeric' dist_name fy %}?id1=PW_given_360_Calcium_tablets"
                                                 target="_blank">Compare</a>
                                         </div>
@@ -748,10 +748,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barchart' dist_name fy %}?id1=PW_given_360_Calcium_tablets"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbar' dist_name fy %}?id1=PW_given_360_Calcium_tablets"
                                                 target="_blank">Compare</a>
                                         </div>
@@ -789,10 +789,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barnumeric' dist_name fy %}?id1=PW_given_one_Albendazole_tablet_after_1st_trimester"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbarNumeric' dist_name fy %}?id1=PW_given_one_Albendazole_tablet_after_1st_trimester"
                                                 target="_blank">Compare</a>
                                         </div>
@@ -830,10 +830,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barchart' dist_name fy %}?id1=PW_given_one_Albendazole_tablet_after_1st_trimester"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbar' dist_name fy %}?id1=PW_given_one_Albendazole_tablet_after_1st_trimester"
                                                 target="_blank">Compare</a>
                                         </div>
@@ -886,10 +886,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barnumeric' dist_name fy %}?id1=C-section_deliveries"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbarNumeric' dist_name fy %}?id1=C-section_deliveries"
                                                 target="_blank">Compare</a>
                                         </div>
@@ -926,10 +926,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barchart' dist_name fy %}?id1=C-section_deliveries"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbar' dist_name fy %}?id1=C-section_deliveries"
                                                 target="_blank">Compare</a>
                                         </div>
@@ -965,10 +965,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barnumeric' dist_name fy %}?id1=Total_no_of_Still_Birth"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbarNumeric' dist_name fy %}?id1=Total_no_of_Still_Birth"
                                                 target="_blank">Compare</a>
                                         </div>
@@ -1005,10 +1005,10 @@
                                             BAR
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'barchart' dist_name fy %}?id1=Still_Birth"
                                                 target="_blank">Individual</a>
-                                            <a class="dropdown-item"
+                                            <a class="dropdown-item lc_link"
                                                 href="{% url 'pw_compbar' dist_name fy %}?id1=Still_Birth"
                                                 target="_blank">Compare</a>
                                         </div>

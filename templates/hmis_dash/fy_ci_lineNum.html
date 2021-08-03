@@ -86,7 +86,7 @@
 {% block feature %}
 <div class="row">
     <div class="col-12 h-75">
-        <div class="heading text-center"> Indicators State-Wise</div>
+        <div class="heading text-center"> Indicators <span id="areaTitle"></span></div>
     </div>
 </div>
 
@@ -176,6 +176,11 @@
 
     let sel_fy = '{{ fy }}';
     let sel_st = '{{ dist_name }}';
+
+    if (sel_st == '22')
+        document.getElementById('areaTitle').innerHTML = 'District-wise';
+    else
+        document.getElementById('areaTitle').innerHTML = 'State-wise';
 
     let areaName = [];
     if (sel_st == '22')

@@ -116,7 +116,7 @@
   <div class="col-12">
     <button type="button" class="btn btn-dark back-button m-2">back</button>
     <span class='info info-hirar'>{{dist_name}}</span>
-    <p>Click on the Polygon(District) to view the Lower Level <span class="drilldown">(Drilldown)</span>
+    <p>Click on the Polygon(State) to view the Lower Level <span class="drilldown">(Drilldown)</span>
       </p>
   </div>
 </div>
@@ -192,7 +192,7 @@
     .select("div#table")
     .append("table")
     .attr("class", "table update-table");
-  let headerName = ["Location", "Percentage", "Actual Number"];
+  let headerName = ["Location", "Percentage", "Reported Data"];
   let headers = table
     .append("thead")
     .append("tr")
@@ -257,7 +257,7 @@
 
     const fillCellColor = (d, percentageColor, actualColor) => {
       if (d.name == "Percentage") return percentageColor(d.value);
-      else if (d.name == "Actual Number") return actualColor(d.value);
+      else if (d.name == "Reported Data") return actualColor(d.value);
     };
 
     //info-div
@@ -577,7 +577,7 @@
 
         temp["Location"] = LocationValue(d);
         temp["Percentage"] = PercentageValue(d);
-        temp["Actual Number"] = ActualValue(d);
+        temp["Reported Data"] = ActualValue(d);
         tbdata.push(temp);
       });
       let percentageColor;
@@ -766,7 +766,7 @@
           let temp = {};
           temp["Location"] = LocationValue(d);
           temp["Percentage"] = PercentageValue(d);
-          temp["Actual Number"] = ActualValue(d);
+          temp["Reported Data"] = ActualValue(d);
           newtbdata.push(temp);
         });
         

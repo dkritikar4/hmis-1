@@ -345,7 +345,6 @@ class chldDiseaseLineNumeric(LoginRequiredMixin, TemplateView):
         for i in data:
             area_n = AreaDetails.objects.filter(Q(area_id = i['area_id'])).values('area_name')
             i.update(area_n[0])
-        print(area_list)
 
         jsondata = json.dumps(data, cls=DjangoJSONEncoder)
 
