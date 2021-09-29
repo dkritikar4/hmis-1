@@ -56,8 +56,8 @@ urlpatterns = [
     url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/cd_pie$', pieChildDisease.as_view(), name='cd_pie'),
 
     url(r'^(?P<fy>[-\w\ ]+)/hmis_dash/pw_map$', mapStPW.as_view(), name='pw_map'),
-    url(r'^(?P<fy>[-\w\ ]+)/hmis_dash/cd_map$', mapStChldDisease.as_view(), name='ci_map'),
-    url(r'^(?P<fy>[-\w\ ]+)/hmis_dash/ci_map$', mapStChldImmu.as_view(), name='cd_map'),
+    url(r'^(?P<fy>[-\w\ ]+)/hmis_dash/cd_map$', mapStChldDisease.as_view(), name='cd_map'),
+    url(r'^(?P<fy>[-\w\ ]+)/hmis_dash/ci_map$', mapStChldImmu.as_view(), name='ci_map'),
 
     url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/fy_ci_line$', fyChldImmuLine.as_view(), name='fy_ci_line'),
     url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/fy_ci_lineNum$', fyChldImmuLineNum.as_view(), name='fy_ci_lineNum'),

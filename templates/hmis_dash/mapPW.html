@@ -409,12 +409,15 @@
 
     //makemap
     const makemap = (geojson, tdata) => {
+      // console.log(tdata, "tdata")
+
       d3.select('.info-hirar').text(function () {
         // let displayVal = d => d.properties.area_name; 
         // console.log(displayVal, "d")
         let hirarchy = "India";
+        let displayAreaName = geojson[0].properties.state
         levelLocation.forEach(loc => {
-          hirarchy += ">" + loc;
+          hirarchy += ">" + displayAreaName;
         })
         return hirarchy;
       })

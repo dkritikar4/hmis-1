@@ -1135,6 +1135,8 @@
 
                                     <a href="{% url 'tablechart' dist_name fy %}" class="lc_link" target="_blank"
                                         style="color: #a10404;">TABLE</a>
+                                    <a href="{% url 'ci_map' fy %}?id1=1" class="lc_link" target="_blank"
+                                    style="color: #05705e;">MAP</a>                                        
                                 </td>
                             </tr>
 
@@ -1191,6 +1193,8 @@
 
                                     <a href="{% url 'tablechart' dist_name fy %}" class="lc_link" target="_blank"
                                         style="color: #a10404;">TABLE</a>
+                                    <a href="{% url 'ci_map' fy %}?id1=2" class="lc_link" target="_blank"
+                                    style="color: #05705e;">MAP</a>      
                                 </td>
                             </tr>
 
@@ -1248,9 +1252,11 @@
                                     </div>
                                     <a href="{% url 'tablechart' dist_name fy %}" class="lc_link" target="_blank"
                                         style="color: #a10404;">TABLE</a>
+                                    <a href="{% url 'ci_map' fy %}?id1=3" class="lc_link" target="_blank"
+                                        style="color: #05705e;">MAP</a>      
                                 </td>
                             </tr>
-
+<!-- 
                             <tr>
                                 <td>9.2.2</td>
                                 <td colspan="6">Child immunisation(9-11months)-Measles 1st dose: <span
@@ -1305,8 +1311,10 @@
                                     </div>
                                     <a href="{% url 'tablechart' dist_name fy %}" class="lc_link" target="_blank"
                                         style="color: #a10404;">TABLE</a>
+                                    <a href="{% url 'ci_map' fy %}?id1=4" class="lc_link" target="_blank"
+                                        style="color: #05705e;">MAP</a>          
                                 </td>
-                            </tr>
+                            </tr> -->
 
                             <tr>
                                 <td>9.8.1</td>
@@ -1361,6 +1369,8 @@
                                     </div>
                                     <a href="{% url 'tablechart' dist_name fy %}" class="lc_link" target="_blank"
                                         style="color: #a10404;">TABLE</a>
+                                    <a href="{% url 'ci_map' fy %}?id1=5" class="lc_link" target="_blank"
+                                    style="color: #05705e;">MAP</a>      
                                 </td>
                             </tr>
 
@@ -1418,6 +1428,8 @@
                                     </div>
                                     <a href="{% url 'tablechart' dist_name fy %}" class="lc_link" target="_blank"
                                         style="color: #a10404;">TABLE</a>
+                                    <a href="{% url 'ci_map' fy %}?id1=6" class="lc_link" target="_blank"
+                                    style="color: #05705e;">MAP</a>      
                                 </td>
                             </tr>
                         </tbody>
@@ -1493,7 +1505,8 @@
 
                                     <a href="{% url 'tablechart' dist_name fy %}" class="lc_link" target="_blank"
                                         style="color: #a10404;">TABLE</a>
-
+                                    <a href="{% url 'cd_map' fy %}?id1=1" class="lc_link" target="_blank"
+                                        style="color: #05705e;">MAP</a>
                                 </td>
                             </tr>
 
@@ -1548,6 +1561,8 @@
                                     </div>
                                     <a href="{% url 'tablechart' dist_name fy %}" class="lc_link" target="_blank"
                                         style="color: #a10404;">TABLE</a>
+                                    <a href="{% url 'cd_map' fy %}?id1=2" class="lc_link" target="_blank"
+                                        style="color: #05705e;">MAP</a>                                        
                                 </td>
                             </tr>
 
@@ -1602,6 +1617,8 @@
                                     </div>
                                     <a href="{% url 'tablechart' dist_name fy %}" class="lc_link" target="_blank"
                                         style="color: #a10404;">TABLE</a>
+                                    <a href="{% url 'cd_map' fy %}?id1=3" class="lc_link" target="_blank"
+                                        style="color: #05705e;">MAP</a>       
                                 </td>
                             </tr>
 
@@ -1656,6 +1673,8 @@
                                     </div>
                                     <a href="{% url 'tablechart' dist_name fy %}" class="lc_link" target="_blank"
                                         style="color: #a10404;">TABLE</a>
+                                    <a href="{% url 'cd_map' fy %}?id1=4" class="lc_link" target="_blank"
+                                        style="color: #05705e;">MAP</a>           
                                 </td>
                             </tr>
 
@@ -1710,6 +1729,8 @@
                                     </div>
                                     <a href="{% url 'tablechart' dist_name fy %}" class="lc_link" target="_blank"
                                         style="color: #a10404;">TABLE</a>
+                                    <a href="{% url 'cd_map' fy %}?id1=5" class="lc_link" target="_blank"
+                                        style="color: #05705e;">MAP</a>     
                                 </td>
                             </tr>
 
@@ -1815,6 +1836,8 @@
                                     </div>
                                     <a href="{% url 'tablechart' dist_name fy %}" class="lc_link" target="_blank"
                                         style="color: #a10404;">TABLE</a>
+                                    <a href="{% url 'cd_map' fy %}?id1=6" class="lc_link" target="_blank"
+                                        style="color: #05705e;">MAP</a> 
                                 </td>
                             </tr>
                         </tbody>
@@ -1974,8 +1997,8 @@
         document.getElementById('st_nocimr').innerHTML = ci_data[0].chld_immunzt_9to11m_mr;
         document.getElementById('st_cimr').innerHTML = ci_data[0].per_chld_immunzt_9to11m_mr + "%";
 
-        document.getElementById('st_nocimsl').innerHTML = ci_data[0].chld_immunzt_9to11m_measl_1st_dose;
-        document.getElementById('st_cimsl').innerHTML = ci_data[0].per_chld_immunzt_9to11m_measl_1st_dose + "%";
+        // document.getElementById('st_nocimsl').innerHTML = ci_data[0].chld_immunzt_9to11m_measl_1st_dose;
+        // document.getElementById('st_cimsl').innerHTML = ci_data[0].per_chld_immunzt_9to11m_measl_1st_dose + "%";
 
         document.getElementById('st_nocivita').innerHTML = ci_data[0].chld_immunzt_vit_a_dose_1;
         document.getElementById('st_civita').innerHTML = ci_data[0].per_chld_immunzt_vit_a_dose_1 + "%";
@@ -2014,12 +2037,12 @@
         // state =  state.replace(/ /g, '_');
         // if(pw_data[0].state != 'state')
         //     {
-        if (pw_data[0].area_parent_id == 22) {
-            newState = pw_data[0].area_parent_id;
-        }
-        else {
-            newState = pw_data[0].area_id;
-        }
+        // if (pw_data[0].area_parent_id == 22) {
+        //     newState = pw_data[0].area_parent_id;
+        // }
+        // else {
+        newState = pw_data[0].area_id;
+        // }
 
         // newState = newState.replace(/ /g, '_');
         $('a.lc_link').each(function () {

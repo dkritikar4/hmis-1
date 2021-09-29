@@ -19,6 +19,7 @@ from django.http import JsonResponse
 
 def create_post_area(request, fy=None, dist_name=None):
     dist = request.GET.get('dist_name', dist_name) 
+    
     areaSelected = request.GET.get('area')
     dtSelected = request.GET.get('area_district')
     monthSelected = request.GET.get('month')
@@ -26,11 +27,13 @@ def create_post_area(request, fy=None, dist_name=None):
 
     if ((areaSelected == '22') and (dtSelected != '0') ):
         pw_data = HmisPw.objects.filter(Q(area_id=dtSelected) & Q(financial_year=fy_name) & Q(month=monthSelected))
+        ci_data = HmisChldImmunzt.objects.filter(Q(area_id=dtSelected) & Q(financial_year=fy_name) & Q(month=monthSelected))
+        cd_data = HmisChldDisease.objects.filter(Q(area_id=dtSelected) & Q(financial_year=fy_name) & Q(month=monthSelected))
+
     else:
         pw_data = HmisPw.objects.filter(Q(area_id=areaSelected) & Q(financial_year=fy_name) & Q(month=monthSelected))
-
-    ci_data = HmisChldImmunzt.objects.filter(Q(area_id=areaSelected) & Q(financial_year=fy_name) & Q(month=monthSelected))
-    cd_data = HmisChldDisease.objects.filter(Q(area_id=areaSelected) & Q(financial_year=fy_name) & Q(month=monthSelected))
+        ci_data = HmisChldImmunzt.objects.filter(Q(area_id=areaSelected) & Q(financial_year=fy_name) & Q(month=monthSelected))
+        cd_data = HmisChldDisease.objects.filter(Q(area_id=areaSelected) & Q(financial_year=fy_name) & Q(month=monthSelected))
 
     pw_json = json.dumps(HmisPwSerializer(pw_data,  many=True).data)
 
@@ -64,7 +67,11 @@ class RegionOverview(LoginRequiredMixin, TemplateView):
         cd_data = HmisChldDisease.objects.filter(Q(area_id=1) & Q(financial_year=fy_name) & Q(month='All'))
 
         st_name = AreaDetails.objects.filter(Q(area_level = 1) | Q(area_level = 2)).values('area_name', 'area_id').distinct().order_by('area_id')
-        dt_name = AreaDetails.objects.filter(Q(area_parent_id = 22)).values('area_name', 'area_id').distinct().order_by('area_id')
+        
+        if (fy_name == '2020-2021'):
+            dt_name = AreaDetails.objects.filter(Q(area_parent_id = 22)).values('area_name', 'area_id').distinct().order_by('area_id')
+        else:
+            dt_name = AreaDetails.objects.filter(Q(area_parent_id = 22)).exclude(area_id=422).values('area_name', 'area_id').distinct().order_by('area_id')
 
         month_name = HmisPw.objects.filter(Q(financial_year=fy_name)).values('month').distinct().order_by('month')
 
