@@ -411,7 +411,7 @@
 
                             <tr class="per_value">
                                 <td>1.2.1</td>
-                                <td colspan="6">% PW given TT1 fraction of registered PW for ANC: <span
+                                <td colspan="6">% PW given TT1 as fraction of PW received 4 or more ANC check ups: <span
                                         id="dt_pwtt1"></span></td>
                                 <td colspan="2">
                                     <div class="btn-group dropright mr-1">
@@ -491,7 +491,7 @@
                                 </td>
                             </tr>
 
-                            <tr class="per_value">
+                            <!-- <tr class="per_value">
                                 <td>1.2.2</td>
                                 <td colspan="6">% PW given TT2 fraction of registered PW for ANC: <span
                                         id="dt_pwtt2"></span></td>
@@ -531,7 +531,7 @@
                                         style="color: #05705e;">MAP</a>
                                 </td>
                                 </td>
-                            </tr>
+                            </tr> -->
 
                             <tr>
                                 <td>1.2.3</td>
@@ -575,7 +575,8 @@
 
                             <tr class="per_value">
                                 <td>1.2.3</td>
-                                <td colspan="6">% PW given TT Booster fraction of registered PW for ANC: <span
+                                <td colspan="6">% PW given TT1 or TT Booster as fraction of PW received 4 or more ANC
+                                    check ups: <span
                                         id="dt_pwttbooster"></span></td>
                                 <td colspan="2">
                                     <div class="btn-group dropright mr-1">
@@ -657,8 +658,8 @@
 
                             <tr class="per_value">
                                 <td>1.2.4</td>
-                                <td colspan="6">% PW given 180 Iron Folic Acid (IFA) tablets fraction of registered PW
-                                    for ANC: <span id="dt_pwifa"></span>
+                                <td colspan="6">% PW given 180 Iron Folic Acid (IFA) tablets as fraction of PW received
+                                    4 or more ANC check ups: <span id="dt_pwifa"></span>
                                 </td>
                                 <td colspan="2">
                                     <div class="btn-group dropright mr-1">
@@ -740,7 +741,8 @@
 
                             <tr class="per_value">
                                 <td>1.2.5</td>
-                                <td colspan="6"> % PW given 360 Calcium tablets: <span id="dt_pwCalcium"></span></td>
+                                <td colspan="6"> % PW given 360 Calcium tablets as fraction of PW received 4 or more ANC
+                                    check ups: <span id="dt_pwCalcium"></span></td>
                                 <td colspan="2">
                                     <div class="btn-group dropright mr-1">
                                         <button type="button" class="btn btn-light dropdown-toggle barColor"
@@ -821,7 +823,8 @@
 
                             <tr class="per_value">
                                 <td>1.2.6</td>
-                                <td colspan="6">% PW given one Albendazole tablet after 1st trimester: <span
+                                <td colspan="6">% PW given one Albendazole tablet after 1st trimester as fraction of PW
+                                    received 4 or more ANC check ups: <span
                                         id="dt_pwalben"></span></td>
                                 <td colspan="2">
                                     <div class="btn-group dropright mr-1">
@@ -875,6 +878,46 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <tr>
+                                <td>2.2</td>
+                                <td colspan="6">Total number of Institutional Deliveries:
+                                    <span id="st_insti"></span>
+                                </td>
+                                <td colspan="2">
+                                    <div class="btn-group dropright mr-1">
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric barColor"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            BAR
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item lc_link"
+                                                href="{% url 'barnumeric' dist_name fy %}?id1=Number_of_Institutional_Deliveries"
+                                                target="_blank">Individual</a>
+                                            <a class="dropdown-item lc_link"
+                                                href="{% url 'pw_compbarNumeric' dist_name fy %}?id1=Number_of_Institutional_Deliveries"
+                                                target="_blank">Compare</a>
+                                        </div>
+                                    </div>
+                                    <div class="btn-group dropright mr-1">
+                                        <button type="button" class="btn btn-light dropdown-toggle numeric lineColor"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            LINE
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item lc_link"
+                                                href="{% url 'linenumeric' dist_name fy %}?id1=Number_of_Institutional_Deliveries"
+                                                target="_blank">Areawise</a>
+                                            <a class="dropdown-item lc_link"
+                                                href="{% url 'fy_lineNum' dist_name fy %}?id1=Number_of_Institutional_Deliveries"
+                                                target="_blank">Yearwise</a>
+                                        </div>
+                                    </div>
+                                    <a href="{% url 'tablechart' dist_name fy %}" class="lc_link" target="_blank"
+                                        style="color: #a10404;">TABLE</a>
+                                    <!-- <a href="{% url 'stlvl_pie' dist_name fy %}?id1=Number_of_Institutional_Deliveries"
+                                        class="lc_link" target="_blank" style="color: #0414a1;">PIE</a> -->
+                                </td>
+                            </tr>
                             <tr>
                                 <td>3.1</td>
                                 <td colspan="6">Total C-Section deliveries performed: <span id="st_nocsection"></span>
@@ -1952,6 +1995,7 @@
 
 
     function updateData(pw_data, ci_data, cd_data) {
+        console.log(pw_data)
         //PW Related
         document.getElementById('st_totpwanc').innerHTML = pw_data[0].tot_no_pw_reg_anc;
 
@@ -1965,7 +2009,7 @@
         document.getElementById('dt_pwtt1').innerHTML = pw_data[0].pw_tt1_given + "%";
 
         document.getElementById('st_nopwtt2').innerHTML = pw_data[0].no_pw_given_tt2;
-        document.getElementById('dt_pwtt2').innerHTML = pw_data[0].pw_tt2_given + "%";
+        // document.getElementById('dt_pwtt2').innerHTML = pw_data[0].pw_tt2_given + "%";
 
         document.getElementById('st_nopwttbooster').innerHTML = pw_data[0].no_pw_given_tt_booster;
         document.getElementById('dt_pwttbooster').innerHTML = pw_data[0].pw_tt_booster_given + "%";
@@ -1978,6 +2022,8 @@
 
         document.getElementById('st_nopwalben').innerHTML = pw_data[0].no_pw_given_albendazole;
         document.getElementById('dt_pwalben').innerHTML = pw_data[0].pw_albendazole + "%";
+
+        document.getElementById('st_insti').innerHTML = pw_data[0].no_institutional_delivery;
 
         document.getElementById('st_nocsection').innerHTML = pw_data[0].tot_c_section_deliveries;
         document.getElementById('dt_csection').innerHTML = pw_data[0].c_section_deliveries + "%";

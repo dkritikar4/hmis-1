@@ -176,14 +176,15 @@
 
     let sel_fy = '{{ fy }}';
     let sel_st = '{{ dist_name }}';
-
-    if (sel_st == '22')
+    let selAreaInt = parseInt(sel_st);
+    
+    if (selAreaInt > 38)
         document.getElementById('areaTitle').innerHTML = 'District-wise';
     else
         document.getElementById('areaTitle').innerHTML = 'State-wise';
 
     let areaName = [];
-    if (sel_st == '22')
+    if (selAreaInt > 38)
         areaName.push(405);  
     else
         areaName.push(1);
@@ -628,7 +629,7 @@
 
     $(function () {
         //bind event
-        if(sel_st == '22')
+        if (selAreaInt > 38)
             $('#state').val(405);
         else
             $('#state').val(1);

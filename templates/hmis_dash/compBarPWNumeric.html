@@ -86,6 +86,7 @@
         <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
         <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
         <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
+        <a class="dropdown-item" href="#">Number of Institutional Deliveries</a>
         <a class="dropdown-item" href="#">C-section deliveries</a>
         <a class="dropdown-item" href="#">Total no of Still Birth</a>
       </div>
@@ -121,6 +122,7 @@
         <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
         <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
         <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
+        <a class="dropdown-item" href="#">Number of Institutional Deliveries</a>
         <a class="dropdown-item" href="#">C-section deliveries</a>
         <a class="dropdown-item" href="#">Total no of Still Birth</a>
 
@@ -537,6 +539,7 @@
     d.no_pw_given_calcium = +d.no_pw_given_calcium;
     d.no_pw_given_albendazole = +d.no_pw_given_albendazole;
     d.no_pw_given_ifa = +d.no_pw_given_ifa;
+    d.no_institutional_delivery = +d.no_institutional_delivery;
     d.tot_c_section_deliveries = +d.tot_c_section_deliveries;
     d.tot_still_birth = +d.tot_still_birth;
     d.area_id = d.area_id;
@@ -592,6 +595,8 @@
 
       case "PW given one Albendazole tablet after 1st trimester": xValue = d => d.no_pw_given_albendazole; sortByL = 'no_pw_given_albendazole'; break;
 
+      case "Number of Institutional Deliveries": xValue = d => d.no_institutional_delivery; sortByL = 'no_institutional_delivery'; break;
+
       case "C-section deliveries": xValue = d => d.tot_c_section_deliveries; sortByL = 'tot_c_section_deliveries'; break;
 
       case "Total no of Still Birth": xValue = d => d.tot_still_birth; sortByL = 'tot_still_birth'; break;
@@ -630,6 +635,8 @@
       case "PW given 180 Iron Folic Acid (IFA) tablets": xValueR = d => d.no_pw_given_ifa; sortByR = 'no_pw_given_ifa'; break;
 
       case "PW given one Albendazole tablet after 1st trimester": xValueR = d => d.no_pw_given_albendazole; sortByR = 'no_pw_given_albendazole'; break;
+
+      case "Number of Institutional Deliveries": xValueR = d => d.no_institutional_delivery; sortByR = 'no_institutional_delivery'; break;
 
       case "C-section deliveries": xValueR = d => d.tot_c_section_deliveries; sortByR = 'tot_c_section_deliveries'; break;
 

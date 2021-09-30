@@ -172,13 +172,14 @@
 
   //   let prjType = 'Urban';
   let selectedArea = "{{ dist_name }}";
-  if (selectedArea == '22')
+  let selAreaInt = parseInt(selectedArea);
+  if (selAreaInt > 38)
     document.getElementById('areaTitle').innerHTML = 'District-wise';
   else
     document.getElementById('areaTitle').innerHTML = 'State-wise';
 
   let areaName = [];
-  if (selectedArea == '22')
+  if (selAreaInt > 38)
     areaName.push(405);  
   else
     areaName.push(1);
@@ -617,7 +618,7 @@
 
   $(function () {
     //bind event
-    if(selectedArea == '22')
+    if (selAreaInt > 38)
       $('#state').val(405);
     else
       $('#state').val(1);

@@ -83,6 +83,7 @@
             <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
             <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
             <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
+            <a class="dropdown-item" href="#">Number of Institutional Deliveries</a>
             <a class="dropdown-item" href="#">C-section deliveries</a>
             <a class="dropdown-item" href="#">Total no of Still Birth</a>
         </div>
@@ -202,6 +203,7 @@
     let tansitionDuration = 1000;
 
     const render = data => {
+        console.log(data, "data")
         const xScale = d3.scaleBand().range([0, 1.5 * bar_width * data.length]).padding(0.3);
         const yScale = d3.scaleLinear() .domain([d3.max(data, yValue), 0 ]).range([0, innerHeight]);
 
@@ -343,6 +345,8 @@
             case "PW given 180 Iron Folic Acid (IFA) tablets": yValue = d => d.no_pw_given_ifa; sortBy = 'no_pw_given_ifa'; break;
 
             case "PW given one Albendazole tablet after 1st trimester": yValue = d => d.no_pw_given_albendazole; sortBy = 'no_pw_given_albendazole'; break;
+            
+            case "Number of Institutional Deliveries": yValue = d => d.no_institutional_delivery; sortBy = 'no_institutional_delivery'; break;
 
             case "C-section deliveries": yValue = d => d.tot_c_section_deliveries; sortBy = 'tot_c_section_deliveries'; break;
 
@@ -389,6 +393,7 @@
         d.no_pw_given_calcium = +d.no_pw_given_calcium;
         d.no_pw_given_albendazole = +d.no_pw_given_albendazole;
         d.no_pw_given_ifa = +d.no_pw_given_ifa;
+        d.no_institutional_delivery = +d.no_institutional_delivery;
         d.tot_c_section_deliveries = +d.tot_c_section_deliveries;
         d.tot_still_birth = +d.tot_still_birth;
         d.area_id = d.area_id;

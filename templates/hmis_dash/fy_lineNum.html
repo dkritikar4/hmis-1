@@ -107,6 +107,7 @@
             <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
             <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
             <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
+            <a class="dropdown-item" href="#">Number of Institutional Deliveries</a>
             <a class="dropdown-item" href="#">C-section deliveries</a>
             <a class="dropdown-item" href="#">Total no of Still Birth</a>
         </div>
@@ -180,14 +181,15 @@
 
     let sel_fy = '{{ fy }}';
     let sel_st = '{{ dist_name }}';
+    let selAreaInt = parseInt(sel_st);
     
-    if (sel_st == '22')
+    if (selAreaInt > 38)
         document.getElementById('areaTitle').innerHTML = 'District-wise';
     else
         document.getElementById('areaTitle').innerHTML = 'State-wise';
 
     let areaName = [];
-    if (sel_st == '22')
+    if (selAreaInt > 38)
         areaName.push(405);  
     else
         areaName.push(1);
@@ -534,6 +536,7 @@
         d.no_pw_given_calcium = +d.no_pw_given_calcium;
         d.no_pw_given_ifa = +d.no_pw_given_ifa;
         d.no_pw_given_albendazole = +d.no_pw_given_albendazole;
+        d.no_institutional_delivery = +d.no_institutional_delivery;
         d.tot_c_section_deliveries = +d.tot_c_section_deliveries;
         d.tot_still_birth = +d.tot_still_birth;
         d.area_id = +d.area_id;
@@ -590,6 +593,8 @@
       section = 'no_pw_given_ifa';
     else if (val == 'PW given one Albendazole tablet after 1st trimester')
       section = 'no_pw_given_albendazole';
+    else if (val == 'Number of Institutional Deliveries')
+        section = 'no_institutional_delivery';                          
     else if (val == 'C-section deliveries')
       section = 'tot_c_section_deliveries';
     else
@@ -644,7 +649,7 @@
 
     $(function () {
         //bind event
-        if(sel_st == '22')
+        if (selAreaInt > 38)
             $('#state').val(405);
         else
             $('#state').val(1);
