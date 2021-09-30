@@ -438,7 +438,6 @@ class pieChildImmu(LoginRequiredMixin, TemplateView):
         district = request.GET.get('dist_name', dist_name) 
         dtInt = int(district)
         fy_name = request.GET.get('fy', fy) 
-        fy_name = request.GET.get('fy', fy) 
         if dtInt > 38: 
             data = list(CiPie.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22)).values())
             
@@ -459,7 +458,8 @@ class pieChildDisease(LoginRequiredMixin, TemplateView):
     redirect_field_name = 'login'
 
     def get(self, request, fy= None, dist_name = None):
-        district = request.GET.get('dist_name', dist_name)
+        district = request.GET.get('dist_name', dist_name) 
+        dtInt = int(district)
         fy_name = request.GET.get('fy', fy) 
         if dtInt > 38: 
             data = list(CdPie.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22)).values())
