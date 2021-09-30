@@ -52,9 +52,10 @@
 </style>
 {% endblock %}
 {% block feature %}
-<div class='heading text-dark mt-2 text-center'><span id="bartitleCategory">Pie Chart</span> <span
-    id="bartitleMonth"></span></div>
-
+<div class='heading text-dark mt-2 text-center'><span id="bartitleCategory">Pie Chart</span> 
+  <!-- <span
+    id="bartitleMonth"></span> -->
+  </div>
 <div class="row h-100 mb-3 bg-info">
 
   <div class="dropdown m-1">
@@ -167,21 +168,22 @@
     }
   }
 
+  const margin = { left: 750, top: 320, right: 170, bottom: 20 };
+  const innerWidth = 1100 - margin.left - margin.right;
+  const innerHeight = 750 - margin.top - margin.bottom;
+
   let fy = '{{ fy }}';
   let dist_name = '{{ dist_name }}';
-  console.log(dist_name)
+  let dtInt = parseInt(dist_name);
 
   var radius = Math.min(1100, 750) / 3;
   let choices = parseURLParameters(window.location.href);
 
+  let arcInitial = d => d.early_anc_register;
+  let arcInitialNum = d => d.no_early_anc_register;
+
   // let prjType = 'Urban';
-
-  const render = data => {
-
-    let arcInitial = d => d.early_anc_register;
-    let arcInitialNum = d => d.no_early_anc_register;
-
-    const setArcInitial = opt =>
+  const setArcInitial = opt =>
     {
       if (opt == 'Early ANC Registeration') {
         arcInitial = d => d.early_anc_register;
@@ -218,23 +220,7 @@
 
     }
 
-    const margin = { left: 750, top: 320, right: 170, bottom: 20 };
-    const innerWidth = 1100 - margin.left - margin.right;
-    const innerHeight = 750 - margin.top - margin.bottom;
-
-    if (choices.length > 0) 
-    {
-      let selectedCat = choices[0].replace(/_/g, ' ');
-      var displayVal = selectedCat.substring(0, selectedCat.length - 3);
-      document.getElementById('paraText').innerHTML = displayVal + " Contribution: ";
-      if(dist_name == '22' ){
-            document.getElementById('bartitleCategory').innerHTML = displayVal + " : District wise Contribution " + "(" + fy + ")";
-          }
-      else
-        document.getElementById('bartitleCategory').innerHTML = displayVal + " : State wise Contribution " + "(" + fy + ")";
-      $('.category a').parents('.dropdown').find('.dropdown-toggle').html(selectedCat + ' <span class="selectedCategory"></span>');
-      setArcInitial(selectedCat); 
-    }
+  const render = data => {
 
     const g = svg.append('g')
       .attr('transform', `translate(${margin.left}, ${margin.top})`);
@@ -405,24 +391,34 @@
         })
     }
 
-    const dropdownChange = () => {
-      var sel = document.getElementById('opt');
-      val = document.getElementById("opt").value
-    }
+    // const dropdownChange = () => {
+    //   var sel = document.getElementById('opt');
+    //   val = document.getElementById("opt").value
+    // }
 
     makeviz(arcInitial);
-    $(".category a").click(function () {
-      $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="selectedCategory"></span>');
-      $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
-      var valCategory = $(this).text();
-      displayPie(valCategory);
-    });
+  }
+
+  if (choices.length > 0) 
+    {
+      let selectedCat = choices[0].replace(/_/g, ' ');
+      var displayVal = selectedCat.substring(0, selectedCat.length);
+      document.getElementById('paraText').innerHTML = displayVal + " Contribution: ";
+      if( dtInt > 38 ){
+            document.getElementById('bartitleCategory').innerHTML = displayVal + " : District wise Contribution " + "(" + fy + ")";
+          }
+      else
+        document.getElementById('bartitleCategory').innerHTML = displayVal + " : State wise Contribution " + "(" + fy + ")";
+      $('.category a').parents('.dropdown').find('.dropdown-toggle').html(selectedCat + ' <span class="selectedCategory"></span>');
+      setArcInitial(selectedCat); 
+    }
 
     function displayPie(valCategory)
     {
         var displayVal = valCategory.substring(0, valCategory.length);
+
           document.getElementById('paraText').innerHTML = displayVal + " Contribution: ";
-          if(dist_name == '22' ){
+          if( dtInt > 38 ){
             document.getElementById('bartitleCategory').innerHTML = displayVal + " : District wise Contribution " + "(" + fy + ")";
           }
           else
@@ -430,8 +426,13 @@
           setArcInitial(valCategory);
           makeviz(arcInitial);
     }
-  }
 
+    $(".category a").click(function () {
+      $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="selectedCategory"></span>');
+      $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+      var valCategory = $(this).text();
+      displayPie(valCategory);
+    });
   // $(".ptype a").click(function () {
   //   $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="selectedPtype"></span>');
   //   $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
@@ -462,7 +463,7 @@
       var displayVal = valCategory.substring(0, valCategory.length);
 
       document.getElementById('paraText').innerHTML = displayVal + " Contribution: ";
-      if(dist_name == '22' ){
+      if( dtInt > 38 ){
         document.getElementById('bartitleCategory').innerHTML = displayVal + " : District wise Contribution " + "(" + fy + ")";
       }
       else
@@ -517,7 +518,7 @@ let tickLabels = ["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov",
 
 $('#monthSlider').slider().on('slideStop', function (ev) {
     var val = tickLabels[ev.value];
-    document.getElementById('bartitleMonth').innerHTML = val;
+    // document.getElementById('bartitleMonth').innerHTML = val;
     mydata = filterCSV(data, 'month', val);
     svg.selectAll("*").remove();
     render(mydata);
