@@ -92,6 +92,7 @@
             <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
             <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
             <a class="dropdown-item" href="#">C-section deliveries</a>
+            <a class="dropdown-item" href="#">Preterm Birth Rate</a>
             <a class="dropdown-item" href="#">Still Birth</a>
         </div>
     </div>
@@ -380,6 +381,18 @@
             break;
 
             case 10:
+            updatedCat = "Preterm Birth Rate";
+            Tooltipheader1 = d => "Preterm Birth Rate:";
+            // Tooltipheader2 = d => "Moderately Underweight Children:";
+            TooltipVal1 = d => d.properties.no_preterm_birth;
+            // TooltipVal2 = d => d.properties.mdrtly_uw;
+            ColorValue = d => d.properties.preterm_birth_rate;
+            TPercentValue = d => d.preterm_birth_rate;
+            TActualValue = d => d.no_preterm_birth;
+
+            break;
+
+            case 11:
             updatedCat = "Still Birth";
             Tooltipheader1 = d => "Still Birth:";
             // Tooltipheader2 = d => "Moderately Underweight Children:";
@@ -396,7 +409,7 @@
     if (choices.length > 0) {
      updateviz(parseInt(choices[0])); 
      selectedCategory = updatedCat;
-     if (selectedCategory != 'C-section deliveries' && selectedCategory != 'Still Birth') {
+     if (selectedCategory != 'C-section deliveries' && selectedCategory != 'Preterm Birth Rate' && selectedCategory != 'Still Birth') {
           d3.select("line.leftcolor").attr("stroke", "red");
           d3.select("line.track-inset").attr("stroke", "green");
         }
@@ -585,7 +598,7 @@
       });
       let percentageColor;
         let actualColor;
-        if (PercentageValue == 'd => d.c_section_deliveries' || PercentageValue == 'd => d.per_still_birth') {
+        if (PercentageValue == 'd => d.c_section_deliveries' || PercentageValue == 'd => d.preterm_birth_rate' || PercentageValue == 'd => d.per_still_birth') {
           percentageColor = d3
             .scaleSequential()
             .domain([d3.max(tdata, PercentageValue), d3.min(tdata, PercentageValue)])
@@ -633,7 +646,7 @@
 
         let selCat = $(this).text();
         let val;
-        if (selCat != 'C-section deliveries' && selCat != 'Still Birth' ) {
+        if (selCat != 'C-section deliveries' && selCat != 'Preterm Birth Rate' && selCat != 'Still Birth' ) {
           d3.select("line.leftcolor").attr("stroke", "red");
           d3.select("line.track-inset").attr("stroke", "green");
         }
@@ -652,7 +665,8 @@
           case "PW given 180 Iron Folic Acid (IFA) tablets": val = 7; break;
           case "PW given one Albendazole tablet after 1st trimester": val = 8; break;
           case "C-section deliveries": val = 9; break;
-          case "Still Birth": val = 10; break;
+          case "Preterm Birth Rate": val = 10; break;
+          case "Still Birth": val = 11; break;
         }
         updateviz(val);
         updateMap(geojson);
@@ -750,9 +764,14 @@
             break;
 
         case 10:
-        PercentageValue = d => d.per_still_birth;
-        ActualValue = d => d.tot_still_birth;
-        break;
+            PercentageValue = d => d.preterm_birth_rate;
+            ActualValue = d => d.no_preterm_birth;
+            break;
+
+        case 11:
+            PercentageValue = d => d.per_still_birth;
+            ActualValue = d => d.tot_still_birth;
+            break;
           
         }
         let newtbdata = [];
@@ -775,7 +794,7 @@
         
         let percentageColor;
         let actualColor;
-        if (PercentageValue == 'd => d.c_section_deliveries' || PercentageValue == 'd => d.per_still_birth') {
+        if (PercentageValue == 'd => d.c_section_deliveries'  || PercentageValue == 'd => d.preterm_birth_rate' || PercentageValue == 'd => d.per_still_birth') {
           percentageColor = d3
             .scaleSequential()
             .domain([d3.max(tdata, PercentageValue), d3.min(tdata, PercentageValue)])
@@ -820,7 +839,7 @@
 
 
       let myColor = (v, low, high) => {
-  if (ColorValue == 'd => d.properties.c_section_deliveries' || ColorValue == 'd => d.properties.per_still_birth') {
+  if (ColorValue == 'd => d.properties.c_section_deliveries'  || ColorValue == 'd => d.properties.preterm_birth_rate' || ColorValue == 'd => d.properties.per_still_birth') {
     if (v < low) return "#24562B"
     //matte red
     else if (v >= low && v <= high) return "#F4BC1C";
@@ -1239,6 +1258,7 @@ let tickLabels = ["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov",
         d.pw_albendazole = +d.pw_albendazole;
         d.pw_ifa = +d.pw_ifa;
         d.c_section_deliveries = +d.c_section_deliveries;
+        d.preterm_birth_rate = +d.preterm_birth_rate;
         d.per_still_birth = +d.per_still_birth;
 
         d.tot_no_pw_reg_anc = +d.tot_no_pw_reg_anc;
@@ -1251,6 +1271,7 @@ let tickLabels = ["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov",
         d.no_pw_given_albendazole = +d.no_pw_given_albendazole;
         d.no_pw_given_ifa = +d.no_pw_given_ifa;
         d.tot_c_section_deliveries = +d.tot_c_section_deliveries;
+        d.no_preterm_birth = +d.no_preterm_birth;
         d.tot_still_birth = +d.tot_still_birth;
         d.area_name = d.area_name;
         d.month = d.month;
@@ -1297,6 +1318,7 @@ let tickLabels = ["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov",
           geojson[j].properties.tot_c_section_deliveries = data[i].tot_c_section_deliveries;
           geojson[j].properties.tot_no_pw_reg_anc = data[i].tot_no_pw_reg_anc;
           geojson[j].properties.tot_still_birth = data[i].tot_still_birth;
+          geojson[j].properties.no_preterm_birth = data[i].no_preterm_birth;
 
           geojson[j].properties.pw_tt1_given = data[i].pw_tt1_given;
           geojson[j].properties.pw_tt2_given = data[i].pw_tt2_given;
@@ -1307,6 +1329,7 @@ let tickLabels = ["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov",
           geojson[j].properties.pw_albendazole = data[i].pw_albendazole;
           geojson[j].properties.pw_ifa = data[i].pw_ifa;
           geojson[j].properties.c_section_deliveries = data[i].c_section_deliveries;
+          geojson[j].properties.preterm_birth_rate = data[i].preterm_birth_rate;
           geojson[j].properties.per_still_birth = data[i].per_still_birth;
 
         }

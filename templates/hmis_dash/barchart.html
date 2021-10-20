@@ -65,6 +65,7 @@
             <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
             <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
             <a class="dropdown-item" href="#">C-section deliveries</a>
+            <a class="dropdown-item" href="#">Preterm Birth Rate</a>
             <a class="dropdown-item" href="#">Still Birth</a>
         </div>
     </div>
@@ -178,7 +179,6 @@
     let tansitionDuration = 1000;
 
     const render = data => {
-        console.log(data, "data in render")
         const xScale = d3.scaleBand().range([0, 1.5 * bar_width * data.length]).padding(0.3);
         const yScale = d3.scaleLinear().domain([1.5 * (d3.max(data, yValue)), 0]).range([0, innerHeight]);
 
@@ -195,7 +195,7 @@
             .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
         let myColor; 
-        if (yValue == 'd => d.c_section_deliveries' || yValue == 'd => d.per_still_birth' ) {
+        if (yValue == 'd => d.c_section_deliveries' || yValue == 'd => d.preterm_birth_rate' || yValue == 'd => d.per_still_birth' ) {
             myColor = d3.scaleSequential().domain([d3.max(data, yValue), d3.min(data, yValue)])
                 .interpolator(d3.interpolateRdYlGn);
         }else{
@@ -330,6 +330,8 @@
 
             case "C-section deliveries": yValue = d => d.c_section_deliveries; sortBy = 'c_section_deliveries'; break;
 
+            case "Preterm Birth Rate": yValue = d => d.preterm_birth_rate; sortBy = 'preterm_birth_rate'; break;
+
             case "Still Birth": yValue = d => d.per_still_birth; sortBy = 'per_still_birth'; break;
 
         }
@@ -337,7 +339,6 @@
         var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
 
         filterdata = filterCSV(data, 'month', valMonth);
-        console.log(filterdata, "filter")
         mydata = sortData(filterdata, sortBy);
         svg.selectAll("*").remove();
         render(mydata);
@@ -359,10 +360,8 @@
     /////
 
     data_from_django = {{ data | safe }};
-    console.log(data_from_django)
     var data = []
     data_from_django.forEach(element => {
-        console.log(element)
         if (element.early_anc_register > 200)
             element.early_anc_register = 200;
         if (element.anc_4_or_more > 200)
@@ -381,12 +380,13 @@
             element.pw_ifa = 200;
         if (element.c_section_deliveries > 200)
             element.c_section_deliveries = 200;
+        if (element.preterm_birth_rate > 200)
+            element.preterm_birth_rate = 200;
         if (element.per_still_birth > 200)
             element.per_still_birth = 200;
 
         data.push(element);
     });
-    // console.log(data_from_django, "data_from_django")
 
     data.forEach(d => {
         d.early_anc_register = +d.early_anc_register;
@@ -398,6 +398,7 @@
         d.pw_albendazole = +d.pw_albendazole;
         d.pw_ifa = +d.pw_ifa;
         d.c_section_deliveries = +d.c_section_deliveries;
+        d.preterm_birth_rate = +d.preterm_birth_rate;
         d.per_still_birth = +d.per_still_birth;
         d.area_id = +d.area_id;
         d.area_name = d.area_name;
@@ -419,8 +420,6 @@
 
     if (choices.length > 0) {
         let categoryChoices = choices[0].replace(/_/g, ' ');
-        console.log(categoryChoices, "[0]")
-
         $('.category a').parents('.dropdown').find('.dropdown-toggle').html(categoryChoices + ' <span class="selectedCategory"></span>');
         displayChart(categoryChoices);
     }

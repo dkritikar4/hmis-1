@@ -85,6 +85,7 @@
             <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
             <a class="dropdown-item" href="#">Number of Institutional Deliveries</a>
             <a class="dropdown-item" href="#">C-section deliveries</a>
+            <a class="dropdown-item" href="#">Number of Preterm Birth</a>
             <a class="dropdown-item" href="#">Total no of Still Birth</a>
         </div>
     </div>
@@ -220,7 +221,7 @@
             .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
         let myColor; 
-        if (yValue == 'd => d.tot_c_section_deliveries' || yValue == 'd => d.tot_still_birth' ) {
+        if (yValue == 'd => d.tot_c_section_deliveries' || yValue == 'd => d.no_preterm_birth' || yValue == 'd => d.tot_still_birth' ) {
             myColor = d3.scaleSequential().domain([d3.max(data, yValue), d3.min(data, yValue)])
                 .interpolator(d3.interpolateRdYlGn);
         }else{
@@ -350,6 +351,8 @@
 
             case "C-section deliveries": yValue = d => d.tot_c_section_deliveries; sortBy = 'tot_c_section_deliveries'; break;
 
+            case "Number of Preterm Birth": yValue = d => d.no_preterm_birth; sortBy = 'no_preterm_birth'; break;
+            
             case "Total no of Still Birth": yValue = d => d.tot_still_birth; sortBy = 'tot_still_birth'; break;
 
         }
@@ -395,6 +398,7 @@
         d.no_pw_given_ifa = +d.no_pw_given_ifa;
         d.no_institutional_delivery = +d.no_institutional_delivery;
         d.tot_c_section_deliveries = +d.tot_c_section_deliveries;
+        d.no_preterm_birth = +d.no_preterm_birth;
         d.tot_still_birth = +d.tot_still_birth;
         d.area_id = d.area_id;
         d.area_name = d.area_name;

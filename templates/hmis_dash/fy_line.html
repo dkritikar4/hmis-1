@@ -107,6 +107,7 @@
             <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
             <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
             <a class="dropdown-item" href="#">C-section deliveries</a>
+            <a class="dropdown-item" href="#">Preterm Birth Rate</a>
             <a class="dropdown-item" href="#">Still Birth</a>
         </div>
     </div>
@@ -534,6 +535,7 @@
         d.pw_albendazole = +d.pw_albendazole;
         d.pw_ifa = +d.pw_ifa;
         d.c_section_deliveries = +d.c_section_deliveries;
+        d.preterm_birth_rate = +d.preterm_birth_rate;
         d.per_still_birth = +d.per_still_birth;
         d.area_id = +d.area_id;
         d.area_name = d.area_name;
@@ -587,8 +589,10 @@
             section = 'pw_ifa';
         else if (val == 'PW given one Albendazole tablet after 1st trimester')
             section = 'pw_albendazole';
-        else if (val = 'C-section deliveries')
+        else if (val == 'C-section deliveries')
             section = 'c_section_deliveries';
+        else if (val == 'Preterm Birth Rate')
+            section = 'preterm_birth_rate';      
         else 
             section = 'per_still_birth'  
     }

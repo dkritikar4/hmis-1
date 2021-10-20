@@ -87,6 +87,7 @@
         <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
         <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
         <a class="dropdown-item" href="#">Number of Institutional Deliveries</a>
+        <a class="dropdown-item" href="#">Number of Preterm Birth</a>
         <a class="dropdown-item" href="#">C-section deliveries</a>
         <a class="dropdown-item" href="#">Total no of Still Birth</a>
       </div>
@@ -123,6 +124,7 @@
         <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
         <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
         <a class="dropdown-item" href="#">Number of Institutional Deliveries</a>
+        <a class="dropdown-item" href="#">Number of Preterm Birth</a>
         <a class="dropdown-item" href="#">C-section deliveries</a>
         <a class="dropdown-item" href="#">Total no of Still Birth</a>
 
@@ -266,7 +268,7 @@
 
     let getColor;
 
-    if (xValue == 'd => d.tot_c_section_deliveries' || xValue == 'd => d.tot_still_birth') {
+    if (xValue == 'd => d.tot_c_section_deliveries' || xValue == 'd => d.no_preterm_birth' || xValue == 'd => d.tot_still_birth') {
       getColor = d3.scaleSequential().domain([d3.max(data, xValue), d3.min(data, xValue)])
 
         .interpolator(d3.interpolateRdYlGn);
@@ -389,7 +391,7 @@
 
     let getColor;
 
-    if (xValueR == 'd => d.tot_c_section_deliveries' || xValueR == 'd => d.tot_still_birth') {
+    if (xValueR == 'd => d.tot_c_section_deliveries' || xValueR == 'd => d.no_preterm_birth' || xValueR == 'd => d.tot_still_birth') {
       getColor = d3.scaleSequential().domain([d3.max(data, xValueR), d3.min(data, xValueR)])
         .interpolator(d3.interpolateRdYlGn);
     }
@@ -541,6 +543,7 @@
     d.no_pw_given_ifa = +d.no_pw_given_ifa;
     d.no_institutional_delivery = +d.no_institutional_delivery;
     d.tot_c_section_deliveries = +d.tot_c_section_deliveries;
+    d.no_preterm_birth = +d.no_preterm_birth;
     d.tot_still_birth = +d.tot_still_birth;
     d.area_id = d.area_id;
     d.area_name = d.area_name;
@@ -599,12 +602,15 @@
 
       case "C-section deliveries": xValue = d => d.tot_c_section_deliveries; sortByL = 'tot_c_section_deliveries'; break;
 
+      case "Number of Preterm Birth": xValue = d => d.no_preterm_birth; sortByL = 'no_preterm_birth'; break;
+
       case "Total no of Still Birth": xValue = d => d.tot_still_birth; sortByL = 'tot_still_birth'; break;
     }
 
     var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
     filterdata = filterCSV(data, 'month', valMonth);
     monthDataL = sortData(filterdata, sortByL);
+    console.log(monthDataL)
     drawLeft(monthDataL);
   }
 
@@ -639,6 +645,8 @@
       case "Number of Institutional Deliveries": xValueR = d => d.no_institutional_delivery; sortByR = 'no_institutional_delivery'; break;
 
       case "C-section deliveries": xValueR = d => d.tot_c_section_deliveries; sortByR = 'tot_c_section_deliveries'; break;
+
+      case "Number of Preterm Birth": xValueR = d => d.no_preterm_birth; sortByR = 'no_preterm_birth'; break;
 
       case "Total no of Still Birth": xValueR = d => d.tot_still_birth; sortByR = 'tot_still_birth'; break;
     }

@@ -113,6 +113,7 @@
       <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
       <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
       <a class="dropdown-item" href="#">Number of Institutional Deliveries</a>
+      <a class="dropdown-item" href="#">Number of Preterm Birth</a>
       <a class="dropdown-item" href="#">C-section deliveries</a>
       <a class="dropdown-item" href="#">Total no of Still Birth</a>
     </div>
@@ -532,6 +533,7 @@
     d.no_pw_given_albendazole = +d.no_pw_given_albendazole;
     d.no_institutional_delivery = +d.no_institutional_delivery;
     d.tot_c_section_deliveries = +d.tot_c_section_deliveries;
+    d.no_preterm_birth = +d.no_preterm_birth;
     d.tot_still_birth = +d.tot_still_birth;
     d.area_id = +d.area_id;
     d.area_name = d.area_name;
@@ -588,6 +590,8 @@
     section = 'no_institutional_delivery';      
     else if (val == 'C-section deliveries')
       section = 'tot_c_section_deliveries';
+    else if (val == 'Number of Preterm Birth')
+      section = 'no_preterm_birth';  
     else
       section = 'tot_still_birth'  
   }
@@ -620,7 +624,7 @@
 
   //Initial Graph
   st_data = filterCSV(data, 'area_id', areaName);
-
+  console.log(st_data)
   setData(st_data, section);
 
   function parseURLParameters() {

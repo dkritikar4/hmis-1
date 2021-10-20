@@ -87,6 +87,7 @@
         <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
         <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
         <a class="dropdown-item" href="#">C-section deliveries</a>
+        <a class="dropdown-item" href="#">Preterm Birth Rate</a>
         <a class="dropdown-item" href="#">Still Birth</a>
       </div>
 
@@ -122,6 +123,7 @@
         <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
         <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
         <a class="dropdown-item" href="#">C-section deliveries</a>
+        <a class="dropdown-item" href="#">Preterm Birth Rate</a>
         <a class="dropdown-item" href="#">Still Birth</a>
 
       </div>
@@ -265,14 +267,12 @@
 
     let getColor;
 
-    if (xValue == 'd => d.c_section_deliveries' || xValue == 'd => d.per_still_birth' ) {
+    if (xValue == 'd => d.c_section_deliveries' || xValue == 'd => d.preterm_birth_rate' || xValue == 'd => d.per_still_birth' ) {
       getColor = d3.scaleSequential().domain([d3.max(data, xValue), d3.min(data, xValue)])
-
         .interpolator(d3.interpolateRdYlGn);
     }
     else {
       getColor = d3.scaleSequential().domain([d3.min(data, xValue), d3.max(data, xValue)])
-
         .interpolator(d3.interpolateRdYlGn);
     }
 
@@ -387,7 +387,7 @@
 
     let getColor;
 
-    if (xValueR == 'd => d.c_section_deliveries' || xValueR == 'd => d.per_still_birth' ) {
+    if (xValueR == 'd => d.c_section_deliveries' || xValueR == 'd => d.preterm_birth_rate' || xValueR == 'd => d.per_still_birth' ) {
       getColor = d3.scaleSequential().domain([d3.max(data, xValueR), d3.min(data, xValueR)])
         .interpolator(d3.interpolateRdYlGn);
     }
@@ -542,9 +542,11 @@
             element.pw_ifa = 200;
         if (element.c_section_deliveries > 200)
             element.c_section_deliveries = 200;
+        if (element.preterm_birth_rate > 200)
+            element.preterm_birth_rate = 200;
         if (element.per_still_birth > 200)
             element.per_still_birth = 200;
-
+            
         data.push(element);
     });
 
@@ -558,6 +560,7 @@
         d.pw_albendazole = +d.pw_albendazole;
         d.pw_ifa = +d.pw_ifa;
         d.c_section_deliveries = +d.c_section_deliveries;
+        d.preterm_birth_rate = +d.preterm_birth_rate;
         d.per_still_birth = +d.per_still_birth;
         d.area_id = +d.area_id;
         d.area_name = d.area_name;
@@ -614,6 +617,8 @@
 
         case "C-section deliveries": xValue = d => d.c_section_deliveries; sortByL = 'c_section_deliveries'; break;
 
+        case "Preterm Birth Rate": xValue = d => d.preterm_birth_rate; sortByL = 'preterm_birth_rate'; break;
+        
         case "Still Birth": xValue = d => d.per_still_birth; sortByL = 'per_still_birth'; break;
     }
 
@@ -650,6 +655,8 @@
         case "PW given one Albendazole tablet after 1st trimester": xValueR = d => d.pw_albendazole; sortByR = 'pw_albendazole'; break;
 
         case "C-section deliveries": xValueR = d => d.c_section_deliveries; sortByR = 'c_section_deliveries'; break;
+
+        case "Preterm Birth Rate": xValueR = d => d.preterm_birth_rate; sortByR = 'preterm_birth_rate'; break;
 
         case "Still Birth": xValueR = d => d.per_still_birth; sortByR = 'per_still_birth'; break;
 
