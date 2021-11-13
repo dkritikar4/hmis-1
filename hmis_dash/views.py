@@ -151,11 +151,11 @@ class hmisLineNumericChart(LoginRequiredMixin, TemplateView):
         fy_name = request.GET.get('fy', fy) 
 
         if dtInt > 38: 
-            data = list(HmisPw.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22)).exclude(month='All').values())
+            data = list(HmisPw.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22)).order_by('month').exclude(month='All').values())
             area_list = AreaDetails.objects.filter(Q(area_parent_id=22)).values('area_name', 'area_id').distinct().order_by('area_id')
             
         else:    
-            data = list(HmisPw.objects.filter(Q(financial_year=fy_name) & (Q(area_parent_id=1) | Q(area_parent_id=-1))).exclude(month='All').values())
+            data = list(HmisPw.objects.filter(Q(financial_year=fy_name) & (Q(area_parent_id=1) | Q(area_parent_id=-1))).order_by('month').exclude(month='All').values())
             area_list = AreaDetails.objects.filter(Q(area_parent_id=1) | Q(area_parent_id=-1)).values('area_name', 'area_id').distinct().order_by('area_id')
 
         for i in data:
@@ -349,11 +349,11 @@ class chldDiseaseLineNumeric(LoginRequiredMixin, TemplateView):
         fy_name = request.GET.get('fy', fy) 
 
         if dtInt > 38: 
-            data = list(HmisChldDisease.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22)).exclude(month='All').values())
+            data = list(HmisChldDisease.objects.filter(Q(financial_year=fy_name) & Q(area_parent_id=22)).order_by('month').exclude(month='All').values())
             area_list = AreaDetails.objects.filter(Q(area_parent_id=22)).values('area_name', 'area_id').distinct().order_by('area_id')
             
         else:    
-            data = list(HmisChldDisease.objects.filter(Q(financial_year=fy_name) & (Q(area_parent_id=1) | Q(area_parent_id=-1))).exclude(month='All').values())
+            data = list(HmisChldDisease.objects.filter(Q(financial_year=fy_name) & (Q(area_parent_id=1) | Q(area_parent_id=-1))).order_by('month').exclude(month='All').values())
             area_list = AreaDetails.objects.filter(Q(area_parent_id=1) | Q(area_parent_id=-1)).values('area_name', 'area_id').distinct().order_by('area_id')
 
         for i in data:

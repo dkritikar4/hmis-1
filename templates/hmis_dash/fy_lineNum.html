@@ -191,7 +191,7 @@
 
     let areaName = [];
     if (selAreaInt > 38)
-        areaName.push(405);  
+        areaName.push(selAreaInt);  
     else
         areaName.push(1);
     let selectedYear = [];
@@ -654,7 +654,7 @@
     $(function () {
         //bind event
         if (selAreaInt > 38)
-            $('#state').val(405);
+            $('#state').val(selAreaInt);
         else
             $('#state').val(1);
         $('#fyList').val(sel_fy);
