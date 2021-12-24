@@ -100,15 +100,15 @@
         <div class="dropdown-menu category" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="#">Early ANC Registeration</a>
             <a class="dropdown-item" href="#">PW received 4 or more ANC check ups</a>
-            <a class="dropdown-item" href="#">PW given TT1</a>
-            <a class="dropdown-item" href="#">PW given TT2</a>
-            <a class="dropdown-item" href="#">PW given TT Booster</a>
-            <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
+            <a class="dropdown-item" href="#">PW given TT1</a>
+            <!-- <a class="dropdown-item" href="#">PW given TT2</a> -->
+            <a class="dropdown-item" href="#">PW given TT1 or TT Booster</a>
+            <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
             <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
             <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
             <a class="dropdown-item" href="#">C-section deliveries</a>
             <a class="dropdown-item" href="#">Preterm Birth Rate</a>
-            <a class="dropdown-item" href="#">Still Birth</a>
+            <a class="dropdown-item" href="#">Still Birth Rate</a>
         </div>
     </div>
     <div class="dropdown m-1">
@@ -188,10 +188,10 @@
         document.getElementById('areaTitle').innerHTML = 'State-wise';
 
     let areaName = [];
-    if (selAreaInt > 38)
+    // if (selAreaInt > 38)
         areaName.push(selAreaInt);  
-    else
-        areaName.push(1);
+    // else
+    //     areaName.push(1);
     let selectedYear = [];
     selectedYear.push(sel_fy)
 
@@ -529,8 +529,8 @@
         d.early_anc_register = +d.early_anc_register;
         d.anc_4_or_more = +d.anc_4_or_more;
         d.pw_tt1_given = +d.pw_tt1_given;
-        d.pw_tt2_given = +d.pw_tt2_given;
-        d.pw_tt_booster_given = +d.pw_tt_booster_given;
+        // d.pw_tt2_given = +d.pw_tt2_given;
+        d.per_pw_given_tt1_or_tt_booster = +d.per_pw_given_tt1_or_tt_booster;
         d.pw_calcium = +d.pw_calcium;
         d.pw_albendazole = +d.pw_albendazole;
         d.pw_ifa = +d.pw_ifa;
@@ -577,13 +577,13 @@
             section = 'early_anc_register';
         else if (val == 'PW received 4 or more ANC check ups')
             section = 'anc_4_or_more';
-        else if (val == 'PW given TT1')
+        else if (val == 'PW given TT1')
             section = 'pw_tt1_given';
-        else if (val == 'PW given TT2')
-            section = 'pw_tt2_given';
-        else if (val == 'PW given TT Booster')
-            section = 'pw_tt_booster_given';
-        else if (val == 'PW given 360 Calcium tablets')
+        // else if (val == 'PW given TT2')
+        //     section = 'pw_tt2_given';
+        else if (val == 'PW given TT1 or TT Booster')
+            section = 'per_pw_given_tt1_or_tt_booster';
+        else if (val == 'PW given 360 Calcium tablets')
             section = 'pw_calcium';
         else if (val == 'PW given 180 Iron Folic Acid (IFA) tablets')
             section = 'pw_ifa';
@@ -645,10 +645,10 @@
 
     $(function () {
         //bind event
-        if (selAreaInt > 38)
+        // if (selAreaInt > 38)
             $('#state').val(selAreaInt);
-        else
-            $('#state').val(1);
+        // else
+        //     $('#state').val(1);
         $('#fyList').val(sel_fy);
 
         $(".category a").click(function () {

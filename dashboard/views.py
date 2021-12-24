@@ -21,24 +21,24 @@ def create_post_area(request, fy=None, dist_name=None):
     dist = request.GET.get('dist_name', dist_name) 
     
     areaSelected = request.GET.get('area')
-    dtSelected = request.GET.get('area_district')
-    monthSelected = request.GET.get('month')
+    # dtSelected = request.GET.get('area_district')
+    monthSelected = int(request.GET.get('month'))
     fy_name = request.GET.get('fy', fy) 
 
-    if ((areaSelected == '22') and (dtSelected != '0') ):
-        pw_data = HmisPw.objects.filter(Q(area_id=dtSelected) & Q(financial_year=fy_name) & Q(month=monthSelected))
-        ci_data = HmisChldImmunzt.objects.filter(Q(area_id=dtSelected) & Q(financial_year=fy_name) & Q(month=monthSelected))
-        cd_data = HmisChldDisease.objects.filter(Q(area_id=dtSelected) & Q(financial_year=fy_name) & Q(month=monthSelected))
+    # if ((areaSelected == '22') and (dtSelected != '0') ):
+    #     pw_data = HmisPw.objects.filter(Q(area_id=dtSelected) & Q(financial_year=fy_name) & Q(month=monthSelected))
+    #     ci_data = HmisChldImmunzt.objects.filter(Q(area_id=dtSelected) & Q(financial_year=fy_name) & Q(month=monthSelected))
+    #     cd_data = HmisChldDisease.objects.filter(Q(area_id=dtSelected) & Q(financial_year=fy_name) & Q(month=monthSelected))
 
-    else:
-        pw_data = HmisPw.objects.filter(Q(area_id=areaSelected) & Q(financial_year=fy_name) & Q(month=monthSelected))
-        ci_data = HmisChldImmunzt.objects.filter(Q(area_id=areaSelected) & Q(financial_year=fy_name) & Q(month=monthSelected))
-        cd_data = HmisChldDisease.objects.filter(Q(area_id=areaSelected) & Q(financial_year=fy_name) & Q(month=monthSelected))
+    # else:
+    pw_data = HmisPw.objects.filter(Q(area_id=areaSelected) & Q(financial_year=fy_name) & Q(month_id=monthSelected))
+    ci_data = HmisChldImmunzt.objects.filter(Q(area_id=areaSelected) & Q(financial_year=fy_name) & Q(month_id=monthSelected))
+    cd_data = HmisChldDisease.objects.filter(Q(area_id=areaSelected) & Q(financial_year=fy_name) & Q(month_id=monthSelected))
 
     pw_json = json.dumps(HmisPwSerializer(pw_data,  many=True).data)
-
     ci_json = json.dumps(HmisCiSerializer(ci_data,  many=True).data)
     cd_json = json.dumps(HmisCdSerializer(cd_data,  many=True).data)
+
     context = {
         'pw_data':pw_json,
         'ci_data':ci_json,
@@ -62,18 +62,19 @@ class RegionOverview(LoginRequiredMixin, TemplateView):
         fy_name = request.POST['fy_select']
       
         area_name = 1
-        pw_data = HmisPw.objects.filter(Q(area_id=1) & Q(financial_year=fy_name) & Q(month='All'))
-        ci_data = HmisChldImmunzt.objects.filter(Q(area_id=1) & Q(financial_year=fy_name) & Q(month='All'))
-        cd_data = HmisChldDisease.objects.filter(Q(area_id=1) & Q(financial_year=fy_name) & Q(month='All'))
+        pw_data = HmisPw.objects.filter(Q(area_id=1) & Q(financial_year=fy_name) & Q(month_id=13))
+        ci_data = HmisChldImmunzt.objects.filter(Q(area_id=1) & Q(financial_year=fy_name) & Q(month_id=13))
+        cd_data = HmisChldDisease.objects.filter(Q(area_id=1) & Q(financial_year=fy_name) & Q(month_id=13))
 
         st_name = AreaDetails.objects.filter(Q(area_level = 1) | Q(area_level = 2)).values('area_name', 'area_id').distinct().order_by('area_id')
         
-        if (fy_name == '2020-2021'):
-            dt_name = AreaDetails.objects.filter(Q(area_parent_id = 22)).values('area_name', 'area_id').distinct().order_by('area_id')
-        else:
-            dt_name = AreaDetails.objects.filter(Q(area_parent_id = 22)).exclude(area_id=422).values('area_name', 'area_id').distinct().order_by('area_id')
+        # if (fy_name == '2020-2021'):
+        #     print("in if loop")
+        #     dt_name = AreaDetails.objects.filter(Q(area_parent_id = 22)).values('area_name', 'area_id').distinct().order_by('area_id')
+        # else:
+        # dt_name = AreaDetails.objects.filter(Q(area_parent_id = 22)).values('area_name', 'area_id').distinct().order_by('area_id')
 
-        month_name = HmisPw.objects.filter(Q(financial_year=fy_name)).values('month').distinct().order_by('month')
+        month_name = HmisPw.objects.filter(Q(financial_year=fy_name)).values('month', 'month_id').distinct().order_by('month_id').exclude(month_id__gte = 14)
 
         pw_json = serializers.serialize('json',pw_data)
         ci_json = serializers.serialize('json',ci_data)
@@ -83,7 +84,8 @@ class RegionOverview(LoginRequiredMixin, TemplateView):
             'ci_data':ci_json,
             'cd_data':cd_json
         }
-        return render(request,'dashboard/dt_dashboard.html', {'st_list':st_name, 'dt_list':dt_name , 'context':context, 'dist_name':area_name, 'months':month_name, 'fy': fy_name})
+        #  'dt_list':dt_name ,
+        return render(request,'dashboard/dt_dashboard.html', {'st_list':st_name, 'context':context, 'dist_name':area_name, 'months':month_name, 'fy': fy_name})
 
 
 

@@ -20,7 +20,7 @@ from hmis_dash.views import (HMISDashboardView, hmisBarChart, hmisLineChart, hmi
     chldImmuBar, chldImmuLine, chldImmuBarNumeric, chldImmuLineNumeric, chldDiseaseBar, chldDiseaseLine, chldDiseaseBarNumeric,
     chldDiseaseLineNumeric, hmisTableChart, pieStateLevel, pieChildDisease, pieChildImmu,mapStPW, mapStChldImmu, mapStChldDisease,
     fyLine, fyLineNum, fyChldImmuLine, fyChldImmuLineNum, fyChldDiseaseLine, fyChldDiseaseLineNum, 
-    CompBarPw, CompBarPwNumeric)
+    CompBarPw, CompBarPwNumeric, CompBarCi, CompBarCiNumeric, CompBarCd, CompBarCdNumeric)
 from django.conf import settings
 from django.conf.urls.static import static
 from dashboard import views
@@ -44,11 +44,15 @@ urlpatterns = [
     url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/ci_line$', chldImmuLine.as_view(), name='ci_line'),
     url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/ci_barnumeric$', chldImmuBarNumeric.as_view(), name='ci_barnumeric'),
     url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/ci_linenumeric$', chldImmuLineNumeric.as_view(), name='ci_linenumeric'),
+    url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/ci_compbar$', CompBarCi.as_view(), name='ci_compbar'),
+    url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/ci_compbarNum$', CompBarCiNumeric.as_view(), name='ci_compbarNumeric'),
     
     url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/cd_bar$', chldDiseaseBar.as_view(), name='cd_bar'),
     url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/cd_line$', chldDiseaseLine.as_view(), name='cd_line'),
     url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/cd_barnumeric$', chldDiseaseBarNumeric.as_view(), name='cd_barnumeric'),
     url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/cd_linenumeric$', chldDiseaseLineNumeric.as_view(), name='cd_linenumeric'),
+    url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/cd_compbar$', CompBarCd.as_view(), name='cd_compbar'),
+    url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/cd_compbarNum$', CompBarCdNumeric.as_view(), name='cd_compbarNumeric'),
 
     url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/tableOverview$', hmisTableChart.as_view(), name='tablechart'),
     url(r'^(?P<dist_name>[-\w]+)/(?P<fy>[-\w\ ]+)/hmis_dash/stlvl_pie$', pieStateLevel.as_view(), name='stlvl_pie'),

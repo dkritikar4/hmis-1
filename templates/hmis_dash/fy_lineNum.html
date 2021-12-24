@@ -101,10 +101,10 @@
             <a class="dropdown-item" href="#">Total no of PW registered for ANC</a>
             <a class="dropdown-item" href="#">Early ANC Registeration</a>
             <a class="dropdown-item" href="#">PW received 4 or more ANC check ups</a>
-            <a class="dropdown-item" href="#">PW given TT1</a>
-            <a class="dropdown-item" href="#">PW given TT2</a>
-            <a class="dropdown-item" href="#">PW given TT Booster</a>
-            <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
+            <a class="dropdown-item" href="#">PW given TT1</a>
+            <a class="dropdown-item" href="#">PW given TT2</a>
+            <a class="dropdown-item" href="#">PW given TT Booster</a>
+            <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
             <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
             <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
             <a class="dropdown-item" href="#">Number of Institutional Deliveries</a>
@@ -190,10 +190,10 @@
         document.getElementById('areaTitle').innerHTML = 'State-wise';
 
     let areaName = [];
-    if (selAreaInt > 38)
+    // if (selAreaInt > 38)
         areaName.push(selAreaInt);  
-    else
-        areaName.push(1);
+    // else
+    //     areaName.push(1);
     let selectedYear = [];
     selectedYear.push(sel_fy)
 
@@ -583,13 +583,13 @@
       section = 'no_early_anc_register';
     else if (val == 'PW received 4 or more ANC check ups')
       section = 'no_anc_4_or_more';
-    else if (val == 'PW given TT1')
+    else if (val == 'PW given TT1')
       section = 'no_pw_given_tt1';
-    else if (val == 'PW given TT2')
+    else if (val == 'PW given TT2')
       section = 'no_pw_given_tt2';
-    else if (val == 'PW given TT Booster')
+    else if (val == 'PW given TT Booster')
       section = 'no_pw_given_tt_booster';
-    else if (val == 'PW given 360 Calcium tablets')
+    else if (val == 'PW given 360 Calcium tablets')
       section = 'no_pw_given_calcium';
     else if (val == 'PW given 180 Iron Folic Acid (IFA) tablets')
       section = 'no_pw_given_ifa';
@@ -653,10 +653,10 @@
 
     $(function () {
         //bind event
-        if (selAreaInt > 38)
+        // if (selAreaInt > 38)
             $('#state').val(selAreaInt);
-        else
-            $('#state').val(1);
+        // else
+        //     $('#state').val(1);
         $('#fyList').val(sel_fy);
 
         $(".category a").click(function () {

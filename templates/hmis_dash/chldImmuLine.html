@@ -179,10 +179,10 @@
     document.getElementById('areaTitle').innerHTML = 'State-wise';
 
   let areaName = [];
-  if (selAreaInt > 38)
+  // if (selAreaInt > 38)
     areaName.push(selAreaInt);  
-  else
-    areaName.push(1);
+  // else
+  //   areaName.push(1);
   let selectedYear = "{{fy}}";
 
   const svg = d3.select('#chart').append('svg').attr('id', 'svg1').attr('width', 1000)
@@ -610,7 +610,7 @@
   function parseURLParameters() {
     var query = (window.location.search || '?').substr(1);
     var map = [];
-    query.replace(/([^&=]+)=?([^&]*)(?:&+|$)/g, function (match, key, value) {
+    query.replace(/([^&=]+)=?([^]*)(?:&+|$)/g, function (match, key, value) {
       map.push(value);
     });
     return map;
@@ -618,10 +618,10 @@
 
   $(function () {
     //bind event
-    if (selAreaInt > 38)
+    // if (selAreaInt > 38)
       $('#state').val(selAreaInt);
-    else
-      $('#state').val(1);
+    // else
+    //   $('#state').val(1);
 
     $(".category a").click(function () {
       var valCategory = $(this).text();

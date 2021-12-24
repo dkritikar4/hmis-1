@@ -58,15 +58,15 @@
         <div class="dropdown-menu category" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="#">Early ANC Registeration</a>
             <a class="dropdown-item" href="#">PW received 4 or more ANC check ups</a>
-            <a class="dropdown-item" href="#">PW given TT1</a>
-            <a class="dropdown-item" href="#">PW given TT2</a>
-            <a class="dropdown-item" href="#">PW given TT Booster</a>
-            <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
+            <a class="dropdown-item" href="#">PW given TT1</a>
+            <!-- <a class="dropdown-item" href="#">PW given TT2</a> -->
+            <a class="dropdown-item" href="#">PW given TT1 or TT Booster</a>
+            <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
             <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
             <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
             <a class="dropdown-item" href="#">C-section deliveries</a>
             <a class="dropdown-item" href="#">Preterm Birth Rate</a>
-            <a class="dropdown-item" href="#">Still Birth</a>
+            <a class="dropdown-item" href="#">Still Birth Rate</a>
         </div>
     </div>
 
@@ -316,13 +316,13 @@
 
             case "PW received 4 or more ANC check ups": yValue = d => d.anc_4_or_more; sortBy = 'anc_4_or_more'; break;
 
-            case "PW given TT1": yValue = d => d.pw_tt1_given; sortBy = 'pw_tt1_given'; break;
+            case "PW given TT1": yValue = d => d.pw_tt1_given; sortBy = 'pw_tt1_given'; break;
 
-            case "PW given TT2": yValue = d => d.pw_tt2_given; sortBy = 'pw_tt2_given'; break;
+            // case "PW given TT2": yValue = d => d.pw_tt2_given; sortBy = 'pw_tt2_given'; break;
 
-            case "PW given TT Booster": yValue = d => d.pw_tt_booster_given; sortBy = 'pw_tt_booster_given'; break;
+            case "PW given TT1 or TT Booster": yValue = d => d.per_pw_given_tt1_or_tt_booster; sortBy = 'per_pw_given_tt1_or_tt_booster'; break;
 
-            case "PW given 360 Calcium tablets": yValue = d => d.pw_calcium; sortBy = 'pw_calcium'; break;
+            case "PW given 360 Calcium tablets": yValue = d => d.pw_calcium; sortBy = 'pw_calcium'; break;
 
             case "PW given 180 Iron Folic Acid (IFA) tablets": yValue = d => d.pw_ifa; sortBy = 'pw_ifa'; break;
 
@@ -332,7 +332,7 @@
 
             case "Preterm Birth Rate": yValue = d => d.preterm_birth_rate; sortBy = 'preterm_birth_rate'; break;
 
-            case "Still Birth": yValue = d => d.per_still_birth; sortBy = 'per_still_birth'; break;
+            case "Still Birth Rate": yValue = d => d.per_still_birth; sortBy = 'per_still_birth'; break;
 
         }
 
@@ -368,10 +368,10 @@
             element.anc_4_or_more = 200;
         if (element.pw_tt1_given > 200)
             element.pw_tt1_given = 200;
-        if (element.pw_tt2_given > 200)
-            element.pw_tt2_given = 200;
-        if (element.pw_tt_booster_given > 200)
-            element.pw_tt_booster_given = 200;
+        // if (element.pw_tt2_given > 200)
+        //     element.pw_tt2_given = 200;
+        if (element.per_pw_given_tt1_or_tt_booster > 200)
+            element.per_pw_given_tt1_or_tt_booster = 200;
         if (element.pw_calcium > 200)
             element.pw_calcium = 200;
         if (element.pw_albendazole > 200)
@@ -392,8 +392,8 @@
         d.early_anc_register = +d.early_anc_register;
         d.anc_4_or_more = +d.anc_4_or_more;
         d.pw_tt1_given = +d.pw_tt1_given;
-        d.pw_tt2_given = +d.pw_tt2_given;
-        d.pw_tt_booster_given = +d.pw_tt_booster_given;
+        // d.pw_tt2_given = +d.pw_tt2_given;
+        d.per_pw_given_tt1_or_tt_booster = +d.per_pw_given_tt1_or_tt_booster;
         d.pw_calcium = +d.pw_calcium;
         d.pw_albendazole = +d.pw_albendazole;
         d.pw_ifa = +d.pw_ifa;

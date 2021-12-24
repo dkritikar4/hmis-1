@@ -390,9 +390,7 @@
         d.per_no_chld_12to59m_albendazole = +d.per_no_chld_12to59m_albendazole;
         d.area_name = d.area_name;
         d.month = d.month;
-        d.year = d.year;
-
-
+        d.financial_year = d.financial_year;
     });
     
     let tickLabels = ["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]
@@ -434,7 +432,7 @@
     function parseURLParameters() {
         var query = (window.location.search || '?').substr(1);
         var map = [];
-        query.replace(/([^&=]+)=?([^&]*)(?:&+|$)/g, function (match, key, value) {
+        query.replace(/([^&=]+)=?([^]*)(?:&+|$)/g, function (match, key, value) {
             map.push(value);
         });
         return map;

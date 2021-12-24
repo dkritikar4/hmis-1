@@ -77,18 +77,12 @@
       </button>
 
       <div class="dropdown-menu category" aria-labelledby="dropdownMenuButton">
-
-        <a class="dropdown-item" href="#">Early ANC Registeration</a>
-        <a class="dropdown-item" href="#">PW received 4 or more ANC check ups</a>
-        <a class="dropdown-item" href="#">PW given TT1</a>
-        <!-- <a class="dropdown-item" href="#">PW given TT2</a> -->
-        <a class="dropdown-item" href="#">PW given TT1 or TT Booster</a>
-        <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
-        <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
-        <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
-        <a class="dropdown-item" href="#">C-section deliveries</a>
-        <a class="dropdown-item" href="#">Preterm Birth Rate</a>
-        <a class="dropdown-item" href="#">Still Birth Rate</a>
+        <a class="dropdown-item" href="#">Child Immunisation-Vitamin K1(Birth Dose)</a>
+        <a class="dropdown-item" href="#">Child Immunisation-BCG</a>
+        <a class="dropdown-item" href="#">Child Immunisation(9-11 months)-Measles & Rubella (MR) 1st Dose</a>
+        <!-- <a class="dropdown-item" href="#">Child Immunisation(9-11 months)-Measles 1st Dose</a> -->
+        <a class="dropdown-item" href="#">Child immunisation-Vitamin A Dose-1</a>
+        <a class="dropdown-item" href="#">Children(12-59 months) provided Albendazole</a>
       </div>
 
 
@@ -113,19 +107,12 @@
       </button>
 
       <div class="dropdown-menu category2" aria-labelledby="dropdownMenuButton">
-
-        <a class="dropdown-item" href="#">Early ANC Registeration</a>
-        <a class="dropdown-item" href="#">PW received 4 or more ANC check ups</a>
-        <a class="dropdown-item" href="#">PW given TT1</a>
-        <!-- <a class="dropdown-item" href="#">PW given TT2</a> -->
-        <a class="dropdown-item" href="#">PW given TT1 or TT Booster</a>
-        <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
-        <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
-        <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
-        <a class="dropdown-item" href="#">C-section deliveries</a>
-        <a class="dropdown-item" href="#">Preterm Birth Rate</a>
-        <a class="dropdown-item" href="#">Still Birth Rate</a>
-
+        <a class="dropdown-item" href="#">Child Immunisation-Vitamin K1(Birth Dose)</a>
+        <a class="dropdown-item" href="#">Child Immunisation-BCG</a>
+        <a class="dropdown-item" href="#">Child Immunisation(9-11 months)-Measles & Rubella (MR) 1st Dose</a>
+        <!-- <a class="dropdown-item" href="#">Child Immunisation(9-11 months)-Measles 1st Dose</a> -->
+        <a class="dropdown-item" href="#">Child immunisation-Vitamin A Dose-1</a>
+        <a class="dropdown-item" href="#">Children(12-59 months) provided Albendazole</a>
       </div>
     </div>
   </div>
@@ -209,14 +196,16 @@
     }
   }
 
-  let sortByL = 'early_anc_register';
+  let sortByL = 'per_chld_immunzt_vit_k1';
 
-  let sortByR = 'early_anc_register';
+  let sortByR = 'per_chld_immunzt_vit_k1';
 
-  let xValue = d => d.early_anc_register;
-  let xValueR = d => d.early_anc_register;
+  let xValue = d => d.per_chld_immunzt_vit_k1;
+  let xValueR = d => d.per_chld_immunzt_vit_k1;
 
-  let stateSelected = '{{ dist_name }}';
+  let stateSelected = '{{ dist_name}}';
+    stateSelected = stateSelected.replace(/_/g, ' ');
+    console.log("stateSelected", stateSelected);
 
   let yValue = d => d.area_name;
 
@@ -267,14 +256,9 @@
 
     let getColor;
 
-    if (xValue == 'd => d.c_section_deliveries' || xValue == 'd => d.preterm_birth_rate' || xValue == 'd => d.per_still_birth' ) {
-      getColor = d3.scaleSequential().domain([d3.max(data, xValue), d3.min(data, xValue)])
+    getColor = d3.scaleSequential().domain([d3.min(data, xValue), d3.max(data, xValue)])
         .interpolator(d3.interpolateRdYlGn);
-    }
-    else {
-      getColor = d3.scaleSequential().domain([d3.min(data, xValue), d3.max(data, xValue)])
-        .interpolator(d3.interpolateRdYlGn);
-    }
+
 
     let chart = g1.selectAll("rect").data(data)
 
@@ -365,10 +349,10 @@
             .attr("stroke-dasharray", '20,10,5,5,5,10')
             .attr("stroke", "red");
 
-      // g1.selectAll('rect')
-      //   .filter(function(d) { return d.area_id == stateSelected; })
-      //   .style("stroke", "black")
-      //   .style("stroke-width", 5);
+    // g1.selectAll('rect')
+    //     .filter(function(d) { return d.area_id == stateSelected; })
+    //     .style("stroke", "black")
+    //     .style("stroke-width", 5);
 
   }
 
@@ -384,14 +368,8 @@
 
     let getColor;
 
-    if (xValueR == 'd => d.c_section_deliveries' || xValueR == 'd => d.preterm_birth_rate' || xValueR == 'd => d.per_still_birth' ) {
-      getColor = d3.scaleSequential().domain([d3.max(data, xValueR), d3.min(data, xValueR)])
+    getColor = d3.scaleSequential().domain([d3.min(data, xValueR), d3.max(data, xValueR)])
         .interpolator(d3.interpolateRdYlGn);
-    }
-    else {
-      getColor = d3.scaleSequential().domain([d3.min(data, xValueR), d3.max(data, xValueR)])
-        .interpolator(d3.interpolateRdYlGn);
-    }
 
     let chart = g2.selectAll("rect").data(data)
 
@@ -444,7 +422,6 @@
       .attr("fill", "blue")
 
       .attr("font-weight", "bold");
-
 
 
 
@@ -501,10 +478,9 @@
         .attr("stroke", "red");  
 
     // g2.selectAll('rect')
-    // .attr("class", "highlighted_bar")
-    // .filter(function (d) { return d.area_id == stateSelected; })
-    // .style("stroke", "black")
-    // .style("stroke-width", 5);     
+    //     .filter(function(d) { return d.area_id == stateSelected; })
+    //     .style("stroke", "black")
+    //     .style("stroke-width", 5);
 
   }
 
@@ -521,45 +497,29 @@
   var data = []
 
   data_from_django.forEach(element => {
-        if (element.early_anc_register > 200)
-            element.early_anc_register = 200;
-        if (element.anc_4_or_more > 200)
-            element.anc_4_or_more = 200;
-        if (element.pw_tt1_given > 200)
-            element.pw_tt1_given = 200;
-        // if (element.pw_tt2_given > 200)
-        //     element.pw_tt2_given = 200;
-        if (element.per_pw_given_tt1_or_tt_booster > 200)
-            element.per_pw_given_tt1_or_tt_booster = 200;
-        if (element.pw_calcium > 200)
-            element.pw_calcium = 200;
-        if (element.pw_albendazole > 200)
-            element.pw_albendazole = 200;
-        if (element.pw_ifa > 200)
-            element.pw_ifa = 200;
-        if (element.c_section_deliveries > 200)
-            element.c_section_deliveries = 200;
-        if (element.preterm_birth_rate > 200)
-            element.preterm_birth_rate = 200;
-        if (element.per_still_birth > 200)
-            element.per_still_birth = 200;
+        if (element.per_chld_immunzt_vit_k1 > 200)
+            element.per_chld_immunzt_vit_k1 = 200;
+        if(element.per_chld_immunzt_bcg > 200)
+            element.per_chld_immunzt_bcg = 200;
+        if(element.per_chld_immunzt_9to11m_mr > 200)
+            element.per_chld_immunzt_9to11m_mr = 200;
+        // if(element.per_chld_immunzt_9to11m_measl_1st_dose > 200)
+        //     element.per_chld_immunzt_9to11m_measl_1st_dose = 200;
+        if(element.per_chld_immunzt_vit_a_dose_1 > 200)
+            element.per_chld_immunzt_vit_a_dose_1 = 200;
+        if(element.per_no_chld_12to59m_albendazole > 200)
+            element.per_no_chld_12to59m_albendazole = 200;
             
         data.push(element);
     });
 
   data.forEach(d => {
-    d.early_anc_register = +d.early_anc_register;
-        d.anc_4_or_more = +d.anc_4_or_more;
-        d.pw_tt1_given = +d.pw_tt1_given;
-        // d.pw_tt2_given = +d.pw_tt2_given;
-        d.per_pw_given_tt1_or_tt_booster = +d.per_pw_given_tt1_or_tt_booster;
-        d.pw_calcium = +d.pw_calcium;
-        d.pw_albendazole = +d.pw_albendazole;
-        d.pw_ifa = +d.pw_ifa;
-        d.c_section_deliveries = +d.c_section_deliveries;
-        d.preterm_birth_rate = +d.preterm_birth_rate;
-        d.per_still_birth = +d.per_still_birth;
-        d.area_id = +d.area_id;
+    d.per_chld_immunzt_vit_k1 = +d.per_chld_immunzt_vit_k1;
+        d.per_chld_immunzt_bcg = +d.per_chld_immunzt_bcg;
+        d.per_chld_immunzt_9to11m_mr = +d.per_chld_immunzt_9to11m_mr;
+        d.per_chld_immunzt_9to11m_measl_1st_dose = +d.per_chld_immunzt_9to11m_measl_1st_dose;
+        d.per_chld_immunzt_vit_a_dose_1 = +d.per_chld_immunzt_vit_a_dose_1;
+        d.per_no_chld_12to59m_albendazole = +d.per_no_chld_12to59m_albendazole;
         d.area_name = d.area_name;
         d.month = d.month;
         d.financial_year = d.financial_year;
@@ -596,27 +556,17 @@
 
     switch (valCategory) {
 
-        case "Early ANC Registeration": xValue = d => d.early_anc_register; sortByL = 'early_anc_register'; break;
+        case "Child Immunisation-Vitamin K1(Birth Dose)": xValue = d => d.per_chld_immunzt_vit_k1; sortByL = 'per_chld_immunzt_vit_k1'; break;
 
-        case "PW received 4 or more ANC check ups": xValue = d => d.anc_4_or_more; sortByL = 'anc_4_or_more'; break;
+        case "Child Immunisation-BCG": xValue = d => d.per_chld_immunzt_bcg; sortByL = 'per_chld_immunzt_bcg'; break;
 
-        case "PW given TT1": xValue = d => d.pw_tt1_given; sortByL = 'pw_tt1_given'; break;
+        case "Child Immunisation(9-11 months)-Measles & Rubella (MR) 1st Dose": xValue = d => d.per_chld_immunzt_9to11m_mr; sortByL = 'per_chld_immunzt_9to11m_mr'; break;
 
-        // case "PW given TT2": xValue = d => d.pw_tt2_given; sortByL = 'pw_tt2_given'; break;
+        // case "Child Immunisation(9-11 months)-Measles 1st Dose": xValue = d => d.per_chld_immunzt_9to11m_measl_1st_dose; sortByL = 'per_chld_immunzt_9to11m_measl_1st_dose'; break;
 
-        case "PW given TT1 or TT Booster": xValue = d => d.per_pw_given_tt1_or_tt_booster; sortByL = 'per_pw_given_tt1_or_tt_booster'; break;
+        case "Child immunisation-Vitamin A Dose-1": xValue = d => d.per_chld_immunzt_vit_a_dose_1; sortByL = 'per_chld_immunzt_vit_a_dose_1'; break;
 
-        case "PW given 360 Calcium tablets": xValue = d => d.pw_calcium; sortByL = 'pw_calcium'; break;
-
-        case "PW given 180 Iron Folic Acid (IFA) tablets": xValue = d => d.pw_ifa; sortByL = 'pw_ifa'; break;
-
-        case "PW given one Albendazole tablet after 1st trimester": xValue = d => d.pw_albendazole; sortByL = 'pw_albendazole'; break;
-
-        case "C-section deliveries": xValue = d => d.c_section_deliveries; sortByL = 'c_section_deliveries'; break;
-
-        case "Preterm Birth Rate": xValue = d => d.preterm_birth_rate; sortByL = 'preterm_birth_rate'; break;
-        
-        case "Still Birth Rate": xValue = d => d.per_still_birth; sortByL = 'per_still_birth'; break;
+        case "Children(12-59 months) provided Albendazole": xValue = d => d.per_no_chld_12to59m_albendazole; sortByL = 'per_no_chld_12to59m_albendazole'; break;
     }
 
     var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
@@ -635,27 +585,17 @@
 
     switch (valCategory) {
 
-        case "Early ANC Registeration": xValueR = d => d.early_anc_register; sortByR = 'early_anc_register'; break;
+        case "Child Immunisation-Vitamin K1(Birth Dose)": xValueR = d => d.per_chld_immunzt_vit_k1; sortByR = 'per_chld_immunzt_vit_k1'; break;
 
-        case "PW received 4 or more ANC check ups": xValueR = d => d.anc_4_or_more; sortByR = 'anc_4_or_more'; break;
+        case "Child Immunisation-BCG": xValueR = d => d.per_chld_immunzt_bcg; sortByR = 'per_chld_immunzt_bcg'; break;
 
-        case "PW given TT1": xValueR = d => d.pw_tt1_given; sortByR = 'pw_tt1_given'; break;
+        case "Child Immunisation(9-11 months)-Measles & Rubella (MR) 1st Dose": xValueR = d => d.per_chld_immunzt_9to11m_mr; sortByR = 'per_chld_immunzt_9to11m_mr'; break;
 
-        // case "PW given TT2": xValueR = d => d.pw_tt2_given; sortByR = 'pw_tt2_given'; break;
+        // case "Child Immunisation(9-11 months)-Measles 1st Dose": xValueR = d => d.per_chld_immunzt_9to11m_measl_1st_dose; sortByR = 'per_chld_immunzt_9to11m_measl_1st_dose'; break;
 
-        case "PW given TT1 or TT Booster": xValueR = d => d.per_pw_given_tt1_or_tt_booster; sortByR = 'per_pw_given_tt1_or_tt_booster'; break;
+        case "Child immunisation-Vitamin A Dose-1": xValueR = d => d.per_chld_immunzt_vit_a_dose_1; sortByR = 'per_chld_immunzt_vit_a_dose_1'; break;
 
-        case "PW given 360 Calcium tablets": xValueR = d => d.pw_calcium; sortByR = 'pw_calcium'; break;
-
-        case "PW given 180 Iron Folic Acid (IFA) tablets": xValueR = d => d.pw_ifa; sortByR = 'pw_ifa'; break;
-
-        case "PW given one Albendazole tablet after 1st trimester": xValueR = d => d.pw_albendazole; sortByR = 'pw_albendazole'; break;
-
-        case "C-section deliveries": xValueR = d => d.c_section_deliveries; sortByR = 'c_section_deliveries'; break;
-
-        case "Preterm Birth Rate": xValueR = d => d.preterm_birth_rate; sortByR = 'preterm_birth_rate'; break;
-
-        case "Still Birth Rate": xValueR = d => d.per_still_birth; sortByR = 'per_still_birth'; break;
+        case "Children(12-59 months) provided Albendazole": xValueR = d => d.per_no_chld_12to59m_albendazole; sortByR = 'per_no_chld_12to59m_albendazole'; break;
 
     }
 
@@ -711,7 +651,7 @@
   function parseURLParameters() {
     var query = (window.location.search || '?').substr(1);
     var map = [];
-    query.replace(/([^&=]+)=?([^&]*)(?:&+|$)/g, function (match, key, value) {
+    query.replace(/([^&=]+)=?([^]*)(?:&+|$)/g, function (match, key, value) {
       map.push(value);
     });
     return map;

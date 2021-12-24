@@ -53,6 +53,7 @@ class HmisPw(models.Model):
     per_still_birth = models.DecimalField(max_digits=10, decimal_places=1, blank=True, null=True)
     area_parent_id = models.IntegerField(blank=True, null=True)
     area_id = models.IntegerField(blank=True, null=True)
+    month_id = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -64,23 +65,24 @@ class HmisChldDisease(models.Model):
     month = models.TextField(blank=True, null=True)  # This field type is a guess.
     tot_chld_born = models.IntegerField(blank=True, null=True)
     chld_disease_pneumonia = models.IntegerField(blank=True, null=True)
-    per_chld_disease_pneumonia = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     chld_disease_sepsis = models.IntegerField(blank=True, null=True)
-    per_chld_disease_sepsis = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     chld_disease_tb = models.IntegerField(blank=True, null=True)
-    per_chld_disease_tb = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     chld_disease_malaria = models.IntegerField(blank=True, null=True)
-    per_chld_disease_malaria = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     chld_disease_diarrhoea = models.IntegerField(blank=True, null=True)
-    per_chld_disease_diarrhoea = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     chld_disease_diarrhoea_trtd_inpatnt = models.IntegerField(blank=True, null=True)
-    per_chld_disease_diarrhoea_trtd_inpatnt = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     chld_admtd_upper_resp_infec = models.IntegerField(blank=True, null=True)
-    per_chld_admtd_upper_resp_infec = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     chld_disease_sam = models.IntegerField(blank=True, null=True)
+    per_chld_disease_pneumonia = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    per_chld_disease_sepsis = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    per_chld_disease_tb = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    per_chld_disease_malaria = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    per_chld_disease_diarrhoea = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    per_chld_disease_diarrhoea_trtd_inpatnt = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    per_chld_admtd_upper_resp_infec = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     per_chld_disease_sam = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     area_parent_id = models.IntegerField(blank=True, null=True)
     area_id = models.IntegerField(blank=True, null=True)
+    month_id = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -109,6 +111,7 @@ class HmisChldImmunzt(models.Model):
     per_chld_immunzt_dpt3_penta3 = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     area_parent_id = models.IntegerField(blank=True, null=True)
     area_id = models.IntegerField(blank=True, null=True)
+    month_id = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False

@@ -77,22 +77,15 @@
       </button>
 
       <div class="dropdown-menu category" aria-labelledby="dropdownMenuButton">
-
-        <a class="dropdown-item" href="#">Early ANC Registeration</a>
-        <a class="dropdown-item" href="#">PW received 4 or more ANC check ups</a>
-        <a class="dropdown-item" href="#">PW given TT1</a>
-        <!-- <a class="dropdown-item" href="#">PW given TT2</a> -->
-        <a class="dropdown-item" href="#">PW given TT1 or TT Booster</a>
-        <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
-        <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
-        <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
-        <a class="dropdown-item" href="#">C-section deliveries</a>
-        <a class="dropdown-item" href="#">Preterm Birth Rate</a>
-        <a class="dropdown-item" href="#">Still Birth Rate</a>
+        <a class="dropdown-item" href="#">Childhood Diseases-Pneumonia</a>
+        <a class="dropdown-item" href="#">Childhood Diseases-Sepsis</a>
+        <a class="dropdown-item" href="#">Childhood Diseases-Tuberculosis(TB)</a>
+        <a class="dropdown-item" href="#">Childhood Diseases-Malaria</a>
+        <a class="dropdown-item" href="#">Childhood Diseases-Diarrhoea</a>
+        <a class="dropdown-item" href="#">Childhood Diseases-Diarrhoea treated in Inpatients</a>
+        <a class="dropdown-item" href="#">Children admitted with upper respiratory infections</a>
+        <a class="dropdown-item" href="#">Childhood Diseases-Severe Acute Malnutrition(SAM)</a>
       </div>
-
-
-
     </div>
     <button class='btn btn-light toggle m-1'>Compare</button>
   </div>
@@ -113,19 +106,14 @@
       </button>
 
       <div class="dropdown-menu category2" aria-labelledby="dropdownMenuButton">
-
-        <a class="dropdown-item" href="#">Early ANC Registeration</a>
-        <a class="dropdown-item" href="#">PW received 4 or more ANC check ups</a>
-        <a class="dropdown-item" href="#">PW given TT1</a>
-        <!-- <a class="dropdown-item" href="#">PW given TT2</a> -->
-        <a class="dropdown-item" href="#">PW given TT1 or TT Booster</a>
-        <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
-        <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
-        <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
-        <a class="dropdown-item" href="#">C-section deliveries</a>
-        <a class="dropdown-item" href="#">Preterm Birth Rate</a>
-        <a class="dropdown-item" href="#">Still Birth Rate</a>
-
+        <a class="dropdown-item" href="#">Childhood Diseases-Pneumonia</a>
+        <a class="dropdown-item" href="#">Childhood Diseases-Sepsis</a>
+        <a class="dropdown-item" href="#">Childhood Diseases-Tuberculosis(TB)</a>
+        <a class="dropdown-item" href="#">Childhood Diseases-Malaria</a>
+        <a class="dropdown-item" href="#">Childhood Diseases-Diarrhoea</a>
+        <a class="dropdown-item" href="#">Childhood Diseases-Diarrhoea treated in Inpatients</a>
+        <a class="dropdown-item" href="#">Children admitted with upper respiratory infections</a>
+        <a class="dropdown-item" href="#">Childhood Diseases-Severe Acute Malnutrition(SAM)</a>
       </div>
     </div>
   </div>
@@ -209,14 +197,16 @@
     }
   }
 
-  let sortByL = 'early_anc_register';
+  let sortByL = 'per_chld_disease_pneumonia';
 
-  let sortByR = 'early_anc_register';
+  let sortByR = 'per_chld_disease_pneumonia';
 
-  let xValue = d => d.early_anc_register;
-  let xValueR = d => d.early_anc_register;
+  let xValue = d => d.per_chld_disease_pneumonia;
+  let xValueR = d => d.per_chld_disease_pneumonia;
 
-  let stateSelected = '{{ dist_name }}';
+  let stateSelected = '{{ dist_name}}';
+    stateSelected = stateSelected.replace(/_/g, ' ');
+    console.log("stateSelected", stateSelected);
 
   let yValue = d => d.area_name;
 
@@ -267,14 +257,9 @@
 
     let getColor;
 
-    if (xValue == 'd => d.c_section_deliveries' || xValue == 'd => d.preterm_birth_rate' || xValue == 'd => d.per_still_birth' ) {
-      getColor = d3.scaleSequential().domain([d3.max(data, xValue), d3.min(data, xValue)])
+    getColor = d3.scaleSequential().domain([d3.max(data, xValue), d3.min(data, xValue)])
         .interpolator(d3.interpolateRdYlGn);
-    }
-    else {
-      getColor = d3.scaleSequential().domain([d3.min(data, xValue), d3.max(data, xValue)])
-        .interpolator(d3.interpolateRdYlGn);
-    }
+
 
     let chart = g1.selectAll("rect").data(data)
 
@@ -365,10 +350,10 @@
             .attr("stroke-dasharray", '20,10,5,5,5,10')
             .attr("stroke", "red");
 
-      // g1.selectAll('rect')
-      //   .filter(function(d) { return d.area_id == stateSelected; })
-      //   .style("stroke", "black")
-      //   .style("stroke-width", 5);
+    // g1.selectAll('rect')
+    //     .filter(function(d) { return d.area_id == stateSelected; })
+    //     .style("stroke", "black")
+    //     .style("stroke-width", 5);
 
   }
 
@@ -384,14 +369,8 @@
 
     let getColor;
 
-    if (xValueR == 'd => d.c_section_deliveries' || xValueR == 'd => d.preterm_birth_rate' || xValueR == 'd => d.per_still_birth' ) {
-      getColor = d3.scaleSequential().domain([d3.max(data, xValueR), d3.min(data, xValueR)])
+    getColor = d3.scaleSequential().domain([d3.max(data, xValueR), d3.min(data, xValueR)])
         .interpolator(d3.interpolateRdYlGn);
-    }
-    else {
-      getColor = d3.scaleSequential().domain([d3.min(data, xValueR), d3.max(data, xValueR)])
-        .interpolator(d3.interpolateRdYlGn);
-    }
 
     let chart = g2.selectAll("rect").data(data)
 
@@ -444,7 +423,6 @@
       .attr("fill", "blue")
 
       .attr("font-weight", "bold");
-
 
 
 
@@ -501,10 +479,9 @@
         .attr("stroke", "red");  
 
     // g2.selectAll('rect')
-    // .attr("class", "highlighted_bar")
-    // .filter(function (d) { return d.area_id == stateSelected; })
-    // .style("stroke", "black")
-    // .style("stroke-width", 5);     
+    //     .filter(function(d) { return d.area_id == stateSelected; })
+    //     .style("stroke", "black")
+    //     .style("stroke-width", 5);
 
   }
 
@@ -521,48 +498,39 @@
   var data = []
 
   data_from_django.forEach(element => {
-        if (element.early_anc_register > 200)
-            element.early_anc_register = 200;
-        if (element.anc_4_or_more > 200)
-            element.anc_4_or_more = 200;
-        if (element.pw_tt1_given > 200)
-            element.pw_tt1_given = 200;
-        // if (element.pw_tt2_given > 200)
-        //     element.pw_tt2_given = 200;
-        if (element.per_pw_given_tt1_or_tt_booster > 200)
-            element.per_pw_given_tt1_or_tt_booster = 200;
-        if (element.pw_calcium > 200)
-            element.pw_calcium = 200;
-        if (element.pw_albendazole > 200)
-            element.pw_albendazole = 200;
-        if (element.pw_ifa > 200)
-            element.pw_ifa = 200;
-        if (element.c_section_deliveries > 200)
-            element.c_section_deliveries = 200;
-        if (element.preterm_birth_rate > 200)
-            element.preterm_birth_rate = 200;
-        if (element.per_still_birth > 200)
-            element.per_still_birth = 200;
+    if (element.per_chld_disease_pneumonia > 200)
+        element.per_chld_disease_pneumonia = 200;
+    if (element.per_chld_disease_sepsis > 200)
+        element.per_chld_disease_sepsis = 200;
+    if (element.per_chld_disease_tb > 200)
+        element.per_chld_disease_tb = 200;
+    if (element.per_chld_disease_malaria > 200)
+        element.per_chld_disease_malaria = 200;
+    if (element.per_chld_disease_diarrhoea > 200)
+        element.per_chld_disease_diarrhoea = 200;
+    if (element.per_chld_disease_diarrhoea_trtd_inpatnt > 200)
+        element.per_chld_disease_diarrhoea_trtd_inpatnt = 200;
+    if (element.per_chld_admtd_upper_resp_infec > 200)
+        element.per_chld_admtd_upper_resp_infec = 200;
+    if (element.per_chld_disease_sam > 200)
+        element.per_chld_disease_sam = 200;
             
         data.push(element);
-    });
+});
 
   data.forEach(d => {
-    d.early_anc_register = +d.early_anc_register;
-        d.anc_4_or_more = +d.anc_4_or_more;
-        d.pw_tt1_given = +d.pw_tt1_given;
-        // d.pw_tt2_given = +d.pw_tt2_given;
-        d.per_pw_given_tt1_or_tt_booster = +d.per_pw_given_tt1_or_tt_booster;
-        d.pw_calcium = +d.pw_calcium;
-        d.pw_albendazole = +d.pw_albendazole;
-        d.pw_ifa = +d.pw_ifa;
-        d.c_section_deliveries = +d.c_section_deliveries;
-        d.preterm_birth_rate = +d.preterm_birth_rate;
-        d.per_still_birth = +d.per_still_birth;
-        d.area_id = +d.area_id;
-        d.area_name = d.area_name;
-        d.month = d.month;
-        d.financial_year = d.financial_year;
+    d.per_chld_disease_pneumonia = +d.per_chld_disease_pneumonia;
+    d.per_chld_disease_sepsis = +d.per_chld_disease_sepsis;
+    d.per_chld_disease_tb = +d.per_chld_disease_tb;
+    d.per_chld_disease_malaria = +d.per_chld_disease_malaria;
+    d.per_chld_disease_diarrhoea = +d.per_chld_disease_diarrhoea;
+    d.per_chld_disease_diarrhoea_trtd_inpatnt = +d.per_chld_disease_diarrhoea_trtd_inpatnt;
+    d.per_chld_admtd_upper_resp_infec = +d.per_chld_admtd_upper_resp_infec;
+    d.per_chld_disease_sam = +d.per_chld_disease_sam;
+    d.area_id = d.area_id;
+    d.area_name = d.area_name;
+    d.month = d.month;
+    d.financial_year = d.financial_year;
 
   });
 
@@ -595,28 +563,21 @@
         document.getElementById('barTitle').innerHTML = "(%) Indicator: " + displayVal + " (" + fy + ")";
 
     switch (valCategory) {
+        case "Childhood Diseases-Pneumonia": xValue = d => d.per_chld_disease_pneumonia; sortByL = 'per_chld_disease_pneumonia'; break;
 
-        case "Early ANC Registeration": xValue = d => d.early_anc_register; sortByL = 'early_anc_register'; break;
+        case "Childhood Diseases-Sepsis": xValue = d => d.per_chld_disease_sepsis; sortByL = 'per_chld_disease_sepsis'; break;
 
-        case "PW received 4 or more ANC check ups": xValue = d => d.anc_4_or_more; sortByL = 'anc_4_or_more'; break;
+        case "Childhood Diseases-Tuberculosis(TB)": xValue = d => d.per_chld_disease_tb; sortByL = 'per_chld_disease_tb'; break;
 
-        case "PW given TT1": xValue = d => d.pw_tt1_given; sortByL = 'pw_tt1_given'; break;
+        case "Childhood Diseases-Malaria": xValue = d => d.per_chld_disease_malaria; sortByL = 'per_chld_disease_malaria'; break;
 
-        // case "PW given TT2": xValue = d => d.pw_tt2_given; sortByL = 'pw_tt2_given'; break;
+        case "Childhood Diseases-Diarrhoea": xValue = d => d.per_chld_disease_diarrhoea; sortByL = 'per_chld_disease_diarrhoea'; break;
 
-        case "PW given TT1 or TT Booster": xValue = d => d.per_pw_given_tt1_or_tt_booster; sortByL = 'per_pw_given_tt1_or_tt_booster'; break;
+        case "Childhood Diseases-Diarrhoea treated in Inpatients": xValue = d => d.per_chld_disease_diarrhoea_trtd_inpatnt; sortByL = 'per_chld_disease_diarrhoea_trtd_inpatnt'; break;
 
-        case "PW given 360 Calcium tablets": xValue = d => d.pw_calcium; sortByL = 'pw_calcium'; break;
+        case "Children admitted with upper respiratory infections": xValue = d => d.per_chld_admtd_upper_resp_infec; sortByL = 'per_chld_admtd_upper_resp_infec'; break;
 
-        case "PW given 180 Iron Folic Acid (IFA) tablets": xValue = d => d.pw_ifa; sortByL = 'pw_ifa'; break;
-
-        case "PW given one Albendazole tablet after 1st trimester": xValue = d => d.pw_albendazole; sortByL = 'pw_albendazole'; break;
-
-        case "C-section deliveries": xValue = d => d.c_section_deliveries; sortByL = 'c_section_deliveries'; break;
-
-        case "Preterm Birth Rate": xValue = d => d.preterm_birth_rate; sortByL = 'preterm_birth_rate'; break;
-        
-        case "Still Birth Rate": xValue = d => d.per_still_birth; sortByL = 'per_still_birth'; break;
+        case "Childhood Diseases-Severe Acute Malnutrition(SAM)": xValue = d => d.per_chld_disease_sam; sortByL = 'per_chld_disease_sam'; break;
     }
 
     var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
@@ -635,28 +596,21 @@
 
     switch (valCategory) {
 
-        case "Early ANC Registeration": xValueR = d => d.early_anc_register; sortByR = 'early_anc_register'; break;
+        case "Childhood Diseases-Pneumonia": xValueR = d => d.per_chld_disease_pneumonia; sortByR = 'per_chld_disease_pneumonia'; break;
 
-        case "PW received 4 or more ANC check ups": xValueR = d => d.anc_4_or_more; sortByR = 'anc_4_or_more'; break;
+        case "Childhood Diseases-Sepsis": xValueR = d => d.per_chld_disease_sepsis; sortByR = 'per_chld_disease_sepsis'; break;
 
-        case "PW given TT1": xValueR = d => d.pw_tt1_given; sortByR = 'pw_tt1_given'; break;
+        case "Childhood Diseases-Tuberculosis(TB)": xValueR = d => d.per_chld_disease_tb; sortByR = 'per_chld_disease_tb'; break;
 
-        // case "PW given TT2": xValueR = d => d.pw_tt2_given; sortByR = 'pw_tt2_given'; break;
+        case "Childhood Diseases-Malaria": xValueR = d => d.per_chld_disease_malaria; sortByR = 'per_chld_disease_malaria'; break;
 
-        case "PW given TT1 or TT Booster": xValueR = d => d.per_pw_given_tt1_or_tt_booster; sortByR = 'per_pw_given_tt1_or_tt_booster'; break;
+        case "Childhood Diseases-Diarrhoea": xValueR = d => d.per_chld_disease_diarrhoea; sortByR = 'per_chld_disease_diarrhoea'; break;
 
-        case "PW given 360 Calcium tablets": xValueR = d => d.pw_calcium; sortByR = 'pw_calcium'; break;
+        case "Childhood Diseases-Diarrhoea treated in Inpatients": xValueR = d => d.per_chld_disease_diarrhoea_trtd_inpatnt; sortByR = 'per_chld_disease_diarrhoea_trtd_inpatnt'; break;
 
-        case "PW given 180 Iron Folic Acid (IFA) tablets": xValueR = d => d.pw_ifa; sortByR = 'pw_ifa'; break;
+        case "Children admitted with upper respiratory infections": xValueR = d => d.per_chld_admtd_upper_resp_infec; sortByR = 'per_chld_admtd_upper_resp_infec'; break;
 
-        case "PW given one Albendazole tablet after 1st trimester": xValueR = d => d.pw_albendazole; sortByR = 'pw_albendazole'; break;
-
-        case "C-section deliveries": xValueR = d => d.c_section_deliveries; sortByR = 'c_section_deliveries'; break;
-
-        case "Preterm Birth Rate": xValueR = d => d.preterm_birth_rate; sortByR = 'preterm_birth_rate'; break;
-
-        case "Still Birth Rate": xValueR = d => d.per_still_birth; sortByR = 'per_still_birth'; break;
-
+        case "Childhood Diseases-Severe Acute Malnutrition(SAM)": xValueR = d => d.per_chld_disease_sam; sortByR = 'per_chld_disease_sam'; break;
     }
 
     var valMonth = tickLabels[$('#monthSlider').slider('getValue')];

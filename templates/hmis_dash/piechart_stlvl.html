@@ -66,14 +66,16 @@
     <div class="dropdown-menu category" aria-labelledby="dropdownMenuButton">
       <a class="dropdown-item" href="#">Early ANC Registeration</a>
       <a class="dropdown-item" href="#">PW received 4 or more ANC check ups</a>
-      <a class="dropdown-item" href="#">PW given TT1</a>
-      <a class="dropdown-item" href="#">PW given TT2</a>
-      <a class="dropdown-item" href="#">PW given TT Booster</a>
-      <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
+      <a class="dropdown-item" href="#">PW given TT1</a>
+      <a class="dropdown-item" href="#">PW given TT2</a>
+      <a class="dropdown-item" href="#">PW given TT Booster</a>
+      <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
       <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
       <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
+      <a class="dropdown-item" href="#">Number of Institutional Deliveries</a>
       <a class="dropdown-item" href="#">C-section deliveries</a>
-      <a class="dropdown-item" href="#">Total no of Still Birth</a>
+      <a class="dropdown-item" href="#">Number of Preterm Birth</a>
+      <a class="dropdown-item" href="#">Number of Still Birth</a>
     </div>
   </div>
 
@@ -191,16 +193,16 @@
       } else if (opt == 'PW received 4 or more ANC check ups') {
         arcInitial = d => d.anc_4_or_more;
         arcInitialNum = d => d.no_anc_4_or_more;
-      } else if (opt == 'PW given TT1') {
+      } else if (opt == 'PW given TT1') {
         arcInitial = d => d.pw_tt1_given;
         arcInitialNum = d => d.no_pw_given_tt1;
-      } else if (opt == 'PW given TT2') {
+      } else if (opt == 'PW given TT2') {
         arcInitial = d => d.pw_tt2_given;
         arcInitialNum = d => d.no_pw_given_tt2;
-      } else if (opt == 'PW given TT Booster') {
+      } else if (opt == 'PW given TT Booster') {
         arcInitial = d => d.pw_tt_booster_given;
         arcInitialNum = d => d.no_pw_given_tt_booster;
-      } else if (opt == 'PW given 360 Calcium tablets') {
+      } else if (opt == 'PW given 360 Calcium tablets') {
         arcInitial = d => d.pw_calcium;
         arcInitialNum = d => d.no_pw_given_calcium;
       } else if (opt == 'PW given 180 Iron Folic Acid (IFA) tablets') {
@@ -209,10 +211,16 @@
       } else if (opt == 'PW given one Albendazole tablet after 1st trimester') {
         arcInitial = d => d.pw_albendazole;
         arcInitialNum = d => d.no_pw_given_albendazole;
-      }
-      else if(opt == 'C-section deliveries'){
+      }else if(opt == 'Number of Institutional Deliveries'){
+        arcInitial = d => d.per_institutional_delivery;
+        arcInitialNum = d => d.no_institutional_delivery;
+      }else if(opt == 'C-section deliveries'){
         arcInitial = d => d.c_section_deliveries;
         arcInitialNum = d => d.tot_c_section_deliveries;
+      }
+      else if(opt == 'Number of Preterm Birth'){
+        arcInitial = d => d.per_preterm_birth;
+        arcInitialNum = d => d.no_preterm_birth;
       }else{
         arcInitial = d => d.per_still_birth;
         arcInitialNum = d => d.tot_still_birth
@@ -250,7 +258,8 @@
       div.html("<b>" + "<span id='paraText'>" + 10 + "</span>" + "</b><br>" + arcInitial(d.data) + "%");
     }
 
-    oi = { "area_name": [], "early_anc_register": [], "anc_4_or_more": [], "pw_tt1_given": [], "pw_tt2_given": [], "pw_tt_booster_given": [], "pw_calcium": [],"pw_albendazole": [],"pw_ifa": [],"c_section_deliveries": [],"per_pw_reg_anc": [], "per_still_birth": [] }
+    oi = { "area_name": [], "early_anc_register": [], "anc_4_or_more": [], "pw_tt1_given": [], "pw_tt2_given": [], "pw_tt_booster_given": [], "pw_calcium": [],
+          "pw_albendazole": [],"pw_ifa": [], "per_institutional_delivery": [],"c_section_deliveries": [],"per_pw_reg_anc": [], "per_preterm_birth": [], "per_still_birth": [] }
 
     data.forEach(d => {
       oi.area_name.push(d.area_name);
@@ -262,8 +271,10 @@
       oi.pw_calcium.push(d.pw_calcium);
       oi.pw_albendazole.push(d.pw_albendazole);
       oi.pw_ifa.push(d.pw_ifa);
+      oi.per_institutional_delivery.push(d.per_institutional_delivery);
       oi.c_section_deliveries.push(d.c_section_deliveries);
       oi.per_pw_reg_anc.push(d.per_pw_reg_anc);
+      oi.per_preterm_birth.push(d.per_preterm_birth);
       oi.per_still_birth.push(d.per_still_birth);
     });
 
@@ -505,6 +516,10 @@
     d.no_pw_given_albendazole = +d.no_pw_given_albendazole;
     d.no_pw_given_ifa = +d.no_pw_given_ifa;
     d.tot_c_section_deliveries = +d.tot_c_section_deliveries;
+    d.no_institutional_delivery = +d.no_institutional_delivery;
+    d.per_institutional_delivery = +d.per_institutional_delivery;
+    d.no_preterm_birth = +d.no_preterm_birth;
+    d.per_preterm_birth = +d.per_preterm_birth;
     d.tot_still_birth = +d.tot_still_birth;
     d.per_still_birth = +d.per_still_birth;
     d.per_pw_reg_anc = +d.per_pw_reg_anc;

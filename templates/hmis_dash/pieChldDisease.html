@@ -69,8 +69,8 @@
         <a class="dropdown-item" href="#">Childhood Diseases-Tuberculosis(TB)</a>
         <a class="dropdown-item" href="#">Childhood Diseases-Malaria</a>
         <a class="dropdown-item" href="#">Childhood Diseases-Diarrhoea</a>
-        <!-- <a class="dropdown-item" href="#">Childhood Diseases-Diarrhoea treated in Inpatients</a>
-        <a class="dropdown-item" href="#">Children admitted with upper respiratory infections</a> -->
+        <a class="dropdown-item" href="#">Childhood Diseases-Diarrhoea treated in Inpatients</a>
+        <a class="dropdown-item" href="#">Children admitted with upper respiratory infections</a>
         <a class="dropdown-item" href="#">Childhood Diseases-Severe Acute Malnutrition(SAM)</a>
     </div>
   </div>
@@ -240,7 +240,8 @@
       div.html("<b>" + "<span id='paraText'>" + 10 + "</span>" + "</b><br>" + arcInitial(d.data) + "%");
     }
 
-    oi = { "area_name": [], "per_chld_disease_pneumonia": [], "per_chld_disease_sepsis": [], "per_chld_disease_tb": [], "per_chld_disease_malaria": [], "per_chld_disease_diarrhoea": [], "per_chld_disease_diarrhoea_trtd_inpatnt": [],"per_chld_disease_sam": [],"per_chld_admtd_upper_resp_infec": [],"per_chld_born": [] }
+    oi = { "area_name": [], "per_chld_disease_pneumonia": [], "per_chld_disease_sepsis": [], "per_chld_disease_tb": [], "per_chld_disease_malaria": [], "per_chld_disease_diarrhoea": [], 
+          "per_chld_disease_diarrhoea_trtd_inpatnt": [],"per_chld_disease_sam": [],"per_chld_admtd_upper_resp_infec": [],"per_chld_born": [] }
 
     data.forEach(d => {
       oi.area_name.push(d.area_name);

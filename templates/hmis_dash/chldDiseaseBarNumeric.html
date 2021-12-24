@@ -79,8 +79,8 @@
             <a class="dropdown-item" href="#">Childhood Diseases-Tuberculosis(TB)</a>
             <a class="dropdown-item" href="#">Childhood Diseases-Malaria</a>
             <a class="dropdown-item" href="#">Childhood Diseases-Diarrhoea</a>
-            <!-- <a class="dropdown-item" href="#">Childhood Diseases-Diarrhoea treated in Inpatients</a>
-            <a class="dropdown-item" href="#">Children admitted with upper respiratory infections</a> -->
+            <a class="dropdown-item" href="#">Childhood Diseases-Diarrhoea treated in Inpatients</a>
+            <a class="dropdown-item" href="#">Children admitted with upper respiratory infections</a>
             <a class="dropdown-item" href="#">Childhood Diseases-Severe Acute Malnutrition(SAM)</a>
 
         </div>
@@ -196,7 +196,6 @@
     let tansitionDuration = 1000;
 
     const render = data => {
-        console.log(data, "data in render")
         const xScale = d3.scaleBand().range([0, 1.5 * bar_width * data.length]).padding(0.3);
         const yScale = d3.scaleLinear() .domain([d3.max(data, yValue), 0 ]).range([0, innerHeight]);
 

@@ -27,14 +27,14 @@
         }
 
         .navbar-brand {
-            font-size: calc(40% + 1vw + 1vh);
+            font-size: calc(30% + 1vw + 1vh);
             font-family: 'Times New Roman', Times, serif;
             padding: 0px;
             margin: 0px;
         }
 
         .navbar {
-            /* height: 20% !important; */
+            height: 20% !important;
             margin-bottom: 0px !important;
         }
     </style>
@@ -53,7 +53,7 @@
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-info justify-content-between">
+    <nav class="navbar navbar-expand-lg navbar-dark py-1 bg-info justify-content-between py-md-1">
         <a class="navbar-brand" href="{% url 'home' %}">HMIS Data Analysis and Visualization</a>
 
         <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarsExample01"
@@ -64,14 +64,14 @@
         <div class="collapse navbar-collapse " id="navbarsExample01">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'home' %}"><i class="fa fa-home" aria-hidden="true"></i>
+                    <a class="nav-link py-1" href="{% url 'home' %}"><i class="fa fa-home" aria-hidden="true"></i>
                         Home <span class="sr-only">(current)</span>
                     </a>
                 </li>
                 {% if user.is_authenticated %}
 
                 <li class="nav-item active">
-                    <a class="nav-link" href="{% url 'logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i>
+                    <a class="nav-link py-1" href="{% url 'logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i>
                         Logout <span class="sr-only">(current)</span>
                     </a>
                 </li>

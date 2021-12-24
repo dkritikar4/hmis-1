@@ -85,10 +85,10 @@
         <div class="dropdown-menu drop-category" aria-labelledby="dropdownMenuButton">
             <a class="dropdown-item" href="#">Early ANC Registeration</a>
             <a class="dropdown-item" href="#">PW received 4 or more ANC check ups</a>
-            <a class="dropdown-item" href="#">PW given TT1</a>
-            <a class="dropdown-item" href="#">PW given TT2</a>
-            <a class="dropdown-item" href="#">PW given TT Booster</a>
-            <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
+            <a class="dropdown-item" href="#">PW given TT1</a>
+            <!-- <a class="dropdown-item" href="#">PW given TT2 </a> -->
+            <a class="dropdown-item" href="#">PW given TT1 or TT Booster</a>
+            <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
             <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
             <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
             <a class="dropdown-item" href="#">C-section deliveries</a>
@@ -299,8 +299,8 @@
 
             break;
           case 3:
-            updatedCat = "PW given TT1";
-            Tooltipheader1 = d => "PW given TT1:";
+            updatedCat = "PW given TT1";
+            Tooltipheader1 = d => "PW given TT1:";
             // Tooltipheader2 = d => "";
             TooltipVal1 = d => d.properties.no_pw_given_tt1;
             // TooltipVal2 = d => "-";
@@ -311,8 +311,8 @@
 
             break;
           case 4:
-            updatedCat = "PW given TT2";
-            Tooltipheader1 = d => "PW given TT2:";
+            updatedCat = "PW given TT2";
+            Tooltipheader1 = d => "PW given TT2:";
             // Tooltipheader2 = d => "Moderately PW given TT2:";
             TooltipVal1 = d => d.properties.no_pw_given_tt2;
             // TooltipVal2 = d => d.properties.mdrtly_wstd;
@@ -322,19 +322,19 @@
 
             break;
           case 5:
-            updatedCat = "PW given TT Booster";
-            Tooltipheader1 = d => "PW given TT Booster:";
+            updatedCat = "PW given TT1 or TT Booster";
+            Tooltipheader1 = d => "PW given TT1 or TT Booster:";
             // Tooltipheader2 = d => "";
             TooltipVal1 = d => d.properties.no_pw_given_tt_booster;
             // TooltipVal2 = d => "-";
-            ColorValue = d => d.properties.pw_tt_booster_given;
-            TPercentValue = d => d.pw_tt_booster_given;
+            ColorValue = d => d.properties.per_pw_given_tt1_or_tt_booster;
+            TPercentValue = d => d.per_pw_given_tt1_or_tt_booster;
             TActualValue = d => d.no_pw_given_tt_booster;
 
             break;
           case 6:
-            updatedCat = "PW given 360 Calcium tablets";
-            Tooltipheader1 = d => "PW given 360 Calcium tablets:";
+            updatedCat = "PW given 360 Calcium tablets";
+            Tooltipheader1 = d => "PW given 360 Calcium tablets:";
             // Tooltipheader2 = d => "Moderately PW given 360 Calcium tablets:";
             TooltipVal1 = d => d.properties.no_pw_given_calcium;
             // TooltipVal2 = d => d.properties.mdrtly_uw;
@@ -658,10 +658,10 @@
         switch (selCat) {
           case "Early ANC Registeration": val = 1; break;
           case "PW received 4 or more ANC check ups": val = 2; break;
-          case "PW given TT1": val = 3; break;
-          case "PW given TT2": val = 4; break;
-          case "PW given TT Booster": val = 5; break;
-          case "PW given 360 Calcium tablets": val = 6; break;
+          case "PW given TT1": val = 3; break;
+          case "PW given TT2": val = 4; break;
+          case "PW given TT1 or TT Booster": val = 5; break;
+          case "PW given 360 Calcium tablets": val = 6; break;
           case "PW given 180 Iron Folic Acid (IFA) tablets": val = 7; break;
           case "PW given one Albendazole tablet after 1st trimester": val = 8; break;
           case "C-section deliveries": val = 9; break;
@@ -740,7 +740,7 @@
             ActualValue = d => d.no_pw_given_tt2;
             break;
           case 5:
-            PercentageValue = d => d.pw_tt_booster_given;
+            PercentageValue = d => d.per_pw_given_tt1_or_tt_booster;
             ActualValue = d => d.no_pw_given_tt_booster;
             break;
           case 6:
@@ -1253,7 +1253,7 @@ let tickLabels = ["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov",
         d.anc_4_or_more = +d.anc_4_or_more;
         d.pw_tt1_given = +d.pw_tt1_given;
         d.pw_tt2_given = +d.pw_tt2_given;
-        d.pw_tt_booster_given = +d.pw_tt_booster_given;
+        d.per_pw_given_tt1_or_tt_booster = +d.per_pw_given_tt1_or_tt_booster;
         d.pw_calcium = +d.pw_calcium;
         d.pw_albendazole = +d.pw_albendazole;
         d.pw_ifa = +d.pw_ifa;
@@ -1324,7 +1324,7 @@ let tickLabels = ["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov",
           geojson[j].properties.pw_tt2_given = data[i].pw_tt2_given;
           geojson[j].properties.early_anc_register = data[i].early_anc_register;
           geojson[j].properties.anc_4_or_more = data[i].anc_4_or_more;
-          geojson[j].properties.pw_tt_booster_given = data[i].pw_tt_booster_given;
+          geojson[j].properties.per_pw_given_tt1_or_tt_booster = data[i].per_pw_given_tt1_or_tt_booster;
           geojson[j].properties.pw_calcium = data[i].pw_calcium;
           geojson[j].properties.pw_albendazole = data[i].pw_albendazole;
           geojson[j].properties.pw_ifa = data[i].pw_ifa;

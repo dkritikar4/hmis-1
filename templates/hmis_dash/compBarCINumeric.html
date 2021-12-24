@@ -18,7 +18,7 @@
   #b2 {
     display: block;
   }
-  
+
   text {
     font-size: 1.1rem
   }
@@ -27,7 +27,7 @@
     float: right;
     font-size: calc(40% + 0.5vw + 0.5vh);
   }
-  
+
   div.tooltip {
     position: absolute;
     text-align: center;
@@ -51,9 +51,9 @@
 {% block feature %}
 
 <div class="row">
-    <div class="col-12 h-75">
-        <div class="heading text-center" id="barTitle"> Indicator </div>
-    </div>
+  <div class="col-12 h-75">
+    <div class="heading text-center" id="barTitle"> Indicator </div>
+  </div>
 </div>
 
 <!-- <div class="row header h-75">
@@ -77,18 +77,13 @@
       </button>
 
       <div class="dropdown-menu category" aria-labelledby="dropdownMenuButton">
-
-        <a class="dropdown-item" href="#">Early ANC Registeration</a>
-        <a class="dropdown-item" href="#">PW received 4 or more ANC check ups</a>
-        <a class="dropdown-item" href="#">PW given TT1</a>
-        <!-- <a class="dropdown-item" href="#">PW given TT2</a> -->
-        <a class="dropdown-item" href="#">PW given TT1 or TT Booster</a>
-        <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
-        <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
-        <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
-        <a class="dropdown-item" href="#">C-section deliveries</a>
-        <a class="dropdown-item" href="#">Preterm Birth Rate</a>
-        <a class="dropdown-item" href="#">Still Birth Rate</a>
+        <a class="dropdown-item" href="#">Total no of Children Born</a>
+        <a class="dropdown-item" href="#">Child Immunisation-Vitamin K1(Birth Dose)</a>
+        <a class="dropdown-item" href="#">Child Immunisation-BCG</a>
+        <a class="dropdown-item" href="#">Child Immunisation(9-11 months)-Measles & Rubella (MR) 1st Dose</a>
+        <!-- <a class="dropdown-item" href="#">Child Immunisation(9-11 months)-Measles 1st Dose</a> -->
+        <a class="dropdown-item" href="#">Child immunisation-Vitamin A Dose-1</a>
+        <a class="dropdown-item" href="#">Children(12-59 months) provided Albendazole</a>
       </div>
 
 
@@ -100,7 +95,7 @@
 
 
   <div class="col-xs-4 col-sm-4 col-md-6 bg-dark">
-    
+
     <div class="dropdown m-1" id="cat2">
 
       <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
@@ -113,37 +108,30 @@
       </button>
 
       <div class="dropdown-menu category2" aria-labelledby="dropdownMenuButton">
-
-        <a class="dropdown-item" href="#">Early ANC Registeration</a>
-        <a class="dropdown-item" href="#">PW received 4 or more ANC check ups</a>
-        <a class="dropdown-item" href="#">PW given TT1</a>
-        <!-- <a class="dropdown-item" href="#">PW given TT2</a> -->
-        <a class="dropdown-item" href="#">PW given TT1 or TT Booster</a>
-        <a class="dropdown-item" href="#">PW given 360 Calcium tablets</a>
-        <a class="dropdown-item" href="#">PW given 180 Iron Folic Acid (IFA) tablets</a>
-        <a class="dropdown-item" href="#">PW given one Albendazole tablet after 1st trimester</a>
-        <a class="dropdown-item" href="#">C-section deliveries</a>
-        <a class="dropdown-item" href="#">Preterm Birth Rate</a>
-        <a class="dropdown-item" href="#">Still Birth Rate</a>
-
+        <a class="dropdown-item" href="#">Total no of Children Born</a>
+        <a class="dropdown-item" href="#">Child Immunisation-Vitamin K1(Birth Dose)</a>
+        <a class="dropdown-item" href="#">Child Immunisation-BCG</a>
+        <a class="dropdown-item" href="#">Child Immunisation(9-11 months)-Measles & Rubella (MR) 1st Dose</a>
+        <!-- <a class="dropdown-item" href="#">Child Immunisation(9-11 months)-Measles 1st Dose</a> -->
+        <a class="dropdown-item" href="#">Child immunisation-Vitamin A Dose-1</a>
+        <a class="dropdown-item" href="#">Children(12-59 months) provided Albendazole</a>
       </div>
     </div>
   </div>
 
 
 </div>
-  <div class="scroll-down">
-    Please click "<b>Compare</b>" button if you want to see Indicators Comparison
-  </div>
+<div class="scroll-down">
+  Please click "<b>Compare</b>" button if you want to see Indicators Comparison
+</div>
 
 <div class="row text-center">
-    <div class="col-12 mb-5">
-        <input type="text" id="monthSlider" name="somename" data-provide="slider"
-            data-slider-ticks="[0, 1, 2, 3, 4, 5,6,7,8,9,10,11,12]"
-            data-slider-ticks-labels='["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]'
-            data-slider-min="0" data-slider-max="12" data-slider-step="1" data-slider-value="0"
-            data-slider-tooltip="hide">
-    </div>
+  <div class="col-12 mb-5">
+    <input type="text" id="monthSlider" name="somename" data-provide="slider"
+      data-slider-ticks="[0, 1, 2, 3, 4, 5,6,7,8,9,10,11,12]"
+      data-slider-ticks-labels='["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]'
+      data-slider-min="0" data-slider-max="12" data-slider-step="1" data-slider-value="0" data-slider-tooltip="hide">
+  </div>
 </div>
 
 <div id='sw' class="spinner-wrapper">
@@ -165,15 +153,15 @@
 
 <script>
 
-  const width = 700;
+  const width = 1400;
   const height = 1500;
 
 
   const tansitionDuration = 500;
 
-  const bar1 = d3.select('#b1').append("svg").attr('id', 'svg1').attr('width', 700).attr('height', 1600).call(responsivefy);
+  const bar1 = d3.select('#b1').append("svg").attr('id', 'svg1').attr('width', 1400).attr('height', 1600).call(responsivefy);
 
-  const bar2 = d3.select('#b2').append("svg").attr('id', 'svg2').attr('width', 700).attr('height', 1600).call(responsivefy);
+  const bar2 = d3.select('#b2').append("svg").attr('id', 'svg2').attr('width', 1400).attr('height', 1600).call(responsivefy);
 
 
   function responsivefy(svg) {
@@ -201,7 +189,7 @@
       const targetWidth = $(window).width();
       const targetheight = $(window).height();
       //var targetHeight = $(window).height();
-    //   console.log("tw&h", targetWidth, targetheight);
+      //   console.log("tw&h", targetWidth, targetheight);
       d3.select('#svg1').attr('width', targetWidth);
       d3.select('#svg1').attr('height', targetheight);
       d3.select('#svg2').attr('width', targetWidth);
@@ -209,12 +197,12 @@
     }
   }
 
-  let sortByL = 'early_anc_register';
+  let sortByL = 'chld_immunzt_vit_k1';
 
-  let sortByR = 'early_anc_register';
+  let sortByR = 'chld_immunzt_vit_k1';
 
-  let xValue = d => d.early_anc_register;
-  let xValueR = d => d.early_anc_register;
+  let xValue = d => d.chld_immunzt_vit_k1;
+  let xValueR = d => d.chld_immunzt_vit_k1;
 
   let stateSelected = '{{ dist_name }}';
 
@@ -260,21 +248,15 @@
 
   const drawLeft = data => {
 
-    const xScaleLeft = d3.scaleLinear().domain([0, 1.2 * (d3.max(data, xValue))]).range([0, innerWidthLeft]);
+    const xScaleLeft = d3.scaleLinear().domain([0, (d3.max(data, xValue))]).range([0, innerWidthLeft]);
 
     const yScale = d3.scaleBand().range([bar_height * data.length, 0]).padding(0.1);
     yScale.domain(data.map(yValue))
 
     let getColor;
 
-    if (xValue == 'd => d.c_section_deliveries' || xValue == 'd => d.preterm_birth_rate' || xValue == 'd => d.per_still_birth' ) {
-      getColor = d3.scaleSequential().domain([d3.max(data, xValue), d3.min(data, xValue)])
+    getColor = d3.scaleSequential().domain([d3.min(data, xValue), d3.max(data, xValue)])
         .interpolator(d3.interpolateRdYlGn);
-    }
-    else {
-      getColor = d3.scaleSequential().domain([d3.min(data, xValue), d3.max(data, xValue)])
-        .interpolator(d3.interpolateRdYlGn);
-    }
 
     let chart = g1.selectAll("rect").data(data)
 
@@ -295,7 +277,7 @@
           .duration(200)
           .style("opacity", 0.9);
         tooltip
-          .html(d.area_name + " : " + (xValue(d).toFixed(2)))
+          .html(d.area_name + " : " + (xValue(d).toFixed(0)))
           .style("left", d3.event.pageX + "px")
           .style("top", d3.event.pageY - 30 + "px");
       })
@@ -310,9 +292,9 @@
     chartText.enter().append('text')
       .filter(function (d, i) { return i === 0 || i === (data.length - 1) })
 
-      .text(d => xValue(d).toFixed(2))
+      .text(d => xValue(d).toFixed(0))
 
-      .attr('x', d => xScaleLeft(xValue(d))+ 5)
+      .attr('x', d => xScaleLeft(xValue(d)) + 10)
 
       .attr('y', d => yScale(d.area_name) + yScale.bandwidth() / 2)
 
@@ -336,15 +318,16 @@
     chartText.transition().duration(tansitionDuration)
       .filter(function (d, i) { return i === 0 || i === (data.length - 1) })
 
-      .text(d => xValue(d).toFixed(2))
+      .text(d => xValue(d).toFixed(0))
 
-      .attr('x', d => xScaleLeft(xValue(d)))
+      .attr('x', d => xScaleLeft(xValue(d)) + 10)
 
       .attr('y', d => yScale(d.area_name) + yScale.bandwidth() / 2);
 
     let xaxisLeft = g1.append('g').call(d3.axisBottom(xScaleLeft))
+      // .tickFormat(d3.format("s"))
 
-      .attr('transform', `translate(0, ${bar_height * data.length})`)
+      .attr('transform', `translate(0, ${bar_height * data.length})`);
 
     xaxisLeft.selectAll("text").attr("font-size", "12px")
       .attr("font-weight", "bold")
@@ -353,22 +336,25 @@
     let yaxisLeft = g1.append('g')
       .call(d3.axisLeft(yScale))
       .attr("font-size", "12px")
-      .attr("font-weight", "bold"); 
+      .attr("font-weight", "bold");
 
-    
-      chart.append("line")
-            .attr("x1", function () { return xScaleLeft(100) })
-            .attr("x2", function () { return xScaleLeft(100) })
-            .attr("y1", 0)
-            .attr("y2", 1.5 * bar_height * data.length)
-            .attr("stroke-width", 4)
-            .attr("stroke-dasharray", '20,10,5,5,5,10')
-            .attr("stroke", "red");
 
-      // g1.selectAll('rect')
-      //   .filter(function(d) { return d.area_id == stateSelected; })
-      //   .style("stroke", "black")
-      //   .style("stroke-width", 5);
+    chart.append("line")
+      .attr("x1", function () { return xScaleLeft(100) })
+      .attr("x2", function () { return xScaleLeft(100) })
+      .attr("y1", 0)
+      .attr("y2", 1.5 * bar_height * data.length)
+      .attr("stroke-width", 4)
+      .attr("stroke-dasharray", '20,10,5,5,5,10')
+      .attr("stroke", "red");
+
+    // g1.selectAll(".highlighted_bar").remove();
+
+    // g1.selectAll('rect')
+    //     .attr("class", "highlighted_bar")
+    //     .filter(function (d) { return d.area_id == stateSelected; })
+    //     .style("stroke", "black")
+    //     .style("stroke-width", 5);   
 
   }
 
@@ -376,7 +362,7 @@
 
   const drawRight = data => {
     // $(".highlighted_bar").remove();
-    const xScaleRight = d3.scaleLinear().domain([0, 1.2 * (d3.max(data, xValueR))]).range([0, innerWidthRight]);
+    const xScaleRight = d3.scaleLinear().domain([0, d3.max(data, xValueR)]).range([0, innerWidthRight]);
 
     const yScale = d3.scaleBand().range([bar_height * data.length, 0]).padding(0.1);
 
@@ -384,14 +370,8 @@
 
     let getColor;
 
-    if (xValueR == 'd => d.c_section_deliveries' || xValueR == 'd => d.preterm_birth_rate' || xValueR == 'd => d.per_still_birth' ) {
-      getColor = d3.scaleSequential().domain([d3.max(data, xValueR), d3.min(data, xValueR)])
+    getColor = d3.scaleSequential().domain([d3.min(data, xValueR), d3.max(data, xValueR)])
         .interpolator(d3.interpolateRdYlGn);
-    }
-    else {
-      getColor = d3.scaleSequential().domain([d3.min(data, xValueR), d3.max(data, xValueR)])
-        .interpolator(d3.interpolateRdYlGn);
-    }
 
     let chart = g2.selectAll("rect").data(data)
 
@@ -417,7 +397,7 @@
           .duration(200)
           .style("opacity", 0.9);
         tooltip
-          .html(d.area_name + " : " + (xValueR(d).toFixed(2)))
+          .html(d.area_name + " : " + (xValueR(d).toFixed(0)))
           .style("left", d3.event.pageX + "px")
           .style("top", d3.event.pageY - 30 + "px");
       })
@@ -431,9 +411,9 @@
     chartText.enter().append('text')
       .filter(function (d, i) { return i === 0 || i === (data.length - 1) })
 
-      .text(d => xValueR(d).toFixed(2))
+      .text(d => xValueR(d).toFixed(0))
 
-      .attr('x', d => xScaleRight(xValueR(d)) + 5)
+      .attr('x', d => xScaleRight(xValueR(d)) + 10)
 
       .attr('y', d => yScale(d.area_name) + yScale.bandwidth() / 2)
 
@@ -462,9 +442,9 @@
     chartText.transition().duration(tansitionDuration)
       .filter(function (d, i) { return i === 0 || i === (data.length - 1) })
 
-      .text(d => xValueR(d).toFixed(2))
+      .text(d => xValueR(d).toFixed(0))
 
-      .attr('x', d => xScaleRight(xValueR(d)))
+      .attr('x', d => xScaleRight(xValueR(d)) + 10)
 
       .attr('y', d => yScale(d.area_name) + yScale.bandwidth() / 2);
 
@@ -492,13 +472,13 @@
 
 
     g2.append("line")
-        .attr("x1", function () { return xScaleLeft(100) })
-        .attr("x2", function () { return xScaleLeft(100) })
-        .attr("y1", 0)
-        .attr("y2", 1.5 * bar_height * data.length)
-        .attr("stroke-width", 4)
-        .attr("stroke-dasharray", '20,10,5,5,5,10')
-        .attr("stroke", "red");  
+      .attr("x1", function () { return xScaleLeft(100) })
+      .attr("x2", function () { return xScaleLeft(100) })
+      .attr("y1", 0)
+      .attr("y2", 1.5 * bar_height * data.length)
+      .attr("stroke-width", 4)
+      .attr("stroke-dasharray", '20,10,5,5,5,10')
+      .attr("stroke", "red");
 
     // g2.selectAll('rect')
     // .attr("class", "highlighted_bar")
@@ -521,53 +501,25 @@
   var data = []
 
   data_from_django.forEach(element => {
-        if (element.early_anc_register > 200)
-            element.early_anc_register = 200;
-        if (element.anc_4_or_more > 200)
-            element.anc_4_or_more = 200;
-        if (element.pw_tt1_given > 200)
-            element.pw_tt1_given = 200;
-        // if (element.pw_tt2_given > 200)
-        //     element.pw_tt2_given = 200;
-        if (element.per_pw_given_tt1_or_tt_booster > 200)
-            element.per_pw_given_tt1_or_tt_booster = 200;
-        if (element.pw_calcium > 200)
-            element.pw_calcium = 200;
-        if (element.pw_albendazole > 200)
-            element.pw_albendazole = 200;
-        if (element.pw_ifa > 200)
-            element.pw_ifa = 200;
-        if (element.c_section_deliveries > 200)
-            element.c_section_deliveries = 200;
-        if (element.preterm_birth_rate > 200)
-            element.preterm_birth_rate = 200;
-        if (element.per_still_birth > 200)
-            element.per_still_birth = 200;
-            
-        data.push(element);
-    });
+    data.push(element);
+  });
 
   data.forEach(d => {
-    d.early_anc_register = +d.early_anc_register;
-        d.anc_4_or_more = +d.anc_4_or_more;
-        d.pw_tt1_given = +d.pw_tt1_given;
-        // d.pw_tt2_given = +d.pw_tt2_given;
-        d.per_pw_given_tt1_or_tt_booster = +d.per_pw_given_tt1_or_tt_booster;
-        d.pw_calcium = +d.pw_calcium;
-        d.pw_albendazole = +d.pw_albendazole;
-        d.pw_ifa = +d.pw_ifa;
-        d.c_section_deliveries = +d.c_section_deliveries;
-        d.preterm_birth_rate = +d.preterm_birth_rate;
-        d.per_still_birth = +d.per_still_birth;
-        d.area_id = +d.area_id;
-        d.area_name = d.area_name;
-        d.month = d.month;
-        d.financial_year = d.financial_year;
+    d.tot_chld_born = +d.tot_chld_born;
+    d.chld_immunzt_vit_k1 = +d.chld_immunzt_vit_k1;
+    d.chld_immunzt_bcg = +d.chld_immunzt_bcg;
+    d.chld_immunzt_9to11m_mr = +d.chld_immunzt_9to11m_mr;
+    d.chld_immunzt_9to11m_measl_1st_dose = +d.chld_immunzt_9to11m_measl_1st_dose;
+    d.chld_immunzt_vit_a_dose_1 = +d.chld_immunzt_vit_a_dose_1;
+    d.no_chld_12to59m_albendazole = +d.no_chld_12to59m_albendazole;
+    d.area_name = d.area_name;
+    d.month = d.month;
+    d.financial_year = d.financial_year;
 
   });
 
 
-  var tickLabels = ["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]
+  var tickLabels = ["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar"]
 
   $('#monthSlider').slider().on('slideStop', function (ev) {
     var val = tickLabels[ev.value];
@@ -588,40 +540,31 @@
 
   });
 
-  function displayLeftChart(valCategory)
-  {
+  function displayLeftChart(valCategory) {
     var displayVal = valCategory.substring(0, valCategory.length);
-        let fy = '{{ fy }}';
-        document.getElementById('barTitle').innerHTML = "(%) Indicator: " + displayVal + " (" + fy + ")";
+    let fy = '{{ fy }}';
+    document.getElementById('barTitle').innerHTML = "(%) Indicator: " + displayVal + " (" + fy + ")";
 
     switch (valCategory) {
+        case "Total no of Children Born": xValue = d => d.tot_chld_born; sortByL = 'tot_chld_born'; break;
 
-        case "Early ANC Registeration": xValue = d => d.early_anc_register; sortByL = 'early_anc_register'; break;
+        case "Child Immunisation-Vitamin K1(Birth Dose)": xValue = d => d.chld_immunzt_vit_k1; sortByL = 'chld_immunzt_vit_k1'; break;
 
-        case "PW received 4 or more ANC check ups": xValue = d => d.anc_4_or_more; sortByL = 'anc_4_or_more'; break;
+        case "Child Immunisation-BCG": xValue = d => d.chld_immunzt_bcg; sortByL = 'chld_immunzt_bcg'; break;
 
-        case "PW given TT1": xValue = d => d.pw_tt1_given; sortByL = 'pw_tt1_given'; break;
+        case "Child Immunisation(9-11 months)-Measles & Rubella (MR) 1st Dose": xValue = d => d.chld_immunzt_9to11m_mr; sortByL = 'chld_immunzt_9to11m_mr'; break;
 
-        // case "PW given TT2": xValue = d => d.pw_tt2_given; sortByL = 'pw_tt2_given'; break;
+        // case "Child Immunisation(9-11 months)-Measles 1st Dose": xValue = d => d.chld_immunzt_9to11m_measl_1st_dose; sortByL = 'chld_immunzt_9to11m_measl_1st_dose'; break;
 
-        case "PW given TT1 or TT Booster": xValue = d => d.per_pw_given_tt1_or_tt_booster; sortByL = 'per_pw_given_tt1_or_tt_booster'; break;
+        case "Child immunisation-Vitamin A Dose-1": xValue = d => d.chld_immunzt_vit_a_dose_1; sortByL = 'chld_immunzt_vit_a_dose_1'; break;
 
-        case "PW given 360 Calcium tablets": xValue = d => d.pw_calcium; sortByL = 'pw_calcium'; break;
-
-        case "PW given 180 Iron Folic Acid (IFA) tablets": xValue = d => d.pw_ifa; sortByL = 'pw_ifa'; break;
-
-        case "PW given one Albendazole tablet after 1st trimester": xValue = d => d.pw_albendazole; sortByL = 'pw_albendazole'; break;
-
-        case "C-section deliveries": xValue = d => d.c_section_deliveries; sortByL = 'c_section_deliveries'; break;
-
-        case "Preterm Birth Rate": xValue = d => d.preterm_birth_rate; sortByL = 'preterm_birth_rate'; break;
-        
-        case "Still Birth Rate": xValue = d => d.per_still_birth; sortByL = 'per_still_birth'; break;
+        case "Children(12-59 months) provided Albendazole": xValue = d => d.no_chld_12to59m_albendazole; sortByL = 'no_chld_12to59m_albendazole'; break;
     }
 
     var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
     filterdata = filterCSV(data, 'month', valMonth);
     monthDataL = sortData(filterdata, sortByL);
+    console.log(monthDataL)
     drawLeft(monthDataL);
   }
 
@@ -635,28 +578,19 @@
 
     switch (valCategory) {
 
-        case "Early ANC Registeration": xValueR = d => d.early_anc_register; sortByR = 'early_anc_register'; break;
+        case "Total no of Children Born": xValueR = d => d.tot_chld_born; sortByR = 'tot_chld_born'; break;
 
-        case "PW received 4 or more ANC check ups": xValueR = d => d.anc_4_or_more; sortByR = 'anc_4_or_more'; break;
+        case "Child Immunisation-Vitamin K1(Birth Dose)": xValueR = d => d.chld_immunzt_vit_k1; sortByR = 'chld_immunzt_vit_k1'; break;
 
-        case "PW given TT1": xValueR = d => d.pw_tt1_given; sortByR = 'pw_tt1_given'; break;
+        case "Child Immunisation-BCG": xValueR = d => d.chld_immunzt_bcg; sortByR = 'chld_immunzt_bcg'; break;
 
-        // case "PW given TT2": xValueR = d => d.pw_tt2_given; sortByR = 'pw_tt2_given'; break;
+        case "Child Immunisation(9-11 months)-Measles & Rubella (MR) 1st Dose": xValueR = d => d.chld_immunzt_9to11m_mr; sortByR = 'chld_immunzt_9to11m_mr'; break;
 
-        case "PW given TT1 or TT Booster": xValueR = d => d.per_pw_given_tt1_or_tt_booster; sortByR = 'per_pw_given_tt1_or_tt_booster'; break;
+        // case "Child Immunisation(9-11 months)-Measles 1st Dose": xValueR = d => d.chld_immunzt_9to11m_measl_1st_dose; sortByR = 'chld_immunzt_9to11m_measl_1st_dose'; break;
 
-        case "PW given 360 Calcium tablets": xValueR = d => d.pw_calcium; sortByR = 'pw_calcium'; break;
+        case "Child immunisation-Vitamin A Dose-1": xValueR = d => d.chld_immunzt_vit_a_dose_1; sortByR = 'chld_immunzt_vit_a_dose_1'; break;
 
-        case "PW given 180 Iron Folic Acid (IFA) tablets": xValueR = d => d.pw_ifa; sortByR = 'pw_ifa'; break;
-
-        case "PW given one Albendazole tablet after 1st trimester": xValueR = d => d.pw_albendazole; sortByR = 'pw_albendazole'; break;
-
-        case "C-section deliveries": xValueR = d => d.c_section_deliveries; sortByR = 'c_section_deliveries'; break;
-
-        case "Preterm Birth Rate": xValueR = d => d.preterm_birth_rate; sortByR = 'preterm_birth_rate'; break;
-
-        case "Still Birth Rate": xValueR = d => d.per_still_birth; sortByR = 'per_still_birth'; break;
-
+        case "Children(12-59 months) provided Albendazole": xValueR = d => d.no_chld_12to59m_albendazole; sortByR = 'no_chld_12to59m_albendazole'; break;
     }
 
     var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
@@ -703,16 +637,21 @@
 
   let choices = parseURLParameters(window.location.href);
   if (choices.length > 0) {
+    console.log(choices, "choices")
     let selectedCat = choices[0].replace(/_/g, ' ');
+    console.log(selectedCat, "selectedCat")
     $('.category a').parents('.dropdown').find('.dropdown-toggle').html(selectedCat + ' <span class="selectedCategory"></span>');
-    displayLeftChart(selectedCat); 
+    displayLeftChart(selectedCat);
   }
 
   function parseURLParameters() {
     var query = (window.location.search || '?').substr(1);
     var map = [];
-    query.replace(/([^&=]+)=?([^&]*)(?:&+|$)/g, function (match, key, value) {
+    query.replace(/([^&=]+)=?([^]*)(?:&+|$)/g, function (match, key, value) {
+      console.log(value, "value")
       map.push(value);
+      console.log(value, "value after map")
+      
     });
     return map;
   }
@@ -732,7 +671,7 @@
     });
 
     if (choices.length <= 0)
-    $(".category a").first().trigger('click');
+      $(".category a").first().trigger('click');
 
   });
 

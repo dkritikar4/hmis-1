@@ -103,6 +103,8 @@
             <a class="dropdown-item" href="#">Childhood Diseases-Tuberculosis(TB)</a>
             <a class="dropdown-item" href="#">Childhood Diseases-Malaria</a>
             <a class="dropdown-item" href="#">Childhood Diseases-Diarrhoea</a>
+            <a class="dropdown-item" href="#">Childhood Diseases-Diarrhoea treated in Inpatients</a>
+            <a class="dropdown-item" href="#">Children admitted with upper respiratory infections</a>
             <a class="dropdown-item" href="#">Childhood Diseases-Severe Acute Malnutrition(SAM)</a>
         </div>
     </div>
@@ -184,10 +186,10 @@
         document.getElementById('areaTitle').innerHTML = 'State-wise';
     
     let areaName = [];
-    if (selAreaInt > 38)
+    // if (selAreaInt > 38)
         areaName.push(selAreaInt);  
-    else
-        areaName.push(1);
+    // else
+    //     areaName.push(1);
         
     let selectedYear = [];
     selectedYear.push(sel_fy)
@@ -567,22 +569,22 @@
     }
 
     function setSection(val) {
-    if (val == 'Total no of Children Born')
-      section = 'chld_disease_pneumonia';
-    else if (val == 'Child Immunisation-Vitamin K1(Birth Dose)')
-      section = 'chld_disease_sepsis';
-    else if (val == 'Child Immunisation-BCG')
-      section = 'chld_disease_tb';
-    else if (val == 'Child Immunisation(9-11 months)-Measles & Rubella (MR) 1st Dose')
-      section = 'chld_disease_malaria';
-    else if (val == 'Child Immunisation(9-11 months)-Measles 1st Dose')
-      section = 'chld_disease_diarrhoea';
-    else if (val == 'Child immunisation-Vitamin A Dose-1')
-      section = 'chld_disease_diarrhoea_trtd_inpatnt';
-    else if (val == 'Children admitted with upper respiratory infections')
-      section = 'chld_admtd_upper_resp_infec';
-    else
-      section = 'chld_disease_sam'
+        if (val == 'Childhood Diseases-Pneumonia')
+            section = 'chld_disease_pneumonia';
+        else if (val == 'Childhood Diseases-Sepsis')
+            section = 'chld_disease_sepsis';
+        else if (val == 'Childhood Diseases-Tuberculosis(TB)')
+            section = 'chld_disease_tb';
+        else if (val == 'Childhood Diseases-Malaria')
+            section = 'chld_disease_malaria';
+        else if (val == 'Childhood Diseases-Diarrhoea')
+            section = 'chld_disease_diarrhoea';
+        else if (val == 'Childhood Diseases-Diarrhoea treated in Inpatients')
+            section = 'chld_disease_diarrhoea_trtd_inpatnt';
+        else if (val == 'Children admitted with upper respiratory infections')
+            section = 'chld_admtd_upper_resp_infec';
+        else
+            section = 'chld_disease_sam'
   }
 
     $("#state").change(function () {
@@ -633,10 +635,10 @@
 
     $(function () {
         //bind event
-        if (selAreaInt > 38)
-            $('#state').val(selAreaInt);
-        else
-            $('#state').val(1);
+        // if (selAreaInt > 38)
+        $('#state').val(selAreaInt);
+        // else
+        //     $('#state').val(1);
         $('#fyList').val(sel_fy);
 
         $(".category a").click(function () {
