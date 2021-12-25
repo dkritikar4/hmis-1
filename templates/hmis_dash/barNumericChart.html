@@ -90,7 +90,10 @@
         </div>
     </div>
 
-    <button type="button" class="btn btn-light m-1" onclick="location.href=`{% url 'barchart' dist_name fy %}`">Percent</button>
+    <button type="button" class="btn btn-success m-1" id="cumulativeData">Cumulative</button>        
+    <button type="button" class="btn btn-primary m-1 hidden" id="monthlyData" style="display: none;">Monthly</button>   
+
+    <button type="button" class="btn btn-light m-1" onclick="location.href=`{% url 'barchart' dist_name fy %}`">Go to Percent</button>
 
     <!-- <div class="dropdown m-1">
     <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
@@ -115,7 +118,7 @@
   </div>
 </div> -->
 
-<div class="row text-center">
+<div class="row text-center" id="monthlySlider">
     <div class="col-12 mb-5">
         
         <input type="text" id="monthSlider" name="somename" data-provide="slider"
@@ -125,6 +128,16 @@
             data-slider-tooltip="hide">
         
 
+    </div>
+</div>
+
+<div class="row text-center" id="quarterlySlider" style="display: none;">
+    <div class="col-12 mb-5">
+        <input type="text" id="quarterSlider" name="name" data-provide="slider"
+            data-slider-ticks="[0, 1, 2, 3, 4, 5,6,7,8,9,10,11]"
+            data-slider-ticks-labels='["Apr", "Upto May", "Upto Jun", "Upto Jul", "Upto Aug", "Upto Sep", "Upto Oct", "Upto Nov", "Upto Dec", "Upto Jan", "Upto Feb", "Upto Mar"]'
+            data-slider-min="0" data-slider-max="11" data-slider-step="1" data-slider-value="0"
+            data-slider-tooltip="hide">
     </div>
 </div>
 
@@ -144,6 +157,7 @@
 <script>
 
     var width1;
+    let quarterly = false;
 
     function filterCSV(csv, key, value) {
         var result = [];
@@ -356,13 +370,27 @@
             case "Total no of Still Birth": yValue = d => d.tot_still_birth; sortBy = 'tot_still_birth'; break;
 
         }
-
-            
-        var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
-        filterdata = filterCSV(data, 'month', valMonth);
-        mydata = sortData(filterdata, sortBy);
-        svg.selectAll("*").remove();
-        render(mydata);
+        if(quarterly == true){
+            var valMonth = qtickLabels[$('#quarterSlider').slider('getValue')];
+            if(valMonth == "Apr"){
+                valMonth = "Upto Apr";
+            }
+            filterdata = filterCSV(data, 'month', valMonth);
+            mydata = sortData(filterdata, sortBy);
+            svg.selectAll("*").remove();
+            render(mydata);
+        }else{
+            var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
+            filterdata = filterCSV(data, 'month', valMonth);
+            mydata = sortData(filterdata, sortBy);
+            svg.selectAll("*").remove();
+            render(mydata);
+        }
+        //var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
+        //filterdata = filterCSV(data, 'month', valMonth);
+        //mydata = sortData(filterdata, sortBy);
+        //svg.selectAll("*").remove();
+        //render(mydata);
     }
 
     //   $(".ptype a").click(function () {
@@ -419,6 +447,22 @@
         render(mydata);
     });
 
+    let qtickLabels = ["Apr", "Upto May", "Upto Jun", "Upto Jul", "Upto Aug", "Upto Sep", "Upto Oct", "Upto Nov", "Upto Dec", "Upto Jan", "Upto Feb", "Upto Mar"]
+    
+    $('#quarterSlider').slider().on('slideStop', function (ev) {
+        let val;
+        if(qtickLabels[ev.value] == "Apr"){
+            val = "Upto Apr";
+        }
+        else
+            val = qtickLabels[ev.value];
+
+        filterdata = filterCSV(data, 'month', val);
+        mydata = sortData(filterdata, sortBy);
+        svg.selectAll("*").remove();
+        render(mydata);
+    });
+    
     let choices = parseURLParameters(window.location.href);
 
     console.log(choices, "choices")
@@ -453,7 +497,44 @@
         return map;
     }
 
+    $(document).ready(function () {
+        $('#cumulativeData').click(function() {
+            quarterly = true;
+            $("div.slider-tick-label-container").css("margin-left", "-4.138rem");
+            $("div.slider-tick-label").css("width", "8.25rem");
 
+            $("#quarterlySlider").show();
+            $("#monthlySlider").hide();
+            $("#cumulativeData").hide();
+            $("#monthlyData").show();
+
+            var valMonth = qtickLabels[$('#quarterSlider').slider('getValue')];
+            if(valMonth == "Apr"){
+                valMonth = "Upto Apr";
+            }
+            filterdata = filterCSV(data, 'month', valMonth);
+            mydata = sortData(filterdata, sortBy);
+            svg.selectAll("*").remove();
+            render(mydata);
+        });
+        $('#monthlyData').click(function() {
+            quarterly = false;
+            $("div.slider-tick-label-container").css("margin-left", "-3.792rem");
+            $("div.slider-tick-label").css("width", "7.583rem");
+            
+            $("#quarterlySlider").hide();
+            $("#monthlySlider").show();
+            $("#cumulativeData").show();
+            $("#monthlyData").hide();
+
+            var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
+            
+            filterdata = filterCSV(data, 'month', valMonth);
+            mydata = sortData(filterdata, sortBy);
+            svg.selectAll("*").remove();
+            render(mydata);
+        });
+    });
 </script>
 
 {% endblock %}
