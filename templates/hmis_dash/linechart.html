@@ -267,7 +267,9 @@
   // Define the line
   var stateline = d3.svg.line()
     .interpolate("linear")
-    .x(function (d) { return xScale(d.month); })
+    .x(function (d) { 
+      // console.log(xScale(d.month), 'd')
+      return xScale(d.month); })
     .y(function (d) { return yScale(d.value); });
 
   var g = svg.append('g')
@@ -455,6 +457,7 @@
       var m = d3.mouse(this),
         lowDiff = 1e99,
         xI = null;
+        // console.log(m, "m");
       d3.selectAll(".mouse-per-line")
         .attr("transform", function (d, i) {
           for (var i = 0; i < tickPos.length; i++) {
@@ -462,12 +465,12 @@
             if (diff < lowDiff) {
               lowDiff = diff;
               xI = i;
-
             }
           }
           d3.select(".mouse-line")
             .attr("d", function () {
               monthX = d.values[xI].month
+              // console.log(d, "monthX");
               var data = "M" + xScale(d.values[xI].month) + "," + height;
               data += " " + xScale(d.values[xI].month) + "," + 0;
               return data;
@@ -620,24 +623,23 @@
   }
 
   function setData(data, section) {
-    console.log(data, "data")
-    var dataFilter = data.map(function (d) { 
+    let filterResult;
       if(quarterly == true){
-        if(d.month_id >= 14)
-        filterMonth = d.month_id;
-        console.log(filterMonth)  
-      }
-      return { financial_year: d.financial_year, month: d.month, areaID:d.area_id, areaN: d.area_name, value: d[section] } })
-    console.log(dataFilter, "dataFilter")
-    
-    //debugger
-    //   console.log(data,"data in setData")
 
+        filterResult = data.filter(u => 
+          u.month_id >= 14);
+      }else{
+        filterResult = data.filter(u => 
+          u.month_id < 14);
+      }   
+
+      var dataFilter = filterResult.map(function (d) { 
+      
+      return { financial_year: d.financial_year, month: d.month, areaID:d.area_id, areaN: d.area_name, value: d[section] } })
 
     dataFilter.forEach(function (d) {
       d.value = +d.value;
     });
-    // console.log(dataFilter,"dataFilter")
     //debugger
     render(dataFilter);
     // jQuery('h1.page-header').html(section);
@@ -687,7 +689,7 @@
         });
         $('#monthlyData').click(function() {
             quarterly = false;
-            
+            setData(st_data, section);
             $("#cumulativeData").show();
             $("#monthlyData").hide();
 
