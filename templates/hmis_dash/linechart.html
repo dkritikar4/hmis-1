@@ -124,7 +124,9 @@
     </select>
   </div>
 
-  <button type="button" class="btn btn-light m-1" onclick="location.href=`{% url 'linenumeric' dist_name fy %}`">Count</button>
+  <button type="button" class="btn btn-success m-1" id="cumulativeData">Cumulative</button>        
+  <button type="button" class="btn btn-primary m-1 hidden" id="monthlyData" style="display: none;">Monthly</button>   
+  <button type="button" class="btn btn-light m-1" onclick="location.href=`{% url 'linenumeric' dist_name fy %}`">Go to Count</button>
   <!-- <div class="dropdown m-1">
     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
       aria-haspopup="true" aria-expanded="false">
@@ -171,6 +173,8 @@
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 
 <script>
+  let quarterly = false;
+  
   let width = 1000,
     height = 550;
 
@@ -606,10 +610,26 @@
     legendbox.selectAll("*").remove();
     setData(st_data, section);
   });
+  
+  let filterMonth;
+  if (quarterly == true){
+    filterMonth = ["Upto Apr", "Upto May", "Upto Jun", "Upto Jul", "Upto Aug", "Upto Sep", "Upto Oct", "Upto Nov", "Upto Dec", "Upto Jan", "Upto Feb", "Upto Mar"]
+  }
+  else{
+    filterMonth = [];
+  }
 
   function setData(data, section) {
-    var dataFilter = data.map(function (d) { return { financial_year: d.financial_year, month: d.month, areaID:d.area_id, areaN: d.area_name, value: d[section] } })
-
+    console.log(data, "data")
+    var dataFilter = data.map(function (d) { 
+      if(quarterly == true){
+        if(d.month_id >= 14)
+        filterMonth = d.month_id;
+        console.log(filterMonth)  
+      }
+      return { financial_year: d.financial_year, month: d.month, areaID:d.area_id, areaN: d.area_name, value: d[section] } })
+    console.log(dataFilter, "dataFilter")
+    
     //debugger
     //   console.log(data,"data in setData")
 
@@ -620,7 +640,7 @@
     // console.log(dataFilter,"dataFilter")
     //debugger
     render(dataFilter);
-    jQuery('h1.page-header').html(section);
+    // jQuery('h1.page-header').html(section);
   }
 
 
@@ -656,5 +676,22 @@
       $(".category a").first().trigger('click');
 
   });
+
+  $(document).ready(function () {
+        $('#cumulativeData').click(function() {
+            quarterly = true;
+            setData(st_data, section);
+            $("#cumulativeData").hide();
+            $("#monthlyData").show();
+
+        });
+        $('#monthlyData').click(function() {
+            quarterly = false;
+            
+            $("#cumulativeData").show();
+            $("#monthlyData").hide();
+
+        });
+    });
 </script>
 {% endblock %}
