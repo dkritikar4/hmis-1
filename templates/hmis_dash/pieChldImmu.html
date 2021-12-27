@@ -72,10 +72,10 @@
       <a class="dropdown-item" href="#">Child immunisation-Vitamin A Dose-1</a>
       <a class="dropdown-item" href="#">Children(12-59 months) provided Albendazole</a>
     </div>
-    <button type="button" class="btn btn-success m-1" id="cumulativeData">Cumulative</button>        
-    <button type="button" class="btn btn-primary m-1 hidden" id="monthlyData" style="display: none;">Monthly</button>   
   </div>
 
+  <button type="button" class="btn btn-success m-1" id="cumulativeData">Cumulative</button>        
+  <button type="button" class="btn btn-primary m-1 hidden" id="monthlyData" style="display: none;">Monthly</button>   
   <!-- <div class="dropdown m-1">
     <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
       aria-haspopup="true" aria-expanded="false">
@@ -416,21 +416,7 @@
           document.getElementById('bartitleCategory').innerHTML = displayVal + " : State wise Contribution " + "(" + fy + ")";
         setArcInitial(valCategory);
         makeviz(arcInitial);
-
-        if(quarterly == true){
-          var valMonth = qtickLabels[$('#quarterSlider').slider('getValue')];
-          if(valMonth == "Apr"){
-              valMonth = "Upto Apr";
-          }
-          filterdata = filterCSV(data, 'month', valMonth);
-          svg.selectAll("*").remove();
-          render(filterdata);
-        }else{
-          var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
-          filterdata = filterCSV(data, 'month', valMonth);
-          svg.selectAll("*").remove();
-          render(filterdata);
-        }    
+        
     }
 
     $(".category a").click(function () {
