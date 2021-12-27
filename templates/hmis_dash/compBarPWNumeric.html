@@ -96,10 +96,11 @@
 
     </div>
     <button class='btn btn-light toggle m-1'>Compare</button>
+    <button type="button" class="btn btn-success m-1" id="cumulativeData">Cumulative</button>        
+    <button type="button" class="btn btn-primary m-1 hidden" id="monthlyData" style="display: none;">Monthly</button>     
   </div>
 
-
-
+ 
   <div class="col-xs-4 col-sm-4 col-md-6 bg-dark">
 
     <div class="dropdown m-1" id="cat2">
@@ -138,12 +139,22 @@
   Please click "<b>Compare</b>" button if you want to see Indicators Comparison
 </div>
 
-<div class="row text-center">
+<div class="row text-center" id="monthlySlider">
   <div class="col-12 mb-5">
     <input type="text" id="monthSlider" name="somename" data-provide="slider"
       data-slider-ticks="[0, 1, 2, 3, 4, 5,6,7,8,9,10,11,12]"
       data-slider-ticks-labels='["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]'
       data-slider-min="0" data-slider-max="12" data-slider-step="1" data-slider-value="0" data-slider-tooltip="hide">
+  </div>
+</div>
+
+<div class="row text-center" id="quarterlySlider" style="display: none;">
+  <div class="col-12 mb-5">
+      <input type="text" id="quarterSlider" name="name" data-provide="slider"
+          data-slider-ticks="[0, 1, 2, 3, 4, 5,6,7,8,9,10,11]"
+          data-slider-ticks-labels='["Apr", "Upto May", "Upto Jun", "Upto Jul", "Upto Aug", "Upto Sep", "Upto Oct", "Upto Nov", "Upto Dec", "Upto Jan", "Upto Feb", "Upto Mar"]'
+          data-slider-min="0" data-slider-max="11" data-slider-step="1" data-slider-value="0"
+          data-slider-tooltip="hide">
   </div>
 </div>
 
@@ -168,7 +179,7 @@
 
   const width = 1400;
   const height = 1500;
-
+  let quarterly = false;
 
   const tansitionDuration = 500;
 
@@ -564,6 +575,21 @@
     drawRight(monthDataR);
   });
 
+  let qtickLabels = ["Apr", "Upto May", "Upto Jun", "Upto Jul", "Upto Aug", "Upto Sep", "Upto Oct", "Upto Nov", "Upto Dec", "Upto Jan", "Upto Feb", "Upto Mar"]
+    
+  $('#quarterSlider').slider().on('slideStop', function (ev) {
+    let val;
+    if(qtickLabels[ev.value] == "Apr"){
+        val = "Upto Apr";
+    }
+    else
+      val = qtickLabels[ev.value];
+      filterdata = filterCSV(data, 'month', val);
+      monthDataL = sortData(filterdata, sortByL);
+      monthDataR = sortData(filterdata, sortByR);
+      drawLeft(monthDataL);
+      drawRight(monthDataR);
+  });
 
   $(".category a").click(function () {
 
@@ -607,11 +633,25 @@
       case "Total no of Still Birth": xValue = d => d.tot_still_birth; sortByL = 'tot_still_birth'; break;
     }
 
-    var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
-    filterdata = filterCSV(data, 'month', valMonth);
-    monthDataL = sortData(filterdata, sortByL);
-    console.log(monthDataL)
-    drawLeft(monthDataL);
+    if(quarterly == true){
+      var valMonth = qtickLabels[$('#quarterSlider').slider('getValue')];
+      if(valMonth == "Apr"){
+          valMonth = "Upto Apr";
+      }
+      filterdata = filterCSV(data, 'month', valMonth);
+      monthDataL = sortData(filterdata, sortByL);
+      drawLeft(monthDataL);
+    }else{
+      var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
+      filterdata = filterCSV(data, 'month', valMonth);
+      monthDataL = sortData(filterdata, sortByL);
+      drawLeft(monthDataL);
+    }
+    //var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
+    //filterdata = filterCSV(data, 'month', valMonth);
+    //monthDataL = sortData(filterdata, sortByL);
+    //console.log(monthDataL)
+    //drawLeft(monthDataL);
   }
 
 
@@ -651,10 +691,24 @@
       case "Total no of Still Birth": xValueR = d => d.tot_still_birth; sortByR = 'tot_still_birth'; break;
     }
 
-    var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
-    filterdata = filterCSV(data, 'month', valMonth);
-    monthDataR = sortData(filterdata, sortByR);
-    drawRight(monthDataR);
+    if(quarterly == true){
+      var valMonth = qtickLabels[$('#quarterSlider').slider('getValue')];
+      if(valMonth == "Apr"){
+          valMonth = "Upto Apr";
+      }
+      filterdata = filterCSV(data, 'month', valMonth);
+      monthDataR = sortData(filterdata, sortByR);
+      drawRight(monthDataR);
+    }else{
+      var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
+      filterdata = filterCSV(data, 'month', valMonth);
+      monthDataR = sortData(filterdata, sortByR);
+      drawRight(monthDataR);
+    }
+    //var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
+    //filterdata = filterCSV(data, 'month', valMonth);
+    //monthDataR = sortData(filterdata, sortByR);
+    //drawRight(monthDataR);
 
   });
 
@@ -728,6 +782,45 @@
 
   });
 
+  $(document).ready(function () {
+    $('#cumulativeData').click(function() {
+        quarterly = true;
+        $("div.slider-tick-label-container").css("margin-left", "-4.138rem");
+        $("div.slider-tick-label").css("width", "8.25rem");
+
+        $("#quarterlySlider").show();
+        $("#monthlySlider").hide();
+        $("#cumulativeData").hide();
+        $("#monthlyData").show();
+
+        var valMonth = qtickLabels[$('#quarterSlider').slider('getValue')];
+        if(valMonth == "Apr"){
+            valMonth = "Upto Apr";
+        }
+        filterdata = filterCSV(data, 'month', valMonth);
+        mydata = sortData(filterdata, sortBy);
+        svg.selectAll("*").remove();
+        render(mydata);
+    });
+    $('#monthlyData').click(function() {
+        quarterly = false;
+        $("div.slider-tick-label-container").css("margin-left", "-3.792rem");
+        $("div.slider-tick-label").css("width", "7.583rem");
+        
+        $("#quarterlySlider").hide();
+        $("#monthlySlider").show();
+        $("#cumulativeData").show();
+        $("#monthlyData").hide();
+
+        var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
+        
+        filterdata = filterCSV(data, 'month', valMonth);
+        mydata = sortData(filterdata, sortBy);
+        svg.selectAll("*").remove();
+        render(mydata);
+    });
+  });
+  
 </script>
 
 {% endblock %}
