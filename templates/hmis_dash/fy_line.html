@@ -126,7 +126,9 @@
         </select>
     </div>
 
-  <button type="button" class="btn btn-light m-1" onclick="location.href=`{% url 'fy_lineNum' dist_name fy %}`">Count</button>
+    <button type="button" class="btn btn-success m-1" id="cumulativeData">Cumulative</button>        
+    <button type="button" class="btn btn-primary m-1 hidden" id="monthlyData" style="display: none;">Monthly</button>   
+    <button type="button" class="btn btn-light m-1" onclick="location.href=`{% url 'fy_lineNum' dist_name fy %}`">Go to Count</button>
 
 
     <!-- <div class="dropdown m-1">
@@ -177,7 +179,7 @@
 <script>
     let width = 1000,
         height = 550;
-
+    let quarterly = false;
     let sel_fy = '{{ fy }}';
     let sel_st = '{{ dist_name }}';
     let selAreaInt = parseInt(sel_st);
@@ -616,19 +618,28 @@
     });
 
     function setData(data, section) {
-        var dataFilter = data.map(function (d) { return { financial_year: d.financial_year, month: d.month, areaID:d.area_id, areaN: d.area_name, value: d[section] } })
-
-        //debugger
-
+        let filterResult;
+          if(quarterly == true){
+    
+            filterResult = data.filter(u => 
+              u.month_id >= 14);
+          }else{
+            filterResult = data.filter(u => 
+              u.month_id < 14);
+          }   
+    
+          var dataFilter = filterResult.map(function (d) { 
+          
+          return { financial_year: d.financial_year, month: d.month, areaID:d.area_id, areaN: d.area_name, value: d[section] } })
+    
         dataFilter.forEach(function (d) {
-            d.value = +d.value;
+          d.value = +d.value;
         });
         //debugger
         render(dataFilter);
-        jQuery('h1.page-header').html(section);
+        // jQuery('h1.page-header').html(section);
     }
-
-
+    
     //Initial Graph
     st_data = filterCSV(data, 'area_id', areaName);
     fyData = filterCSV(st_data, 'financial_year', selectedYear);
@@ -660,6 +671,23 @@
         if (choices.length <= 0)
             $(".category a").first().trigger('click');
 
+    });
+
+    $(document).ready(function () {
+        $('#cumulativeData').click(function() {
+            quarterly = true;
+            setData(fyData, section);
+            $("#cumulativeData").hide();
+            $("#monthlyData").show();
+
+        });
+        $('#monthlyData').click(function() {
+            quarterly = false;
+            setData(fyData, section);
+            $("#cumulativeData").show();
+            $("#monthlyData").hide();
+
+        });
     });
 </script>
 {% endblock %}
