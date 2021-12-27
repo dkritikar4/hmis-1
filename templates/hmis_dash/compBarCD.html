@@ -122,10 +122,7 @@
 
 
 </div>
-  <div class="scroll-down">
-    Please click "<b>Compare</b>" button if you want to see Indicators Comparison
-  </div>
-
+  
   <div class="row text-center"  id="monthlySlider">
     <div class="col-12 mb-5">
      
@@ -145,6 +142,10 @@
             data-slider-min="0" data-slider-max="11" data-slider-step="1" data-slider-value="0"
             data-slider-tooltip="hide">
     </div>
+</div>
+
+<div class="scroll-down">
+  Please click "<b>Compare</b>" button if you want to see Indicators Comparison
 </div>
 
 <div id='sw' class="spinner-wrapper">
@@ -752,10 +753,11 @@
             valMonth = "Upto Apr";
         }
         filterdata = filterCSV(data, 'month', valMonth);
-        mydata = sortData(filterdata, sortBy);
-        svg.selectAll("*").remove();
-        render(mydata);
-    });
+        monthDataL = sortData(filterdata, sortByL);
+        monthDataR = sortData(filterdata, sortByR);
+        drawLeft(monthDataL);
+        drawRight(monthDataR);
+      });
     $('#monthlyData').click(function() {
         quarterly = false;
         $("div.slider-tick-label-container").css("margin-left", "-3.792rem");
@@ -769,9 +771,10 @@
         var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
         
         filterdata = filterCSV(data, 'month', valMonth);
-        mydata = sortData(filterdata, sortBy);
-        svg.selectAll("*").remove();
-        render(mydata);
+        monthDataL = sortData(filterdata, sortByL);
+        monthDataR = sortData(filterdata, sortByR);
+        drawLeft(monthDataL);
+        drawRight(monthDataR);
     });
   });
 
