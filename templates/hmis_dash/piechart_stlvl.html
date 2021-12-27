@@ -457,12 +457,12 @@
         }
         filterdata = filterCSV(data, 'month', valMonth);
         svg.selectAll("*").remove();
-        render(mydata);
+        render(filterdata);
       }else{
         var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
         filterdata = filterCSV(data, 'month', valMonth);
         svg.selectAll("*").remove();
-        render(mydata);
+        render(filterdata);
       }    
     }
 
@@ -579,12 +579,12 @@
 
     filterdata = filterCSV(data, 'month', val);
     svg.selectAll("*").remove();
-    render(mydata);
+    render(filterdata);
   });
 
-  //monthSelect = tickLabels[$('#monthSlider').slider('getValue')]
-  //augData = filterCSV(data, 'month', monthSelect);
-  //render(augData);
+  monthSelect = tickLabels[$('#monthSlider').slider('getValue')]
+  augData = filterCSV(data, 'month', monthSelect);
+  render(augData);
 
   $(document).ready(function () {
     $('#cumulativeData').click(function() {
@@ -603,7 +603,7 @@
         }
         filterdata = filterCSV(data, 'month', valMonth);
         svg.selectAll("*").remove();
-        render(mydata);
+        render(filterdata);
     });
     $('#monthlyData').click(function() {
         quarterly = false;
@@ -619,7 +619,7 @@
         
         filterdata = filterCSV(data, 'month', valMonth);
         svg.selectAll("*").remove();
-        render(mydata);
+        render(filterdata);
     });
   });
 
