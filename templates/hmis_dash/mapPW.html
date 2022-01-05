@@ -28,10 +28,10 @@
     pointer-events: none;
   }
 
-  .slider{
+  /* .slider{
     font-weight: bold;
     font-size: calc(50% + 0.5vw + 0.5vh);
-  }
+  } */
 
   .color_range{
     float: right;
@@ -70,13 +70,13 @@
 
 <div class="row">
   <div class="col-12 h-75">
-    <div class="heading text-center">Pregnant Women related Indicators ({{ fy }})</div>
+    <div class="heading text-center" id="barTitle"> India-Statewise </div>
   </div>
 </div>
 
 <div class="row text-center bg-light">
     
-    <div class="dropdown mt-3">
+    <div class="dropdown p-1">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false">
         Select Category
@@ -96,6 +96,19 @@
             <a class="dropdown-item" href="#">Still Birth</a>
         </div>
     </div>
+    <div class="flex-auto h-25 m-1">
+      <ul class="flex-wrap nav nav-tabs d-flex" id="myTab" role="tablist">
+          <li class="flex-wrap nav-item">
+          <button class="flex-wrap rounded nav-link active" id="monthlyData" data-toggle="tab" role="tab"
+              aria-controls="Monthly" aria-selected="true" data-value="N">Monthly</button>
+          </li>
+          <li class="flex-wrap nav-item">
+          <button class="flex-wrap rounded nav-link" id="cumulativeData" data-toggle="tab" role="tab"
+              aria-controls="Cumulative" aria-selected="false" data-value="A">Cumulative</button>
+          </li>
+      </ul>
+    </div>    
+
   <div id="slider-range" class="mx-auto">
     <div class="slider">Slider:</div>
   </div>
@@ -103,7 +116,8 @@
 <div class="row">
     <div class="color_range">Please use Slider to change color range </div>
 </div>
-<div class="row text-center">
+
+  <div class="row text-center" id="monthlySlider">
     <div class="col-12 mb-5">
         <input type="text" id="monthSlider" name="somename" data-provide="slider"
             data-slider-ticks="[0, 1, 2, 3, 4, 5,6,7,8,9,10,11,12]"
@@ -113,11 +127,21 @@
     </div>
   </div>
 
+  <div class="row text-center" id="quarterlySlider" style="display: none;">
+    <div class="col-12 mb-5">
+        <input type="text" id="quarterSlider" name="name" data-provide="slider"
+            data-slider-ticks="[0, 1, 2, 3, 4, 5,6,7,8,9,10,11]"
+            data-slider-ticks-labels='["April", "Upto May", "Upto Jun", "Upto Jul", "Upto Aug", "Upto Sep", "Upto Oct", "Upto Nov", "Upto Dec", "Upto Jan", "Upto Feb", "Upto Mar"]'
+            data-slider-min="0" data-slider-max="11" data-slider-step="1" data-slider-value="0"
+            data-slider-tooltip="hide">
+    </div>
+  </div>
+
 <div class="row">
   <div class="col-12">
     <button type="button" class="btn btn-dark back-button m-2">back</button>
     <span class='info info-hirar'>{{dist_name}}</span>
-    <p>Click on the Polygon(State) to view the Lower Level <span class="drilldown">(Drilldown)</span>
+    <!-- <p>Click on the Polygon(State) to view the Lower Level <span class="drilldown">(Drilldown)</span> -->
       </p>
   </div>
 </div>
@@ -186,6 +210,7 @@
   let level = 0;
   let levelLocation = [];
   let month_hack;
+  let fy = '{{ fy }}';
   let direction = 1;
   let circleEnter, rowEnter;
   let zoomBox = { 'translate': [], 'scale': [] };
@@ -418,6 +443,7 @@
           d3.select("line.track-inset").attr("stroke", "red");
         }
      $('.drop-category a').parents('.dropdown').find('.dropdown-toggle').html(updatedCat + ' <span class="selectedCategory"></span>');
+        document.getElementById('barTitle').innerHTML = "India-Statewise: (%) " + updatedCat + " (" + fy + ")";
      }
 
     //makemap
@@ -621,6 +647,9 @@
             .interpolator(d3.interpolateRdYlGn);
         }
 
+        //Sorting Alphabetically
+        tbdata = _.sortBy(tbdata, 'Location');
+
       rowEnter = row
         .data(tbdata)
         .enter()
@@ -646,6 +675,7 @@
 
         let selCat = $(this).text();
         let val;
+        document.getElementById('barTitle').innerHTML = "India-Statewise: (%) " + selCat + " (" + fy + ")";
         if (selCat != 'C-section deliveries' && selCat != 'Preterm Birth Rate' && selCat != 'Still Birth' ) {
           d3.select("line.leftcolor").attr("stroke", "red");
           d3.select("line.track-inset").attr("stroke", "green");
@@ -816,6 +846,10 @@
             .domain([d3.min(tdata, ActualValue), d3.max(tdata, ActualValue)])
             .interpolator(d3.interpolateRdYlGn);
         }
+        
+        //Sorting Alphabetically using Lodash
+        newtbdata = _.sortBy(newtbdata, 'Location') 
+
         rowEnter = row
           .data(newtbdata)
           .enter()
@@ -969,33 +1003,62 @@ $('#monthSlider').slider().on('slideStop', function (ev) {
 //       }
     });
 
-// $(".yearwise a").click(function () {
-//     $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="selectedYear"></span>');
-//     $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
-//     valYear = $(this).text();
-//     g.selectAll("*").remove();
-//     rowEnter.selectAll("*").remove();
-//     let svgTrans = svg.transition().duration(transitionDuration);
-//           // calculation for zoom
-//           let transLength = zoomBox.translate.length;
-//           let scaleLength = zoomBox.scale.length;
-//           let transX, transY, scaleV;
-//           if (level !== 0) {
-//             transX = zoomBox.translate[transLength - 1][0];
-//             transY = zoomBox.translate[transLength - 1][1];
-//             scaleV = zoomBox.scale[scaleLength - 1];
-//           }
-//           if (level === 0) {
-//             LocationDataMonth = filterCSV(stData, 'year', valYear);
-//             LocationMonth = addProperty(LocationDataMonth, state);
-//             console.log("on year change");
-//             console.log("LocationDataMonth", LocationDataMonth);
-//             console.log("LocationMonth", LocationMonth);
+    $('#quarterSlider').slider().on('slideStop', function (ev) {
+      var val = qtickLabels[ev.value];
+      month_hack = val;
+      g.selectAll("*").remove();
+      rowEnter.selectAll("*").remove();
+      let svgTrans = svg.transition().duration(transitionDuration);
+          // calculation for zoom
+          let transLength = zoomBox.translate.length;
+          let scaleLength = zoomBox.scale.length;
+          let transX, transY, scaleV;
+          if (level !== 0) {
+            transX = zoomBox.translate[transLength - 1][0];
+            transY = zoomBox.translate[transLength - 1][1];
+            scaleV = zoomBox.scale[scaleLength - 1];
+          }
+          
+          if (level === 0) {
+            LocationDataMonth = filterCSV(stData, 'month', month_hack);
+            LocationMonth = addProperty(LocationDataMonth, state);
+            // console.log("LocationDataMonth", LocationDataMonth);
+            // console.log("LocationMonth", LocationMonth);
 
-//             makemap(LocationMonth, LocationDataMonth);
+            makemap(LocationMonth, LocationDataMonth);
+          }
+          else if (level === 1) {
+            LocationDataMonth = filterCSV(dtData, 'month', month_hack);
+            LocationMonth = addProperty(LocationDataMonth, district);
+            //select beats map from project_name
+            let previousProject = levelLocation[levelLocation.length - 1];
+            let selectedjson = selectedSubFeature(LocationMonth, previousProject);
+            let selectedcsv = selectedSubData(LocationDataMonth, previousProject);
+            makemap(selectedjson, selectedcsv);
+          }
+// else if (level === 2) {
+//         LocationDataMonth = filterCSV(beatData, 'month_n', month_hack);
+//         LocationMonth = addProperty(LocationDataMonth, beat);
+//         //select beats map from project_name
+//         let previousProject = levelLocation[levelLocation.length - 1];
+//         let selectedjson = selectedSubFeature(LocationMonth, previousProject);
+//         let selectedcsv = selectedSubData(LocationDataMonth, previousProject);
+//         makemap(selectedjson, selectedcsv);
+//       }
+//       else if (level === 3) {
+//         LocationDataMonth = filterCSV(awcData, 'month_n', month_hack);
+//         LocationMonth = addProperty(LocationDataMonth, beat);
+//         selectedPoints = addProperty(LocationDataMonth, awc);
+//         //select beats map from project_name
+//         let previousbeat = levelLocation[levelLocation.length - 1];
+//         let selectedjson = selectedSubFeature(LocationMonth, previousbeat);
+//         let selectedcsv = selectedSubData(LocationDataMonth, previousbeat);
+//         makemap(selectedjson, selectedcsv);
+//         if (level === 3) {
+//             makegeoPoints(selectedPoints, previousbeat);
 //           }
-         
-//     });
+//       }
+    });    
 	
 	   // clicked
       const clicked = d => {
@@ -1185,12 +1248,98 @@ $('#monthSlider').slider().on('slideStop', function (ev) {
       };
    
     //initial map
-let tickLabels = ["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]
+  let qtickLabels = ["April", "Upto May", "Upto Jun", "Upto Jul", "Upto Aug", "Upto Sep", "Upto Oct", "Upto Nov", "Upto Dec", "Upto Jan", "Upto Feb", "Upto Mar"]
+
+  let tickLabels = ["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]
     month_hack = tickLabels[0];
     let monthdata = filterCSV(stData, 'month', month_hack);
     let monthjson = addProperty(monthdata, state);
     makemap(monthjson, monthdata);
+
+    $(document).ready(function () {
+        $('#cumulativeData').click(function() {
+            $("div.slider-tick-label-container").css("margin-left", "-4.138rem");
+            $("div.slider-tick-label").css("width", "8.25rem");
+
+            $("#quarterlySlider").show();
+            $("#monthlySlider").hide();
+
+            month_hack = qtickLabels[$('#quarterSlider').slider('getValue')];
+
+            g.selectAll("*").remove();
+            rowEnter.selectAll("*").remove();
+            let svgTrans = svg.transition().duration(transitionDuration);
+            // calculation for zoom
+            let transLength = zoomBox.translate.length;
+            let scaleLength = zoomBox.scale.length;
+            let transX, transY, scaleV;
+            if (level !== 0) {
+              transX = zoomBox.translate[transLength - 1][0];
+              transY = zoomBox.translate[transLength - 1][1];
+              scaleV = zoomBox.scale[scaleLength - 1];
+            }
+            
+            if (level === 0) {
+              LocationDataMonth = filterCSV(stData, 'month', month_hack);
+              LocationMonth = addProperty(LocationDataMonth, state);
+              // console.log("LocationDataMonth", LocationDataMonth);
+              // console.log("LocationMonth", LocationMonth);
+
+              makemap(LocationMonth, LocationDataMonth);
+            }
+            else if (level === 1) {
+              LocationDataMonth = filterCSV(dtData, 'month', month_hack);
+              LocationMonth = addProperty(LocationDataMonth, district);
+              //select beats map from project_name
+              let previousProject = levelLocation[levelLocation.length - 1];
+              let selectedjson = selectedSubFeature(LocationMonth, previousProject);
+              let selectedcsv = selectedSubData(LocationDataMonth, previousProject);
+              makemap(selectedjson, selectedcsv);
+            }
+        });
+        $('#monthlyData').click(function() {
+            $("div.slider-tick-label-container").css("margin-left", "-3.792rem");
+            $("div.slider-tick-label").css("width", "7.583rem");
+            
+            $("#quarterlySlider").hide();
+            $("#monthlySlider").show();
+
+            month_hack = tickLabels[$('#monthSlider').slider('getValue')];
+            g.selectAll("*").remove();
+            rowEnter.selectAll("*").remove();
+            let svgTrans = svg.transition().duration(transitionDuration);
+            // calculation for zoom
+            let transLength = zoomBox.translate.length;
+            let scaleLength = zoomBox.scale.length;
+            let transX, transY, scaleV;
+            if (level !== 0) {
+              transX = zoomBox.translate[transLength - 1][0];
+              transY = zoomBox.translate[transLength - 1][1];
+              scaleV = zoomBox.scale[scaleLength - 1];
+            }
+            
+            if (level === 0) {
+              LocationDataMonth = filterCSV(stData, 'month', month_hack);
+              LocationMonth = addProperty(LocationDataMonth, state);
+              // console.log("LocationDataMonth", LocationDataMonth);
+              // console.log("LocationMonth", LocationMonth);
+
+              makemap(LocationMonth, LocationDataMonth);
+          }
+          else if (level === 1) {
+            LocationDataMonth = filterCSV(dtData, 'month', month_hack);
+            LocationMonth = addProperty(LocationDataMonth, district);
+            //select beats map from project_name
+            let previousProject = levelLocation[levelLocation.length - 1];
+            let selectedjson = selectedSubFeature(LocationMonth, previousProject);
+            let selectedcsv = selectedSubData(LocationDataMonth, previousProject);
+            makemap(selectedjson, selectedcsv);
+          }
+        });
+    });
   };
+
+
 
   async function fetchGeoJSON() {
     let geoJSONBundle = {};
@@ -1407,6 +1556,7 @@ fetchGeoJSON().then(mergeData);
     
     $(".drop-category a").click(function () {
       var valCategory = $(this).text();
+      document.getElementById('barTitle').innerHTML = "India-Statewise: (%) " + valCategory + " (" + fy + ")";
       $(this).parents('.dropdown').find('.dropdown-toggle').html(valCategory + ' <span class="selectedCategory"></span>');
     });
 

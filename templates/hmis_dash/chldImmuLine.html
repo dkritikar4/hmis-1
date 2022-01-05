@@ -91,12 +91,12 @@
 {% block feature %}
 <div class="row">
   <div class="col-12 h-75">
-    <div class="heading text-center"> (%) Indicators <span id="areaTitle"></span> ({{ fy }})</div>
+    <div class="heading text-center"> <span id="areaTitle"></span> </div>
   </div>
 </div>
 
 <div class="row bg-dark mb-2">
-  <div class="dropdown m-1">
+  <div class="dropdown p-1">
     <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
       aria-haspopup="true" aria-expanded="false">
       Select Category
@@ -111,7 +111,8 @@
       <a class="dropdown-item" href="#">Children(12-59 months) provided Albendazole</a>
     </div>
   </div>
-  <div class="dropdown m-1">
+
+  <div class="dropdown p-1">
     <select name="state" id="state" class="selectpicker" multiple>
       {% for area_select in area_list %}
       <option value='{{ area_select.area_id }}'>{{ area_select.area_name }}</option>
@@ -119,38 +120,24 @@
     </select>
   </div>
 
-  <button type="button" class="btn btn-success m-1" id="cumulativeData">Cumulative</button>        
-  <button type="button" class="btn btn-primary m-1 hidden" id="monthlyData" style="display: none;">Monthly</button>   
-  <button type="button" class="btn btn-light m-1" onclick="location.href=`{% url 'ci_linenumeric' dist_name fy %}`">Go to Count</button>
+  <div class="p-1">
+    <button type="button" class="btn btn-light" onclick="location.href=`{% url 'ci_linenumeric' dist_name fy %}`">Go to Count</button>
+  </div>
 
-  <!-- <div class="dropdown m-1">
-    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-      aria-haspopup="true" aria-expanded="false">
-      Select State
-      <span class="selectedState"></span>
-    </button>
-    <div class="dropdown-menu state" aria-labelledby="dropdownMenuButton">
-      {% for area_select in area_list %}
-      <a class="dropdown-item" href="#">{{ area_select.area_name }}</a>
-      {% endfor %}
-    </div>
-  </div> -->
-  <!-- <div class="dropdown m-1">
-    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-      aria-haspopup="true" aria-expanded="false">
-      <span class="selectedPtype"></span>
-    </button>
-    <div class="dropdown-menu ptype" aria-labelledby="dropdownMenuButton">
-      <a class="dropdown-item" href="#">Urban</a>
-      <a class="dropdown-item" href="#">Rural</a>
-      <a class="dropdown-item" href="#">Tribal</a>
-    </div>-->
+  <div class="flex-auto h-25 m-1">
+      <ul class="flex-wrap nav nav-tabs d-flex" id="myTab" role="tablist">
+          <li class="flex-wrap nav-item">
+          <button class="flex-wrap rounded nav-link active" id="monthlyData" data-toggle="tab" role="tab"
+              aria-controls="Monthly" aria-selected="true" data-value="N">Monthly</button>
+          </li>
+          <li class="flex-wrap nav-item">
+          <button class="flex-wrap rounded nav-link" id="cumulativeData" data-toggle="tab" role="tab"
+              aria-controls="Cumulative" aria-selected="false" data-value="A">Cumulative</button>
+          </li>
+      </ul>
+  </div>    
 </div>
 
-<!-- <div class="row">
-  <p>Click rectangle box besides block names to view month wise trend for
-    the project</p>
-</div> -->
 
 <div class="row m-2">
   <div class="col-2" id="legendList">
@@ -173,13 +160,8 @@
   let width = 1000,
     height = 550;
 
-  //   let prjType = 'Urban';
   let selectedArea = "{{ dist_name }}";
   let selAreaInt = parseInt(selectedArea);
-  if (selAreaInt > 38)
-    document.getElementById('areaTitle').innerHTML = 'District-wise';
-  else
-    document.getElementById('areaTitle').innerHTML = 'State-wise';
 
   let areaName = [];
   // if (selAreaInt > 38)
@@ -437,9 +419,10 @@
 
 
     function removeTooltip() {
-      if (tooltip) tooltip.style('display', 'none');
-      // if(mouseG)     mouseG.selectAll('.mouse-per-line').selectAll('.topic-circle').remove();
-    }
+            if (tooltip) tooltip.style('display', 'none');
+            if(mouseG)     d3.selectAll('.mouse-line').style("opacity", "0");
+            if(mouseG)     d3.selectAll(".mouse-per-line circle").style("opacity", "0");
+        }
 
     function drawTooltip() {
 
@@ -473,7 +456,7 @@
 
       tooltip.html('<b style="color:#FF0000">' + monthX + '</b>')
         .style('display', 'block')
-        .style('left', d3.event.pageX + "px")
+        .style('left', (d3.event.pageX) - 300 + "px")
         .style('top', 40 + "px")
         .selectAll()
         .data(result).enter()
@@ -535,17 +518,18 @@
   $(".category a").click(function () {
     var val = $(this).text();
     selectedCategory = val;
+    document.getElementById('areaTitle').innerHTML = "India-Statewise: (%) " + selectedCategory + " (" + selectedYear + ")";
     setSection(val);
     st_data = filterCSV(data, 'area_id', areaName);
     d3.selectAll(".mouse-per-line circle").remove();
     setData(st_data, section);
-
   });
 
   let choices = parseURLParameters(window.location.href);
   if (choices.length > 0) {
     let selectedCat = choices[0].replace(/_/g, ' ');
     selectedCategory = selectedCat;
+    document.getElementById('areaTitle').innerHTML = "India-Statewise: (%) " + selectedCategory + " (" + selectedYear + ")";
     $('.category a').parents('.dropdown').find('.dropdown-toggle').html(selectedCat + ' <span class="selectedCategory"></span>');
     st_data = filterCSV(data, 'area_id', areaName);
     setSection(selectedCat);
@@ -645,16 +629,11 @@
     $('#cumulativeData').click(function() {
         quarterly = true;
         setData(st_data, section);
-        $("#cumulativeData").hide();
-        $("#monthlyData").show();
 
     });
     $('#monthlyData').click(function() {
         quarterly = false;
         setData(st_data, section);
-        $("#cumulativeData").show();
-        $("#monthlyData").hide();
-
     });
   });
 </script>

@@ -92,6 +92,11 @@
     .form-group{
         margin-bottom: 0%;
     }
+
+    .form-check-input{
+        margin-top: 0.7rem !important;
+    }
+
 </style>
 
 <div class="row">
@@ -102,11 +107,42 @@
 <form method="POST" name="hmis">
     {% csrf_token %}
     <div class="row mt-2 ml-2">
-        <div class="form-group">
+        <!-- Default checked -->
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="monthlyData" value="m" checked>
+            <label class="form-check-label" for="exampleRadios1">
+            Monthly
+            </label>
+        </div>
+        <div class="form-check ml-4">
+            <input class="form-check-input" type="radio" name="exampleRadios" id="cumulativeData" value="c">
+            <label class="d-inline-block" for="exampleRadios2">
+            Cumulative
+            </label>
+        </div>
+        <!-- <div class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="monthly" name="defaultExampleRadios" checked>
+            <label class="custom-control-label d-inline-block" for="defaultExampleRadios">Monthly</label>
+        </div>
+        
+        <div class="custom-control custom-radio ml-3">
+            <input type="radio" class="custom-control-input" id="quarterly" name="defaultExampleRadios">
+            <label class="custom-control-label d-inline-block" for="defaultExampleRadios">Cumulative</label>
+        </div> -->
+
+        <div class="form-group ml-5">
             <label class="d-inline-block" for="month_select">Select Month:</label>
 
-            <select class="custom-select" name="month_select" id="month-1" style="width: auto">
+            <select class="custom-select monthly" name="month_select" id="month-1" style="width: auto">
                 {% for month_select in months %}
+                <option value="{{ month_select.month_id }}">{{ month_select.month}}
+                </option>
+                {% endfor %}
+            </select>
+
+            <select class="custom-select quarterly" name="month_select" id="month-2" style="width: auto; display: none;">
+                <!-- <option value="17">Apr</option> -->
+                {% for month_select in quarterly %}
                 <option value="{{ month_select.month_id }}">{{ month_select.month}}
                 </option>
                 {% endfor %}
@@ -2417,6 +2453,33 @@
 
     });
 
+    $("#month-2").change(function (e) {
+        console.log(e)
+        areaSelected = $('#areaSt').val();
+        monthSelected = $('#month-2').val();
+        dtSelected = $('#areaDt').val();
+        e.preventDefault();
+        $.ajax({
+            url: "{% url 'ajaxArea' fy %}", // the endpoint
+            method: "GET", // http method
+            data: {
+                area: $('#areaSt').val(),
+                month: $('#month-2').val(),
+                area_district: $('#areaDt').val()
+            },
+            success: function (response) {
+                let pw_dataAjax = JSON.parse(response.context.pw_data);
+                let ci_dataAjax = JSON.parse(response.context.ci_data);
+                let cd_dataAjax = JSON.parse(response.context.cd_data);
+
+                let district = response.dist_name;
+                updateData(pw_dataAjax, ci_dataAjax, cd_dataAjax);
+
+            }
+        });
+
+    });
+
     $("#areaDt").change(function (e) {
         areaSelected = $('#areaSt').val();
         monthSelected = $('#month-1').val();
@@ -2471,7 +2534,6 @@
 
 
     function updateData(pw_data, ci_data, cd_data) {
-        // console.log(pw_data)
 
         //PW Related
         document.getElementById('st_totpwanc').innerHTML = pw_data[0].tot_no_pw_reg_anc;
@@ -2585,6 +2647,66 @@
 
     }
 
+    $(document).ready(function () {
+        $('#cumulativeData').click(function() {
+
+            $(".quarterly").show();
+            $(".monthly").hide();
+            $("#month-2").val(17);
+            areaSelected = $('#areaSt').val();
+            monthSelected = $('#month-2').val();
+            dtSelected = $('#areaDt').val();
+
+            $.ajax({
+                url: "{% url 'ajaxArea' fy %}", // the endpoint
+                method: "GET", // http method
+                data: {
+                    area: $('#areaSt').val(),
+                    month: $('#month-2').val(),
+                    area_district: $('#areaDt').val()
+                },
+                success: function (response) {
+                    let pw_dataAjax = JSON.parse(response.context.pw_data);
+                    let ci_dataAjax = JSON.parse(response.context.ci_data);
+                    let cd_dataAjax = JSON.parse(response.context.cd_data);
+
+                    let district = response.dist_name;
+                    updateData(pw_dataAjax, ci_dataAjax, cd_dataAjax);
+
+                }
+            });
+        });
+
+        $('#monthlyData').click(function() {
+
+            $(".quarterly").hide();
+            $(".monthly").show();
+            $("#month-1").val(13);
+            areaSelected = $('#areaSt').val();
+            monthSelected = $('#month-1').val();
+            dtSelected = $('#areaDt').val();
+
+            $.ajax({
+                url: "{% url 'ajaxArea' fy %}", // the endpoint
+                method: "GET", // http method
+                data: {
+                    area: $('#areaSt').val(),
+                    month: $('#month-1').val(),
+                    area_district: $('#areaDt').val()
+                },
+                success: function (response) {
+                    let pw_dataAjax = JSON.parse(response.context.pw_data);
+                    let ci_dataAjax = JSON.parse(response.context.ci_data);
+                    let cd_dataAjax = JSON.parse(response.context.cd_data);
+
+                    let district = response.dist_name;
+                    updateData(pw_dataAjax, ci_dataAjax, cd_dataAjax);
+
+                }
+            });
+        });
+
+    });   
 
     // $(document).ready(function () {
     //     $('#areaSt').bind('change', function () {

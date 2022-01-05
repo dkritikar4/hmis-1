@@ -86,12 +86,12 @@
 {% block feature %}
 <div class="row">
     <div class="col-12 h-75">
-        <div class="heading text-center"> (%) Indicators <span id="areaTitle"></span></div>
+        <div class="heading text-center"> <span id="areaTitle"></span> </div>
     </div>
 </div>
 
 <div class="row bg-dark mb-2">
-    <div class="dropdown m-1">
+    <div class="dropdown p-1">
         <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
             Select Category
@@ -108,14 +108,14 @@
             <a class="dropdown-item" href="#">Childhood Diseases-Severe Acute Malnutrition(SAM)</a>
         </div>
     </div>
-    <div class="dropdown m-1">
+    <div class="dropdown p-1">
         <select name="state" id="state" class="custom-select">
             {% for area_select in area_list %}
             <option value='{{ area_select.area_id }}'>{{ area_select.area_name }}</option>
             {% endfor %}
         </select>
     </div>
-    <div class="dropdown m-1">
+    <div class="dropdown p-1">
         <select name="fyList" id="fyList" class="selectpicker" multiple>
             {% for fy_select in fyList %}
             <option value='{{ fy_select.financial_year }}'>{{ fy_select.financial_year }}</option>
@@ -123,39 +123,23 @@
         </select>
     </div>
 
-    <button type="button" class="btn btn-success m-1" id="cumulativeData">Cumulative</button>        
-    <button type="button" class="btn btn-primary m-1 hidden" id="monthlyData" style="display: none;">Monthly</button>   
-    <button type="button" class="btn btn-light m-1" onclick="location.href=`{% url 'fy_cd_lineNum' dist_name fy %}`">Go to Count</button>
-
-
-    <!-- <div class="dropdown m-1">
-    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-      aria-haspopup="true" aria-expanded="false">
-      Select State
-      <span class="selectedState"></span>
-    </button>
-    <div class="dropdown-menu state" aria-labelledby="dropdownMenuButton">
-      {% for area_select in area_list %}
-      <a class="dropdown-item" href="#">{{ area_select.area_name }}</a>
-      {% endfor %}
+    <div class="p-1">
+        <button type="button" class="btn btn-light" onclick="location.href=`{% url 'fy_cd_lineNum' dist_name fy %}`">Go to Count</button>
     </div>
-  </div> -->
-    <!-- <div class="dropdown m-1">
-    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-      aria-haspopup="true" aria-expanded="false">
-      <span class="selectedPtype"></span>
-    </button>
-    <div class="dropdown-menu ptype" aria-labelledby="dropdownMenuButton">
-      <a class="dropdown-item" href="#">Urban</a>
-      <a class="dropdown-item" href="#">Rural</a>
-      <a class="dropdown-item" href="#">Tribal</a>
-    </div>-->
-</div>
 
-<!-- <div class="row">
-  <p>Click rectangle box besides block names to view month wise trend for
-    the project</p>
-</div> -->
+    <div class="flex-auto h-25 m-1">
+        <ul class="flex-wrap nav nav-tabs d-flex" id="myTab" role="tablist">
+            <li class="flex-wrap nav-item">
+            <button class="flex-wrap rounded nav-link active" id="monthlyData" data-toggle="tab" role="tab"
+                aria-controls="Monthly" aria-selected="true" data-value="N">Monthly</button>
+            </li>
+            <li class="flex-wrap nav-item">
+            <button class="flex-wrap rounded nav-link" id="cumulativeData" data-toggle="tab" role="tab"
+                aria-controls="Cumulative" aria-selected="false" data-value="A">Cumulative</button>
+            </li>
+        </ul>
+    </div>  
+</div>
 
 <div class="row m-2">
     <div class="col-2" id="legendList">
@@ -182,11 +166,6 @@
     let sel_st = '{{ dist_name }}';
     let selAreaInt = parseInt(sel_st);
 
-    if (selAreaInt > 38)
-        document.getElementById('areaTitle').innerHTML = 'District-wise';
-    else
-        document.getElementById('areaTitle').innerHTML = 'State-wise';
-        
     let areaName = [];
     // if (selAreaInt > 38)
         areaName.push(selAreaInt);  
@@ -445,7 +424,8 @@
 
         function removeTooltip() {
             if (tooltip) tooltip.style('display', 'none');
-            // if(mouseG)     mouseG.selectAll('.mouse-per-line').selectAll('.topic-circle').remove();
+            if(mouseG)     d3.selectAll('.mouse-line').style("opacity", "0");
+            if(mouseG)     d3.selectAll(".mouse-per-line circle").style("opacity", "0");
         }
 
         function drawTooltip() {
@@ -481,7 +461,7 @@
 
             tooltip.html('<b style="color:#FF0000">' + monthX + '</b>' + '<br>' + '<b style="color: rgb(30, 6, 116)">State Name: ' + stname + '</b>')
                 .style('display', 'block')
-                .style('left', d3.event.pageX + "px")
+                .style('left', (d3.event.pageX) - 300 + "px")
                 .style('top', 40 + "px")
                 .selectAll()
                 .data(result).enter()
@@ -546,6 +526,7 @@
         var val = $(this).text();
         selectedCategory = val;
         setSection(val);
+        document.getElementById('areaTitle').innerHTML = "India-Statewise: (%) " + selectedCategory;
         st_data = filterCSV(data, 'area_id', areaName);
         fyData = filterCSV(st_data, 'financial_year', selectedYear);
         d3.selectAll(".mouse-per-line circle").remove();
@@ -557,6 +538,7 @@
     if (choices.length > 0) {
         let selectedCat = choices[0].replace(/_/g, ' ');
         selectedCategory = selectedCat;
+        document.getElementById('areaTitle').innerHTML = "India-Statewise: (%) " + selectedCategory;
         $('.category a').parents('.dropdown').find('.dropdown-toggle').html(selectedCat + ' <span class="selectedCategory"></span>');
         st_data = filterCSV(data, 'area_id', areaName);
         fyData = filterCSV(st_data, 'financial_year', selectedYear);
@@ -666,16 +648,10 @@
         $('#cumulativeData').click(function() {
             quarterly = true;
             setData(fyData, section);
-            $("#cumulativeData").hide();
-            $("#monthlyData").show();
-
         });
         $('#monthlyData').click(function() {
             quarterly = false;
             setData(fyData, section);
-            $("#cumulativeData").show();
-            $("#monthlyData").hide();
-
         });
     });
 </script>

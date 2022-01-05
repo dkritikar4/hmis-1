@@ -13,7 +13,7 @@
       color: #fcfcfc;
       background-color: #067788;
       border-color: transparent transparent #f3f3f3;
-      border-bottom: 3px solid !important;
+      /* border-bottom: 3px solid !important; */
       font-weight: bold;
   }
 
@@ -86,7 +86,8 @@
 }
 
 .slider-tick-label {
-  font-size: calc(50% + 0.5vw + 0.5vh);
+  font-size: calc(20% + 0.5vw + 0.5vh);
+  font-weight: bold;
 }
 
 div.tooltip {	
@@ -125,6 +126,27 @@ div.tooltip {
   align-items: center;
   justify-content: center;
 
+}
+
+.flex-wrap.nav-link.active {
+  /* color: #fff; */
+  background-color: transparent;
+  border-color: transparent;
+  display: inline-block;
+  background: #4285F4;
+}
+
+.flex-wrap.nav-link {
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  font-size: calc(45% + 0.5vw + 0.5vh);
+  padding: 0.375rem 0.75rem;
+}
+
+.flex-wrap.nav-link {
+  border: 2px solid #0609af;
+  background: #fff;
+  width: 100%;
+  text-align: center;
 }
 
 @-webkit-keyframes sk-scaleout {

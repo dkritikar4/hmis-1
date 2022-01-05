@@ -52,7 +52,7 @@
 
 <div class="row">
   <div class="col-12 h-75">
-    <div class="heading text-center" id="barTitle"> Indicator </div>
+    <div class="heading text-center" id="barTitle"> India-Statewise </div>
   </div>
 </div>
 
@@ -65,7 +65,7 @@
 
   <div class="col-xs-8 col-sm-8 col-md-6 bg-dark">
 
-    <div class="dropdown m-1">
+    <div class="dropdown p-1">
 
       <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false">
@@ -91,19 +91,33 @@
         <a class="dropdown-item" href="#">C-section deliveries</a>
         <a class="dropdown-item" href="#">Total no of Still Birth</a>
       </div>
-
-
-
     </div>
-    <button class='btn btn-light toggle m-1'>Compare</button>
-    <button type="button" class="btn btn-success m-1" id="cumulativeData">Cumulative</button>        
-    <button type="button" class="btn btn-primary m-1 hidden" id="monthlyData" style="display: none;">Monthly</button>     
+
+    <div class="row m-1">
+      <div class="col-2 p-1">
+        <button class='btn btn-light toggle'>Compare</button>
+      </div> 
+  
+      <div class="flex-auto m-1">
+        <ul class="flex-wrap nav nav-tabs d-flex" id="myTab" role="tablist">
+            <li class="flex-wrap nav-item">
+            <button class="flex-wrap rounded nav-link active" id="monthlyData" data-toggle="tab" role="tab"
+                aria-controls="Monthly" aria-selected="true" data-value="N">Monthly</button>
+            </li>
+            <li class="flex-wrap nav-item">
+            <button class="flex-wrap rounded nav-link" id="cumulativeData" data-toggle="tab" role="tab"
+                aria-controls="Cumulative" aria-selected="false" data-value="A">Cumulative</button>
+            </li>
+        </ul>
+      </div>   
+    </div>
+
   </div>
 
  
   <div class="col-xs-4 col-sm-4 col-md-6 bg-dark">
 
-    <div class="dropdown m-1" id="cat2">
+    <div class="dropdown p-1" id="cat2">
 
       <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false">
@@ -149,7 +163,7 @@
   <div class="col-12 mb-5">
       <input type="text" id="quarterSlider" name="name" data-provide="slider"
           data-slider-ticks="[0, 1, 2, 3, 4, 5,6,7,8,9,10,11]"
-          data-slider-ticks-labels='["Apr", "Upto May", "Upto Jun", "Upto Jul", "Upto Aug", "Upto Sep", "Upto Oct", "Upto Nov", "Upto Dec", "Upto Jan", "Upto Feb", "Upto Mar"]'
+          data-slider-ticks-labels='["April", "Upto May", "Upto Jun", "Upto Jul", "Upto Aug", "Upto Sep", "Upto Oct", "Upto Nov", "Upto Dec", "Upto Jan", "Upto Feb", "Upto Mar"]'
           data-slider-min="0" data-slider-max="11" data-slider-step="1" data-slider-value="0"
           data-slider-tooltip="hide">
   </div>
@@ -575,15 +589,10 @@
     drawRight(monthDataR);
   });
 
-  let qtickLabels = ["Apr", "Upto May", "Upto Jun", "Upto Jul", "Upto Aug", "Upto Sep", "Upto Oct", "Upto Nov", "Upto Dec", "Upto Jan", "Upto Feb", "Upto Mar"]
+  let qtickLabels = ["April", "Upto May", "Upto Jun", "Upto Jul", "Upto Aug", "Upto Sep", "Upto Oct", "Upto Nov", "Upto Dec", "Upto Jan", "Upto Feb", "Upto Mar"]
     
   $('#quarterSlider').slider().on('slideStop', function (ev) {
-    let val;
-    if(qtickLabels[ev.value] == "Apr"){
-        val = "Upto Apr";
-    }
-    else
-      val = qtickLabels[ev.value];
+    let val = qtickLabels[ev.value];
       filterdata = filterCSV(data, 'month', val);
       monthDataL = sortData(filterdata, sortByL);
       monthDataR = sortData(filterdata, sortByR);
@@ -603,7 +612,7 @@
   function displayLeftChart(valCategory) {
     var displayVal = valCategory.substring(0, valCategory.length);
     let fy = '{{ fy }}';
-    document.getElementById('barTitle').innerHTML = "(%) Indicator: " + displayVal + " (" + fy + ")";
+    document.getElementById('barTitle').innerHTML = "India-Statewise: " + displayVal + " (" + fy + ")";
 
     switch (valCategory) {
       case "Total no of PW registered for ANC": xValue = d => d.tot_no_pw_reg_anc; sortByL = 'tot_no_pw_reg_anc'; break;
@@ -635,9 +644,6 @@
 
     if(quarterly == true){
       var valMonth = qtickLabels[$('#quarterSlider').slider('getValue')];
-      if(valMonth == "Apr"){
-          valMonth = "Upto Apr";
-      }
       filterdata = filterCSV(data, 'month', valMonth);
       monthDataL = sortData(filterdata, sortByL);
       drawLeft(monthDataL);
@@ -693,9 +699,6 @@
 
     if(quarterly == true){
       var valMonth = qtickLabels[$('#quarterSlider').slider('getValue')];
-      if(valMonth == "Apr"){
-          valMonth = "Upto Apr";
-      }
       filterdata = filterCSV(data, 'month', valMonth);
       monthDataR = sortData(filterdata, sortByR);
       drawRight(monthDataR);
@@ -790,13 +793,8 @@
 
         $("#quarterlySlider").show();
         $("#monthlySlider").hide();
-        $("#cumulativeData").hide();
-        $("#monthlyData").show();
 
         var valMonth = qtickLabels[$('#quarterSlider').slider('getValue')];
-        if(valMonth == "Apr"){
-            valMonth = "Upto Apr";
-        }
         filterdata = filterCSV(data, 'month', valMonth);
         monthDataL = sortData(filterdata, sortByL);
         monthDataR = sortData(filterdata, sortByR);
@@ -810,8 +808,6 @@
         
         $("#quarterlySlider").hide();
         $("#monthlySlider").show();
-        $("#cumulativeData").show();
-        $("#monthlyData").hide();
 
         var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
         

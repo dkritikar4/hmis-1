@@ -63,11 +63,11 @@
 
 <div class="row">
     <div class="col-12 h-75">
-        <div class="heading text-center" id="barTitle"> Indicator </div>
+        <div class="heading text-center" id="barTitle"> India-Statewise </div>
     </div>
 </div>
 <div class="row bg-dark mb-2">
-    <div class="dropdown m-1">
+    <div class="dropdown p-1">
         <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
             <!-- Category Dropdown -->
@@ -83,33 +83,24 @@
         </div>
     </div>
 
-    <button type="button" class="btn btn-success m-1" id="cumulativeData">Cumulative</button>        
-    <button type="button" class="btn btn-primary m-1 hidden" id="monthlyData" style="display: none;">Monthly</button>   
-
-    <button type="button" class="btn btn-light m-1" onclick="location.href=`{% url 'ci_barnumeric' dist_name fy %}`">Go to Count</button>
-
-    <!-- <div class="dropdown m-1">
-    <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-      aria-haspopup="true" aria-expanded="false">
-      <span class="selectedPtype"></span>
-    </button>
-    <div class="dropdown-menu ptype" aria-labelledby="dropdownMenuButton">
-      <a class="dropdown-item" href="#">Urban</a>
-      <a class="dropdown-item" href="#">Rural</a>
-      <a class="dropdown-item" href="#">Tribal</a>
+    <div class="p-1">
+        <button type="button" class="btn btn-light" onclick="location.href=`{% url 'ci_barnumeric' dist_name fy %}`">Go to Count</button>
     </div>
-  </div> -->
 
+    <div class="flex-auto h-25 m-1">
+        <ul class="flex-wrap nav nav-tabs d-flex" id="myTab" role="tablist">
+            <li class="flex-wrap nav-item">
+            <button class="flex-wrap rounded nav-link active" id="monthlyData" data-toggle="tab" role="tab"
+                aria-controls="Monthly" aria-selected="true" data-value="N">Monthly</button>
+            </li>
+            <li class="flex-wrap nav-item">
+            <button class="flex-wrap rounded nav-link" id="cumulativeData" data-toggle="tab" role="tab"
+                aria-controls="Cumulative" aria-selected="false" data-value="A">Cumulative</button>
+            </li>
+        </ul>
+    </div>
 
 </div>
-
-<!-- <div class="row">
-  <div class="col">
-    <div class="scroll-down">
-      Please Scroll Down to see Actual Numbers
-    </div>
-  </div>
-</div> -->
 
 <div class="row text-center"  id="monthlySlider">
     <div class="col-12 mb-5">
@@ -127,7 +118,7 @@
     <div class="col-12 mb-5">
         <input type="text" id="quarterSlider" name="name" data-provide="slider"
             data-slider-ticks="[0, 1, 2, 3, 4, 5,6,7,8,9,10,11]"
-            data-slider-ticks-labels='["Apr", "Upto May", "Upto Jun", "Upto Jul", "Upto Aug", "Upto Sep", "Upto Oct", "Upto Nov", "Upto Dec", "Upto Jan", "Upto Feb", "Upto Mar"]'
+            data-slider-ticks-labels='["April", "Upto May", "Upto Jun", "Upto Jul", "Upto Aug", "Upto Sep", "Upto Oct", "Upto Nov", "Upto Dec", "Upto Jan", "Upto Feb", "Upto Mar"]'
             data-slider-min="0" data-slider-max="11" data-slider-step="1" data-slider-value="0"
             data-slider-tooltip="hide">
     </div>
@@ -136,11 +127,6 @@
 <div class="row">
     <div class="col-12" id="chart"></div>
 </div>
-
-<!-- <div class="row">
-  <div class="col-12 text-center mt-3" id="table">
-  </div>
-</div> -->
 
 
 {% endblock %}
@@ -334,7 +320,7 @@
     function displayChart(valCategory) {
         var displayVal = valCategory.substring(0, valCategory.length);
         let fy = '{{ fy }}';
-        document.getElementById('barTitle').innerHTML = "(%) Indicator: " + displayVal + " (" + fy + ")";
+        document.getElementById('barTitle').innerHTML = "India-Statewise: (%) " + displayVal + " (" + fy + ")";
 
         switch (valCategory) {
 
@@ -353,9 +339,6 @@
         }
         if(quarterly == true){
             var valMonth = qtickLabels[$('#quarterSlider').slider('getValue')];
-            if(valMonth == "Apr"){
-                valMonth = "Upto Apr";
-            }
             filterdata = filterCSV(data, 'month', valMonth);
             mydata = sortData(filterdata, sortBy);
             svg.selectAll("*").remove();
@@ -367,26 +350,7 @@
             svg.selectAll("*").remove();
             render(mydata);
         }
-        //var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
-        //filterdata = filterCSV(data, 'month', valMonth);
-        //mydata = sortData(filterdata, sortBy);
-        //tableData = tables(filterdata);
-        //svg.selectAll("*").remove();
-        //render(mydata);
     }
-
-    //   $(".ptype a").click(function () {
-    //     $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="selectedPtype"></span>');
-    //     $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
-    //     prjType = $(this).text();
-    //     var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
-    //     filterdata = filterCSV(data, 'month_n', valMonth);
-    //     pt_data = filterCSV(filterdata, 'project_type', prjType);
-    //     mydata = sortData(pt_data, sortBy);
-    //     tableData = tables(pt_data);
-    //     svg.selectAll("*").remove();
-    //     render(mydata);
-    //   });
 
     /////
 
@@ -432,16 +396,10 @@
         render(mydata);
     });
 
-    let qtickLabels = ["Apr", "Upto May", "Upto Jun", "Upto Jul", "Upto Aug", "Upto Sep", "Upto Oct", "Upto Nov", "Upto Dec", "Upto Jan", "Upto Feb", "Upto Mar"]
+    let qtickLabels = ["April", "Upto May", "Upto Jun", "Upto Jul", "Upto Aug", "Upto Sep", "Upto Oct", "Upto Nov", "Upto Dec", "Upto Jan", "Upto Feb", "Upto Mar"]
     
     $('#quarterSlider').slider().on('slideStop', function (ev) {
-        let val;
-        if(qtickLabels[ev.value] == "Apr"){
-            val = "Upto Apr";
-        }
-        else
-            val = qtickLabels[ev.value];
-
+        let val = qtickLabels[ev.value];
         filterdata = filterCSV(data, 'month', val);
         mydata = sortData(filterdata, sortBy);
         svg.selectAll("*").remove();
@@ -453,15 +411,12 @@
     console.log(choices, "choices")
     if (choices.length > 0) {
         let categoryChoices = choices[0].replace(/_/g, ' ');
-        console.log(categoryChoices, "[0]")
 
         $('.category a').parents('.dropdown').find('.dropdown-toggle').html(categoryChoices + ' <span class="selectedCategory"></span>');
         displayChart(categoryChoices);
     }
 
     $(function () {
-
-        // $('.ptype a').parents('.dropdown').find('.dropdown-toggle').html('Urban' + ' <span class="selectedPtype"></span>');
 
         $(".category a").click(function () {
             var selText = $(this).text();
@@ -482,46 +437,6 @@
         return map;
     }
 
-    function tables(data) {
-        $(".hello").remove();
-        var tbdata = [];
-        data.forEach(d => {
-            var tbd = {}
-            tbd["area_name"] = d.area_name;
-            tbd["Number of Children 0-6 years old enrolled for services"] = d.no_enrolled;
-            tbd["Total No. of Children Eligible to be Weighed"] = d.tot_elgb_wghd;
-            tbd["Total No. of Children Eligible for measuring Height"] = d.tot_elgb_hght;
-            tbd["Total No. of Children Weighed"] = d.no_wt;
-            tbd["Total No. of Children whose Height has been measured"] = d.no_ht;
-            tbd["Total No. of Children whose Height and Weight has been measured"] = d.no_wt_ht;
-            tbdata.push(tbd);
-        });
-
-        var table = d3.select('div#table').append('table').attr('class', 'hello');
-        var titles = d3.keys(tbdata[0]);
-        var headers = table.append('thead').append('tr')
-            .selectAll('th')
-            .data(titles).enter()
-            .append('th')
-            .text(function (d) {
-                return d;
-            });
-
-        var rows = table.append('tbody').selectAll('tr')
-            .data(tbdata).enter()
-            .append('tr');
-
-        rows.selectAll('td')
-            .data(function (d) {
-                return titles.map(function (k) {
-                    return { 'value': d[k], 'name': k };
-                });
-            }).enter()
-            .append('td')
-            .text(function (d) {
-                return d.value;
-            });
-    }
     $(document).ready(function () {
         $('#cumulativeData').click(function() {
             quarterly = true;
@@ -530,13 +445,8 @@
 
             $("#quarterlySlider").show();
             $("#monthlySlider").hide();
-            $("#cumulativeData").hide();
-            $("#monthlyData").show();
 
             var valMonth = qtickLabels[$('#quarterSlider').slider('getValue')];
-            if(valMonth == "Apr"){
-                valMonth = "Upto Apr";
-            }
             filterdata = filterCSV(data, 'month', valMonth);
             mydata = sortData(filterdata, sortBy);
             svg.selectAll("*").remove();
@@ -549,8 +459,6 @@
             
             $("#quarterlySlider").hide();
             $("#monthlySlider").show();
-            $("#cumulativeData").show();
-            $("#monthlyData").hide();
 
             var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
             

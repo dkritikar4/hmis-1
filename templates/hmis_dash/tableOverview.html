@@ -53,12 +53,12 @@
 {% block feature %}
 <div class="row">
     <div class="col-12 h-75">
-        <div class="heading text-center"> <span id="areaTitle"></span> Overview ({{ fy }})</div>
+        <div class="heading text-center"> <span id="areaTitle"></span> India-Statewise Overview ({{ fy }})</div>
     </div>
 </div>
-<div class="row h-100 bg-info">
+<div class="row h-100 bg-dark">
     <div class="dropdown m-1">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+        <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
             aria-haspopup="true" aria-expanded="false">
             <span class="selectedCategory"></span>
         </button>
@@ -77,7 +77,20 @@
           <a class="dropdown-item" href="#">{{ state_select.state }}</a>
           {% endfor %}
         </div>
-      </div> -->
+    </div> -->
+    
+    <div class="flex-auto h-25 m-1">
+        <ul class="flex-wrap nav nav-tabs d-flex" id="myTab" role="tablist">
+            <li class="flex-wrap nav-item">
+            <button class="flex-wrap rounded nav-link active" id="monthlyData" data-toggle="tab" role="tab"
+                aria-controls="Monthly" aria-selected="true" data-value="N">Monthly</button>
+            </li>
+            <li class="flex-wrap nav-item">
+            <button class="flex-wrap rounded nav-link" id="cumulativeData" data-toggle="tab" role="tab"
+                aria-controls="Cumulative" aria-selected="false" data-value="A">Cumulative</button>
+            </li>
+        </ul>
+    </div>      
 </div>
 
 <div class="row">
@@ -88,11 +101,24 @@
     </div>
 </div>
 
-<div class="row text-center">
-    <div class="col-12 mb-3">
-        <input type="text" id="monthSlider" name="somename" data-provide="slider" data-slider-ticks="[0, 1, 2, 3, 4, 5,6,7,8,9,10,11,12]"
-        data-slider-ticks-labels='["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]' data-slider-min="0"
-        data-slider-max="5" data-slider-step="1" data-slider-value="0" data-slider-tooltip="hide">
+
+<div class="row text-center" id="monthlySlider">
+    <div class="col-12 mb-5">
+        <input type="text" id="monthSlider" name="somename" data-provide="slider"
+            data-slider-ticks="[0, 1, 2, 3, 4, 5,6,7,8,9,10,11,12]"
+            data-slider-ticks-labels='["All", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",  "Jan", "Feb", "Mar"]'
+            data-slider-min="0" data-slider-max="12" data-slider-step="1" data-slider-value="0"
+            data-slider-tooltip="hide">
+    </div>
+</div>
+
+<div class="row text-center" id="quarterlySlider" style="display: none;">
+    <div class="col-12 mb-5">
+        <input type="text" id="quarterSlider" name="name" data-provide="slider"
+            data-slider-ticks="[0, 1, 2, 3, 4, 5,6,7,8,9,10,11]"
+            data-slider-ticks-labels='["April", "Upto May", "Upto Jun", "Upto Jul", "Upto Aug", "Upto Sep", "Upto Oct", "Upto Nov", "Upto Dec", "Upto Jan", "Upto Feb", "Upto Mar"]'
+            data-slider-min="0" data-slider-max="11" data-slider-step="1" data-slider-value="0"
+            data-slider-tooltip="hide">
     </div>
 </div>
 
@@ -138,12 +164,10 @@
     }
 
     function block() {
+    let quarterly = false;
+
         let dist_name = "{{ dist_name }}";
         let selAreaInt = parseInt(dist_name);
-        if (selAreaInt > 38)
-            document.getElementById('areaTitle').innerHTML = 'District ';
-        else
-            document.getElementById('areaTitle').innerHTML = 'State ';
 
         const render = data => {
         }
@@ -247,25 +271,87 @@
         render(tbleData);
     });
 
- 
+    let qtickLabels = ["April", "Upto May", "Upto Jun", "Upto Jul", "Upto Aug", "Upto Sep", "Upto Oct", "Upto Nov", "Upto Dec", "Upto Jan", "Upto Feb", "Upto Mar"]
+    
+    $('#quarterSlider').slider().on('slideStop', function (ev) {
+        let val = qtickLabels[ev.value];
+        dataPw = filterCSV(data_pw, 'month', val);
+        dataChildIm = filterCSV(data_childIm, 'month', val);
+        dataChildDi = filterCSV(data_childDi, 'month', val);
+        let tbleData = tables(d3.select('input[name="states"]:checked').node().value, dataPw, dataChildIm, dataChildDi);
+        render(tbleData);
+    });
+    if(quarterly == true)
+    {
+        console.log("if true")
+        monthSelect = qtickLabels[$('#quarterSlider').slider('getValue')];
 
-    monthSelect = tickLabels[$('#monthSlider').slider('getValue')];
-    dataPw = filterCSV(data_pw, 'month', monthSelect);
-    dataChildIm = filterCSV(data_childIm, 'month', monthSelect);
-    dataChildDi = filterCSV(data_childDi, 'month', monthSelect);
-    let tbleData = tables(d3.select('input[name="states"]:checked').node().value, dataPw, dataChildIm, dataChildDi);
-    render(tbleData);
-
-
-    const tbData = (val, monthwiseData) => {
-
-        return selectMonth;
-
+        dataPw = filterCSV(data_pw, 'month', monthSelect);
+        dataChildIm = filterCSV(data_childIm, 'month', monthSelect);
+        dataChildDi = filterCSV(data_childDi, 'month', monthSelect);
+        let tbleData = tables(d3.select('input[name="states"]:checked').node().value, dataPw, dataChildIm, dataChildDi);
+        render(tbleData);
+    }else{
+        monthSelect = tickLabels[$('#monthSlider').slider('getValue')];
+        dataPw = filterCSV(data_pw, 'month', monthSelect);
+        dataChildIm = filterCSV(data_childIm, 'month', monthSelect);
+        dataChildDi = filterCSV(data_childDi, 'month', monthSelect);
+        let tbleData = tables(d3.select('input[name="states"]:checked').node().value, dataPw, dataChildIm, dataChildDi);
+        render(tbleData);
     }
+
+    // const tbData = (val, monthwiseData) => {
+
+    //     return selectMonth;
+
+    // }
+
+    $(document).ready(function () {
+        $('#cumulativeData').click(function() {
+            quarterly = true;
+
+            $("div.slider-tick-label-container").css("margin-left", "-4.138rem");
+            $("div.slider-tick-label").css("width", "8.25rem");
+
+            $("#quarterlySlider").show();
+            $("#monthlySlider").hide();
+
+            var valMonth = qtickLabels[$('#quarterSlider').slider('getValue')];
+            dataPw = filterCSV(data_pw, 'month', valMonth);
+            dataChildIm = filterCSV(data_childIm, 'month', valMonth);
+            dataChildDi = filterCSV(data_childDi, 'month', valMonth);
+            let tbleData = tables(d3.select('input[name="states"]:checked').node().value, dataPw, dataChildIm, dataChildDi);
+            render(tbleData);
+        });
+        $('#monthlyData').click(function() {
+            quarterly = false;
+            $("div.slider-tick-label-container").css("margin-left", "-3.792rem");
+            $("div.slider-tick-label").css("width", "7.583rem");
+            
+            $("#quarterlySlider").hide();
+            $("#monthlySlider").show();
+
+            var valMonth = tickLabels[$('#monthSlider').slider('getValue')];
+            
+            dataPw = filterCSV(data_pw, 'month', valMonth);
+            dataChildIm = filterCSV(data_childIm, 'month', valMonth);
+            dataChildDi = filterCSV(data_childDi, 'month', valMonth);
+            let tbleData = tables(d3.select('input[name="states"]:checked').node().value, dataPw, dataChildIm, dataChildDi);
+            render(tbleData);
+        });
+    });
 
     const buttons = d3.selectAll('input');
     buttons.on('change', function (d) {
         const selection = this.value;
+        console.log(quarterly)
+        if(quarterly == true){
+            monthSelect = qtickLabels[$('#quarterSlider').slider('getValue')];
+        }else
+            monthSelect = tickLabels[$('#monthSlider').slider('getValue')];
+
+        console.log(monthSelect, "monthSelect")
+
         dataPw = filterCSV(data_pw, 'month', monthSelect);
         dataChildIm = filterCSV(data_childIm, 'month', monthSelect);
         dataChildDi = filterCSV(data_childDi, 'month', monthSelect);
@@ -924,6 +1010,7 @@
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
+    
 
 </script>
 {% endblock %}

@@ -74,7 +74,8 @@ class RegionOverview(LoginRequiredMixin, TemplateView):
         # else:
         # dt_name = AreaDetails.objects.filter(Q(area_parent_id = 22)).values('area_name', 'area_id').distinct().order_by('area_id')
 
-        month_name = HmisPw.objects.filter(Q(financial_year=fy_name)).values('month', 'month_id').distinct().order_by('month_id').exclude(month_id__gte = 14)
+        month_name = HmisPw.objects.filter(Q(financial_year=fy_name)).values('month', 'month_id').distinct().order_by('month').exclude(month_id__gte = 14)
+        quarterly = HmisPw.objects.filter(Q(financial_year=fy_name)).values('month', 'month_id').distinct().order_by('month').exclude(month_id__lte = 13)
 
         pw_json = serializers.serialize('json',pw_data)
         ci_json = serializers.serialize('json',ci_data)
@@ -85,7 +86,7 @@ class RegionOverview(LoginRequiredMixin, TemplateView):
             'cd_data':cd_json
         }
         #  'dt_list':dt_name ,
-        return render(request,'dashboard/dt_dashboard.html', {'st_list':st_name, 'context':context, 'dist_name':area_name, 'months':month_name, 'fy': fy_name})
+        return render(request,'dashboard/dt_dashboard.html', {'st_list':st_name, 'context':context, 'dist_name':area_name, 'months':month_name, 'quarterly':quarterly, 'fy': fy_name})
 
 
 
